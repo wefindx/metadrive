@@ -1,0 +1,5 @@
+.env/
+.pytest_cache/
+drivers.egg-info/
+dist/
+*__pycache__*
