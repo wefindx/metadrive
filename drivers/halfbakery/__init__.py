@@ -15,20 +15,33 @@ def sync_one(url):
     '''
     pass
 
-def sync_all(limit=100, offset=0, sync_comments=False):
+def sync_all(page_size=100, offset=0, limit=None, sync_comments=False):
     '''
     -> Download all titles, descriptions and dates.
     -> Create if not exists, update if exists. (call sync_one if updated)
     -> produce (yield) items with *, +, -.
     '''
-    feed_url = 'http://www.halfbakery.com/lr/view/fxc=230:s=R:d=iwqhvroc:do={offset}:dn={limit}:ds=A:n=tiny:t=halfbakery'.format(
-        limit=limit,
-        offset=offset
-    )
 
-    feedparser.parse(feed_url)
+    feed_url = 'http://www.halfbakery.com/lr/view/fxc=230:s=R:d=iwqhvroc:do={offset}:dn={page_size}:ds=A:n=tiny:t=halfbakery'
 
-    print(feed_url)
+    while True:
+
+        results = feedparser.parse(feed_url.format(
+            page_size=page_size,
+            offset=offset
+        ))['entries']
+
+        for result in results:
+            yield result
+
+        if len(results) < page_size:
+            break
+
+        offset += page_size
+
+        if limit:
+            if offset >= limit:
+                break
 
 
 def harvest():
@@ -38,5 +51,13 @@ def harvest():
     if authenticate in ['y', 'Y']:
         login()
 
-    for item in sync_all():
+    complete = input('Do you want to synchronize comments? Takes much time. [y/N] ')
+
+    if complete in ['y', 'Y']:
+        complete = True
+    else:
+        complete = False
+
+
+    for item in sync_all(sync_comments=complete, limit=300):
         yield item
