@@ -32,6 +32,7 @@ def sync_all(page_size=100, offset=0, limit=None, sync_comments=False):
         ))['entries']
 
         for result in results:
+            result['-'] = result['id']
             yield result
 
         if len(results) < page_size:
