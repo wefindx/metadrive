@@ -1,0 +1,2 @@
+def harvest():
+    return 'yes'
