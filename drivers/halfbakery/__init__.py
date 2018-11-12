@@ -45,7 +45,7 @@ def sync_all(page_size=100, offset=0, limit=None, sync_comments=False):
                 break
 
 
-def harvest():
+def harvest(limit=None):
 
     authenticate = input('Do you want to login and bind encrypted login info? [y/N] ')
 
@@ -60,5 +60,5 @@ def harvest():
         complete = False
 
 
-    for item in sync_all(sync_comments=complete, limit=300):
+    for item in sync_all(sync_comments=complete, limit=limit):
         yield item
