@@ -18,6 +18,13 @@ setup(
     license='MIT',
     packages = find_packages(exclude=['docs', 'tests*']),
     install_requires=[
+        'requests',
+        'apiage',
+        'paramiko',
+        'selenium',
+        'slumber',
+        'feedparser',
+        # 'selendroid',
     ],
     extras_require = {
         'test': ['coverage', 'pytest', 'pytest-cov'],
