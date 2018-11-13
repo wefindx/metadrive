@@ -45,7 +45,7 @@ def sync_all(page_size=100, offset=0, limit=None, sync_comments=False):
                 break
 
 
-def harvest(limit=None):
+def read_ideas(limit=None):
 
     authenticate = input('Do you want to login and bind encrypted login info? [y/N] ')
 
