@@ -1,4 +1,3 @@
-import requests
 import feedparser
 
 def login(username, password):
@@ -7,15 +6,17 @@ def login(username, password):
     -> store encrypted credentials with data in github, to use as link.
     '''
     print('performing login...')
+    print('saving login token...')
+    print('saving login session...')
     pass
 
-def sync_one(url):
+def get(url):
     '''
     -> Download a single item content with comments.
     '''
     pass
 
-def sync_all(page_size=100, offset=0, limit=None, sync_comments=False):
+def search(page_size=100, offset=0, limit=None, get_comments=False):
     '''
     -> Download all titles, descriptions and dates.
     -> Create if not exists, update if exists. (call sync_one if updated)
@@ -45,7 +46,10 @@ def sync_all(page_size=100, offset=0, limit=None, sync_comments=False):
                 break
 
 
-def read_ideas(limit=None):
+def generate(limit=None):
+    '''
+    Combines login, get, search into a procudure sufficient to generate full-fledged items.
+    '''
 
     authenticate = input('Do you want to login and bind encrypted login info? [y/N] ')
 
@@ -60,5 +64,5 @@ def read_ideas(limit=None):
         complete = False
 
 
-    for item in sync_all(sync_comments=complete, limit=limit):
+    for item in search(get_comments=complete, limit=limit):
         yield item

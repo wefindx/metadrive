@@ -7,12 +7,12 @@ with open('README.md', 'r') as f:
     long_description = f.read()
 
 setup(
-    name='drivers',
-    version='0.0.8',
+    name='metadrive',
+    version='0.0.0',
     description='Integration of controllers to drive tools.',
     long_description=long_description,
     long_description_content_type='text/markdown',
-    url='https://github.com/wefindx/drivers',
+    url='https://gitlab.com/wefindx/metadrive',
     author='Mindey',
     author_email='mindey@qq.com',
     license='MIT',
