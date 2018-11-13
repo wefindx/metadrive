@@ -1,5 +1,5 @@
 .env/
 .pytest_cache/
-drivers.egg-info/
+metadrive.egg-info/
 dist/
 *__pycache__*
