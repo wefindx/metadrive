@@ -1,52 +1,57 @@
 import os
 import requests
 import feedparser
-import config
 
-from metaform import get_schema
+from metadrive import (
+    config,
+    utils
+)
+
 
 def login(username=None, password=None):
 
-    if 'halfbakery.session' in os.listdir(config.DEFAULT_LOCATION):
-        # read session #
-        pass
+    session = requests.Session()
+
+    session_data = utils.load_session_data(
+        namespace='halfbakery')
+
+    if session_data:
+        session.cookies.update(
+            requests.utils.cookiejar_from_dict(
+                session_data))
+        return session
+
+    credential = utils.ensure_credentials(
+        namespace='halfbakery',
+        variables=['username', 'password'])
+
+    username = credential['username']
+    password = credential['password']
+
+    if session.get(
+            'http://www.halfbakery.com/lr/').ok:
+        signin = session.get(
+            'http://www.halfbakery.com/lr/',
+             params={
+                 'username': username,
+                 'password': password,
+                 'login': 'login'})
+
+        if signin.ok:
+            utils.save_session_data(
+                'halfbakery',
+                requests.utils.dict_from_cookiejar(
+                    session.cookies))
+
+            return session
+        else:
+            raise Exception(
+                'Could not signin: {}'.format(
+                    signin.status_code))
     else:
-        # use known password #
-        if not (username and password):
-
-            try:
-                credentials = metaform.get_schema(
-                    '-:{gituser}/metadrive/halfbakery.md#main'.format(
-                        config.GITHUB_USER))
-            except:
-                credentials = None
-
-            if credentials:
-                # decrypt #
-                pass
-            else:
-
-            in ['-repo']:
-                print('Log-in to Halfbakery:')
-            if not username:
-                username = input('username = ')
-            if not password:
-                password = input('password = ')
-
-        # logging in
-
-        print('logging in')
-    #
-    # else:
-    #     print('Found `halfbakery.session` in ~/.metadrive, using existing session.')
-
-
-
-    print('saving login token...')
-    print("creating - repository, if doesn't exist")
-    print('saving login session...')
-    save_login = input('Do you want to encrypt and save password on github? [Y/n] ')
-    pass
+        raise Exception(
+            'Failed to open Halfbakery: {}'.format(
+                signin.status_code))
 
 def get(url):
     '''
