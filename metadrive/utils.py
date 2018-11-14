@@ -92,4 +92,4 @@ def load_session_data(namespace):
 
 def save_session_data(namespace, session_data):
     session_path = os.path.join(config.SESSIONS_DIR, namespace)
-    json.dump(open(session_path, 'w'))
+    json.dump(session_data, open(session_path, 'w'))
