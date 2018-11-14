@@ -5,6 +5,15 @@ import config
 import requests
 import gpgrecord
 
+MAIN = 'main'
+
+def get_metaname(namespace):
+    return '-:{gituser}/+/{namespace}.md#{main}'.format(
+        gituser=config.GITHUB_USER,
+        namespace=namespace,
+        main=MAIN
+    ))
+
 
 def get_credential(namespace):
     '''
@@ -17,10 +26,7 @@ def get_credential(namespace):
     from metaform import get_schema
 
     try:
-        data = get_schema(
-            '-:{gituser}/+/{namespace}.md#main'.format(
-                gituser=config.GITHUB_USER,
-                namespace=namespace))
+        data = get_schema(get_metaname(namespace))
 
         credential = gpgrecord.decrypt_data(data)
 
@@ -44,11 +50,12 @@ def set_credential(namespace, credential):
             GPG_KEY
         )
 
-        content = '''## main
+        content = '''## {main}
 ```yaml
-{}
+{cont}
 ```'''.format(
-            yaml.dump(encrypted_credential)
+            main=MAIN,
+            cont=yaml.dump(encrypted_credential)
         )
 
         with open(

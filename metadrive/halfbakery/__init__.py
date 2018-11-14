@@ -7,10 +7,10 @@ from metadrive import (
     utils
 )
 
-
 def login(username=None, password=None):
 
     session = requests.Session()
+    session.metaname = utils.get_metaname('halfbakery')
 
     session_data = utils.load_session_data(
         namespace='halfbakery')
@@ -53,13 +53,20 @@ def login(username=None, password=None):
             'Failed to open Halfbakery: {}'.format(
                 signin.status_code))
 
-def get(url):
+def get(url, session=None):
     '''
-    -> Download a single item content with comments.
+    -> Download a single item content.
+    In Halfbakery, that gives full text with comments.
     '''
-    pass
+    session.get(url)
 
-def search(page_size=100, offset=0, limit=None, get_comments=False):
+def search(
+        query=None,
+        session=None,
+        page_size=100,
+        offset=0,
+        limit=None,
+        get_detail=False):
     '''
     -> Download all titles, descriptions and dates.
     -> Create if not exists, update if exists. (call sync_one if updated)
@@ -77,6 +84,12 @@ def search(page_size=100, offset=0, limit=None, get_comments=False):
 
         for result in results:
             result['-'] = result['id']
+            if session:
+                result['+'] = session.metaname
+            #
+            # if get_detail=True, call the get()
+            # asynchronously in parallel.
+            #
             yield result
 
         if len(results) < page_size:
@@ -88,24 +101,26 @@ def search(page_size=100, offset=0, limit=None, get_comments=False):
             if offset >= limit:
                 break
 
-
-def generate(limit=None):
+def generate(query=None, limit=None):
     '''
     Combines login, get, search into a procudure sufficient to generate full-fledged items.
     '''
 
-    authenticate = input('Do you want to login to Halfbakery? [y/N] ')
-
-    if authenticate in ['y', 'Y']:
-        login()
-
-    complete = input('Do you want to synchronize comments? Takes much time. [y/N] ')
-
-    if complete in ['y', 'Y']:
-        complete = True
+    if input('Do you want to login to Halfbakery? [y/N] ') in ['y', 'Y']:
+        session = login()
     else:
-        complete = False
+        session = None
+
+    if input('Do you want to get detail of each search result? (In Halfbakery, that means full text of each post, and comments. Takes much time. [y/N] ') in ['y', 'Y']:
+        get_detail = True
+    else:
+        get_detail = False
 
 
-    for item in search(get_comments=complete, limit=limit):
+    for item in search(
+            query=query,
+            session=session,
+            get_detail=get_detail,
+            limit=limit):
+
         yield item
