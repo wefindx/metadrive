@@ -1,6 +1,7 @@
 import os
 import requests
 import feedparser
+import metawiki
 
 from metadrive import (
     config,
@@ -85,7 +86,7 @@ def search(
         for result in results:
             result['-'] = result['id']
             if session:
-                result['+'] = session.metaname
+                result['+'] = metawiki.name_to_url(session.metaname)
             #
             # if get_detail=True, call the get()
             # asynchronously in parallel.
