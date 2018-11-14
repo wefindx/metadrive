@@ -1,0 +1,2 @@
+class GeolocationMeasurement:
+    pass
