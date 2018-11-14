@@ -1,13 +1,51 @@
+import os
+import requests
 import feedparser
+import config
 
-def login(username, password):
-    '''
-    -> store session locally in '~/.metaform'
-    -> store encrypted credentials with data in github, to use as link.
-    '''
-    print('performing login...')
+from metaform import get_schema
+
+def login(username=None, password=None):
+
+    if 'halfbakery.session' in os.listdir(config.DEFAULT_LOCATION):
+        # read session #
+        pass
+    else:
+        # use known password #
+        if not (username and password):
+
+            try:
+                credentials = metaform.get_schema(
+                    '-:{gituser}/metadrive/halfbakery.md#main'.format(
+                        config.GITHUB_USER))
+            except:
+                credentials = None
+
+            if credentials:
+                # decrypt #
+                pass
+            else:
+
+            in ['-repo']:
+                print('Log-in to Halfbakery:')
+            if not username:
+                username = input('username = ')
+            if not password:
+                password = input('password = ')
+
+        # logging in
+
+        print('logging in')
+    #
+    # else:
+    #     print('Found `halfbakery.session` in ~/.metadrive, using existing session.')
+
+
+
     print('saving login token...')
+    print("creating - repository, if doesn't exist")
     print('saving login session...')
+    save_login = input('Do you want to encrypt and save password on github? [Y/n] ')
     pass
 
 def get(url):
@@ -51,7 +89,7 @@ def generate(limit=None):
     Combines login, get, search into a procudure sufficient to generate full-fledged items.
     '''
 
-    authenticate = input('Do you want to login and bind encrypted login info? [y/N] ')
+    authenticate = input('Do you want to login to Halfbakery? [y/N] ')
 
     if authenticate in ['y', 'Y']:
         login()

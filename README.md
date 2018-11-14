@@ -1,8 +1,10 @@
-# Drivers
+# Metadrive
 
 The drivers shall define clients for [metaform](https://pypi.org/project/metaform/).
 
-# Todo
+The package that introduces simple generic interfaces to the objects within web APIs, allowing for generation (searching), and management of items on the web systems.
+
+# Future
 
 ## Business data
 1. Flights ( flightradar24.com )
@@ -10,7 +12,7 @@ The drivers shall define clients for [metaform](https://pypi.org/project/metafor
 3. Weather ( windy.com )
 4. Human ( biodigital.com )
 5. Ships ( marinetraffic.com )
-6. Deaths ( https://www.cdc.gov/nchs/data_access/vitalstatsonline.htm )h
+6. Deaths ( https://www.cdc.gov/nchs/data_access/vitalstatsonline.htm )
 7. Companies ( opencorporates.com, etc.)
 
 ## Common services
