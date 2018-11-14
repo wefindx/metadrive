@@ -12,7 +12,7 @@ def get_metaname(namespace):
         gituser=config.GITHUB_USER,
         namespace=namespace,
         main=MAIN
-    ))
+    )
 
 
 def get_credential(namespace):
