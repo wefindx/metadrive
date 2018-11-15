@@ -7,13 +7,13 @@ import gpgrecord
 
 MAIN = 'main'
 
+
 def get_metaname(namespace):
     return '-:{gituser}/+/{namespace}.md#{main}'.format(
         gituser=config.GITHUB_USER,
         namespace=namespace,
         main=MAIN
     )
-
 
 def get_credential(namespace):
     '''

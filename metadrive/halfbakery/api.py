@@ -1,28 +1,80 @@
-# this includes the methods available to items of the source
-
+# This includes the methods available to items of the source for user with session.
+import bs4
 
 class Topic:
 
-    def __init__(self, session):
-        self.type = '::mindey/topic#halfbakery'
+    def __init__(self, idea_url, session):
+        self.session = session
+        self.idea_url = idea_url
 
-    def new_idea(self, title, summary, text):
-        pass
+    def update(self):
+        '''
+        Edits own idea.
+        '''
+        raise NotImplemented
 
-    def edit_idea(self, title, summary, text):
-        pass
+    def delete(self):
+        '''
+        Deletes own idea.
+        '''
+        raise NotImplemented
 
-    def delete_idea(self):
-        pass
+    def vote(self, value: int):
+        '''
+        Changes your vote on an idea. Value can be betwee -1, 0, 1.
+        '''
+        page = self.session.get(self.idea_url)
+        if page.ok:
+            soup = bs4.BeautifulSoup(page.content)
+            sig = soup.find('input', {'name': 'sig'})
+            if sig:
+                sig = sig.attrs['value']
+            else:
+                raise Exception("Log in to vote.")
+        else:
+            raise Exception("Log in to vote.")
 
-    def vote_idea(self, value):
-        pass
+        if value == -1:
+            self.session.get(
+                self.idea_url,
+                params={
+                    'op': 'nay',
+                    'sig': sig
+                }
+            )
 
-    def new_anno(self, text):
-        pass
+        if value == 0:
+            self.session.get(
+                self.idea_url,
+                params={
+                    'op': 'unvote',
+                    'sig': sig
+                }
+            )
+        if value == 1:
+            self.session.get(
+                self.idea_url,
+                params={
+                    'op': 'aye',
+                    'sig': sig
+                }
+            )
 
-    def edit_anno(self, text):
-        pass
 
-    def delete_anno(self):
-        pass
+    def addnote(self, text):
+        '''
+        Creates an annotation to an idea.
+        '''
+        raise NotImplemented
+
+    def updnote(self, anno_url, text):
+        '''
+        Edits own annotation to an idea.
+        '''
+        raise NotImplemented
+
+    def delnote(self, anno_url):
+        '''
+        Deletes own annotation from an idea.
+        '''
+        raise NotImplemented
