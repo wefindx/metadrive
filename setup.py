@@ -27,6 +27,7 @@ setup(
         'selenium',
         'slumber',
         'feedparser',
+        'python-dateutil',
         # 'selendroid',
     ],
     extras_require = {

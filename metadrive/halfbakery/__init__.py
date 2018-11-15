@@ -8,6 +8,9 @@ from metadrive import (
     utils
 )
 
+from dateutil.parser import parse as dateparse
+from datetime import timezone
+
 def login(username=None, password=None):
 
     session = requests.Session()
@@ -84,14 +87,58 @@ def search(
         ))['entries']
 
         for result in results:
+
+            ### Conform to the result to record format '::mindey/topic#halfbakery' ###
+
+            record = {}
+            created, updated = result['dc_coverage'].split(' - ')
+            created_utc = dateparse(created).astimezone(timezone.utc).isoformat()
+            updated_utc = dateparse(updated).astimezone(timezone.utc).isoformat()
+
+            record['author'] = {
+                'date': created_utc,
+                'userlink': 'http://www.halfbakery.com/user/{}'.format(result['author'].replace(' ', '_20')),
+                'username': result['author'],
+                'last_modified': updated_utc
+            }
+            record['category'] = result['tags'][0]['term']
+
+            def title_vote_splitter(title_info):
+
+                title = title_info.rsplit(' (', 1)[0]
+
+                meal_votes = title_info.rsplit(' (', 1)[-1][:-1]
+                meal, votes = meal_votes.split(': ')
+                meal = float(meal)
+
+                if ',' in votes:
+                    pos, neg = votes.split(', ')
+                else:
+                    if votes.startswith('+'):
+                        pos, neg = int(votes[1:]), 0
+                    elif votes.startswith('-'):
+                        pos, neg = 0, int(votes[1:])
+                    else:
+                        pos, neg = 0, 0
+
+                return {'title': title,
+                        'meal': meal,
+                        'votes': {'positive': pos, 'negative': neg}}
+
+            title_details = title_vote_splitter(result['title'])
+            record['title'] = title_details['title']
+            record['votes'] = title_details['votes']
+            record['meal'] = title_details['meal']
+
             if session:
-                result['+'] = metawiki.name_to_url(session.metaname)
-            result['-'] = result['id']
+                record['+'] = metawiki.name_to_url(session.metaname)
+            record['-'] = result['id']
+
             #
             # if get_detail=True, call the get()
             # asynchronously in parallel.
             #
-            yield result
+            yield record
 
         if len(results) < page_size:
             break
