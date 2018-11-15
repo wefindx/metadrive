@@ -25,7 +25,7 @@ class Topic:
         '''
         page = self.session.get(self.idea_url)
         if page.ok:
-            soup = bs4.BeautifulSoup(page.content)
+            soup = bs4.BeautifulSoup(page.content, 'html.parser')
             sig = soup.find('input', {'name': 'sig'})
             if sig:
                 sig = sig.attrs['value']
