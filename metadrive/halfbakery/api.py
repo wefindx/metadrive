@@ -6,6 +6,11 @@ class Topic:
     def __init__(self, idea_url, session):
         self.session = session
         self.idea_url = idea_url
+        if '://www.halfbakery.com/lr/' not in self.idea_url:
+            self.idea_url = self.idea_url.replace(
+                '://www.halfbakery.com/',
+                '://www.halfbakery.com/lr/'
+            )
 
     def update(self):
         '''
