@@ -1,37 +1,28 @@
 # this includes the methods available to items of the source
 
+
 class Topic:
 
     def __init__(self, session):
+        self.type = '::mindey/topic#halfbakery'
+
+    def new_idea(self, title, summary, text):
         pass
 
-    def create(self):
+    def edit_idea(self, title, summary, text):
         pass
 
-    def update(self):
+    def delete_idea(self):
         pass
 
-    def delete(self):
+    def vote_idea(self, value):
         pass
 
-    def vote_plus(self):
+    def new_anno(self, text):
         pass
 
-    def vote_neutral(self):
+    def edit_anno(self, text):
         pass
 
-    def vote_minus(self):
-        pass
-
-class Comment:
-    def __init__(self, session):
-        pass
-
-    def create(self):
-        pass
-
-    def update(self):
-        pass
-
-    def delete(self):
+    def delete_anno(self):
         pass

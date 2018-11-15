@@ -84,9 +84,9 @@ def search(
         ))['entries']
 
         for result in results:
-            result['-'] = result['id']
             if session:
                 result['+'] = metawiki.name_to_url(session.metaname)
+            result['-'] = result['id']
             #
             # if get_detail=True, call the get()
             # asynchronously in parallel.
