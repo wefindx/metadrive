@@ -61,3 +61,36 @@ The package that introduces simple generic interfaces to the objects within web 
 **Note:** [https://github.com/Nikolay-Kha/PyCNC#readme](https://github.com/Nikolay-Kha/PyCNC#readme)
 
 - [https://mmi-direct.com/machines/search/?make_id=&page=brand](https://mmi-direct.com/machines/search/?make_id=&page=brand)
+
+## Development
+Add `~/.pypirc` file:
+
+```
+[distutils]
+index-servers =
+  pypi
+  internal
+
+[pypi]
+username:<your_pypi_username>
+password:<your_pypi_passwd>
+
+[internal]
+repository: https://pypi.wefindx.io
+username: <wefindx_pypi_username>
+password: <wefindx_pypi_passwd>
+```
+
+Then, use:
+`python setup.py sdist upload -r internal`
+
+Or also, use:
+`pip install -i https://pypi.wefindx.io metadrive`
+
+
+And then, `requirements.txt` may look like so:
+`
+metadir==0.0.1
+--extra-index-url https://<wefindx_pypi_passwd>@ypi.wefindx.io/<wefindx_pypi_username>/
+metadrive==0.4.0
+`
