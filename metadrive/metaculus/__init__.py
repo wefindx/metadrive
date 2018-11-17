@@ -1,5 +1,5 @@
 import apiage
-from utils import clean_em
+from .utils import clean_em
 
 
 def generate(query=None, limit=None):
