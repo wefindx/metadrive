@@ -24,6 +24,7 @@ The package that introduces simple generic interfaces to the objects within web 
 5. Ships ( marinetraffic.com )
 6. Deaths ( https://www.cdc.gov/nchs/data_access/vitalstatsonline.htm )
 7. Companies ( opencorporates.com, etc.)
+8. Oil Miners ( http://aleph.openoil.net/ )
 ￼
 ## Common services
 1. Gmail API ( get all your mails )
