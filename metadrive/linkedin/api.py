@@ -6,8 +6,10 @@ class Topic:
         self.driver.get(topic_url)
 
     def comment(self, text):
-        self.driver.find_element_by_class_name('mentions-texteditor__content').send_keys(text)
-        self.driver.find_element_by_class_name('feed-shared-comment-box__submit-button button-primary-small').click()
+        field = self.driver.find_element_by_class_name('mentions-texteditor__contenteditable')
+        field.send_keys(text)
+        button = self.driver.find_element_by_class_name('feed-shared-comment-box__submit-button button-primary-small')
+        button.click()
 
 class Contact:
     pass
