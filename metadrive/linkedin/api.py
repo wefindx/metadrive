@@ -8,7 +8,7 @@ class Topic:
     def comment(self, text):
         field = self.driver.find_element_by_class_name('mentions-texteditor__contenteditable')
         field.send_keys(text)
-        button = self.driver.find_element_by_class_name('feed-shared-comment-box__submit-button button-primary-small')
+        button = self.driver.find_element_by_class_name('feed-shared-comment-box__submit-button')
         button.click()
 
 class Contact:
