@@ -28,7 +28,9 @@ setup(
         'slumber',
         'feedparser',
         'python-dateutil',
-        'bs4'
+        'bs4',
+        'pyautogui',
+        'python3-xlib',
         # 'selendroid',
     ],
     extras_require = {
