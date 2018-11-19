@@ -3,15 +3,16 @@ import requests
 import feedparser
 import metawiki
 
-from metadrive import (
-    config,
-    utils
-)
+from metadrive import utils
 
 from dateutil.parser import parse as dateparse
 from datetime import timezone
 
 def login(username=None, password=None):
+    '''
+    Creates, serializes and saves session
+    ( utils.save_session_data )
+    '''
 
     session = requests.Session()
     session.metaname = utils.get_metaname('halfbakery')
@@ -25,17 +26,16 @@ def login(username=None, password=None):
                 session_data))
         return session
 
-    credential = utils.ensure_credentials(
-        namespace='halfbakery',
-        variables=['username', 'password'])
+    if not username and password:
+        credential = utils.get_or_ask_credentials(
+            namespace='halfbakery',
+            variables=['username', 'password'])
 
-    username = credential['username']
-    password = credential['password']
+        username = credential['username']
+        password = credential['password']
 
-    if session.get(
-            'http://www.halfbakery.com/lr/').ok:
-        signin = session.get(
-            'http://www.halfbakery.com/lr/',
+    if session.get('http://www.halfbakery.com/lr/').ok:
+        signin = session.get('http://www.halfbakery.com/lr/',
              params={
                  'username': username,
                  'password': password,

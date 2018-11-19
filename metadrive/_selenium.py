@@ -16,8 +16,8 @@ from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.keys import Keys
 
 def get_browser(
-        profile_name='default',
-        porfiles_dir='.chrome-profile',
+        profile_name='selenium',
+        porfiles_dir='.metadrive/sessions',
         driver_location='',
         headless=False,
         load_images=True,

@@ -69,12 +69,20 @@ def set_credential(namespace, credential):
 
     return
 
-def ensure_credentials(namespace, variables):
+def get_or_ask_credentials(namespace, variables, ask_refresh=False):
     credential = get_credential(namespace)
 
-    if not credential:
+    refresh = False
+
+    if ask_refresh:
+        if credential:
+            if input("Found credential, do you want to refresh? [N/y] ") in ['y', 'Y']:
+                refresh = True
+
+    if not credential or refresh:
         credential = {}
 
+        print('Type credentials for your {}:'.format(namespace.title()))
         for variable in variables:
             credential[variable] = input('{} = '.format(
                 variable
@@ -86,7 +94,7 @@ def ensure_credentials(namespace, variables):
                 credential)
             return credential
         else:
-            raise Exception('Some of the credentials were  not set.')
+            raise Exception('Some of the credentials were not set.')
     else:
         return credential
 
@@ -95,6 +103,8 @@ def load_session_data(namespace):
     if os.path.exists(session_path):
         session_data = json.load(open(session_path, 'r'))
         return session_data
+    else:
+        return {}
 
 
 def save_session_data(namespace, session_data):
