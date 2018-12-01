@@ -1,6 +1,7 @@
 import click
 import json
-from metaform import read, slug
+from metadrive import read
+from metaform import slug
 from metawiki import name_to_url
 import os
 from urllib.parse import urlparse
