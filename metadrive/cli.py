@@ -1,6 +1,6 @@
 import click
 import json
-from metadrive import read
+import metadrive
 from metaform import slug
 from metawiki import name_to_url
 import os
@@ -57,7 +57,7 @@ def harvest(resource, limit=None, output=None, db=None):
     if not resource.startswith('http'):
         resource = name_to_url(resource)
 
-    for item in read(resource, limit=limit):
+    for item in metadrive.read(resource, limit=limit):
         item['*'] = resource
 
         if db:
