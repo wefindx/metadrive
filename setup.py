@@ -8,7 +8,7 @@ with open('README.md', 'r') as f:
 
 setup(
     name='metadrive',
-    version='0.5.1',
+    version='0.5.3',
     description='Integration of controllers to drive tools.',
     long_description=long_description,
     long_description_content_type='text/markdown',
@@ -27,6 +27,7 @@ setup(
         'selenium',
         'slumber',
         'feedparser',
+        'click',
         'python-dateutil',
         'bs4',
         'pyautogui',
@@ -36,5 +37,10 @@ setup(
     extras_require = {
         'test': ['coverage', 'pytest', 'pytest-cov'],
     },
-    zip_safe=False
+    zip_safe=False,
+    entry_points = {
+        'console_scripts': [
+            'harvest=metadrive.cli:harvest',
+        ],
+    }
 )
