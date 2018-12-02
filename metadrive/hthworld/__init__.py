@@ -2,11 +2,15 @@ import apiage
 import random
 
 from metadrive import utils
+from metawiki import name_to_url
+from config import GITHUB_USER
+
+KEY_NAMESPACE = 'hthworld'
 
 def login(test_key=None, prod_key=None):
 
     credential = utils.get_or_ask_credentials(
-        namespace='hthworld',
+        namespace=KEY_NAMESPACE,
         variables=[
             'test_key',
             'prod_key'])
@@ -103,5 +107,10 @@ from metadrive.hthworld import data
 
 def doctors(limit=None):
     for point in data.cities:
-        for item in generate(point, 'Doctors', test=False):
+        for i, item in enumerate(generate(point, 'Doctors', test=False)):
+            item['-'] += '#{}'.format(i)
+            item['+'] = name_to_url(
+                '-:{github}/+/{namespace}.md#main'.format(
+                    github=GITHUB_USER,
+                    namespace=KEY_NAMESPACE))
             yield item

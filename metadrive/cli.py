@@ -69,7 +69,9 @@ def harvest(resource, limit=None, output=None, db=None):
                     {'-': ID}, {'$set': item}, upsert=True)
 
         else:
-            ID = slug(item['-'])[:FILENAME_LENGTH_LIMIT-5]+'.json'
+            s = slug(item['-'])
+            c = item['-'].rsplit('#')[-1][:7]
+            ID = s[:FILENAME_LENGTH_LIMIT-12]+'#{}'.format(c)+'.json'
             # Writing to file:
 
             if output:
