@@ -1,9 +1,22 @@
 import apiage
 import random
 
+from metadrive import utils
+
+def login(test_key=None, prod_key=None):
+
+    credential = utils.get_or_ask_credentials(
+        namespace='hthworld',
+        variables=[
+            'test_key',
+            'prod_key'])
+
+    return credential
+
+
 def generate(
         point,
-        kind='doctors',
+        kind=None,
         d=80,
         test=True,
         pause=lambda: random.randint(1,2),
@@ -16,8 +29,18 @@ def generate(
     '''
     point: dict that has keys 'latitude', 'longitude' (e.g., -34.61315, -58.37723).
     gen: if gen, then returns generator, else, returns responses combined
-    kind: can be ['doctors', 'pharmacies', 'hospitals']
+    kind: can be [
+        'Doctors',
+        'Hospitals',
+        'TravelClinics'
+        'Pharmacies',
+    ]
     '''
+
+    session = login()
+    servers['test']['key'] = session['test_key']
+    servers['prod']['key'] = session['prod_key']
+
     url_template = '{url}/{kind}/search/geolocation/?latitude={latitude}&longitude={longitude}&distance={distance}&distance_type=k&page={page}&page_size=100&includeLaungages=true&user_key={key}'
 
     if test:
@@ -75,3 +98,10 @@ def generate(
     )
 
     return data
+
+from metadrive.hthworld import data
+
+def doctors():
+    for point in data.cities:
+        for item in generate(point, 'Doctors', test=False):
+            yield item
