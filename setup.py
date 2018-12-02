@@ -8,7 +8,7 @@ with open('README.md', 'r') as f:
 
 setup(
     name='metadrive',
-    version='0.5.7',
+    version='0.5.8',
     description='Integration of controllers to drive tools.',
     long_description=long_description,
     long_description_content_type='text/markdown',
@@ -32,6 +32,7 @@ setup(
         'bs4',
         'pyautogui',
         'python3-xlib',
+        'pysocks',
         # 'selendroid',
     ],
     extras_require = {

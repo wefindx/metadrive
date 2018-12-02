@@ -16,7 +16,7 @@ def login(test_key=None, prod_key=None):
 
 def generate(
         point,
-        kind=None,
+        kind,
         d=80,
         test=True,
         pause=lambda: random.randint(1,2),
@@ -54,7 +54,7 @@ def generate(
         longitude=point['longitude'],
         distance=d,
         key=server['key'],
-        kind=kind,
+        kind=kind.lower(),
         page=1
     )
 
@@ -90,7 +90,7 @@ def generate(
         first_url,
         next_key=next_url,
         count_key=count_results,
-        results_key=kind.title(),
+        results_key=kind,
         proxies=proxies,
         pause=pause,
         remove_keys_in_url=['user_key'],
@@ -101,7 +101,7 @@ def generate(
 
 from metadrive.hthworld import data
 
-def doctors():
+def doctors(limit=None):
     for point in data.cities:
         for item in generate(point, 'Doctors', test=False):
             yield item
