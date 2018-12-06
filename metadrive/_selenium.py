@@ -35,6 +35,9 @@ def get_browser(
     OPTIONS.add_argument("--disable-infobars")
     OPTIONS.add_argument('--no-sandbox')
     OPTIONS.add_argument('--disable-dev-shm-usage')
+#    OPTIONS.add_argument('--ignore-ssl-errors=yes')
+#    OPTIONS.add_argument('--ssl-protocol=any')
+#    OPTIONS.add_argument('--web-security=no')
 
 
     PREFERENCES = {}

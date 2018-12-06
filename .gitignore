@@ -2,4 +2,5 @@
 .pytest_cache/
 metadrive.egg-info/
 dist/
+data/
 *__pycache__*

@@ -114,3 +114,7 @@ def doctors(limit=None):
                     github=GITHUB_USER,
                     namespace=KEY_NAMESPACE))
             yield item
+
+def terms(limit=None):
+    pass
+

@@ -57,7 +57,7 @@ def harvest(resource, limit=None, output=None, db=None):
     if not resource.startswith('http'):
         resource = name_to_url(resource)
 
-    for item in metadrive.read(resource, limit=limit):
+    for n, item in enumerate(metadrive.read(resource, limit=limit)):
         item['*'] = resource
 
         if db:
@@ -70,8 +70,8 @@ def harvest(resource, limit=None, output=None, db=None):
 
         else:
             s = slug(item['-'])
-            c = item['-'].rsplit('#')[-1][:7]
-            ID = s[:FILENAME_LENGTH_LIMIT-12]+'#{}'.format(c)+'.json'
+            # c = slug(item['-'].rsplit('#')[0][-7:])
+            ID = s[:FILENAME_LENGTH_LIMIT-12]+'#{}'.format(n)+'.json'
             # Writing to file:
 
             if output:
