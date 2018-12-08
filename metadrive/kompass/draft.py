@@ -1,9 +1,10 @@
-[# Go over each country in https://www.kompass.com/selectcountry/
-from crawls import db
+# Go over each country in https://www.kompass.com/selectcountry/
 from boltons.iterutils import remap
 import copy
 import requests
 import bs4
+import ssl
+ssl._create_default_https_context = ssl._create_unverified_context
 
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
@@ -158,46 +159,41 @@ def get_all_subcategories(category_url):
     return get_childless(base)
 
 
-subcats = get_all_subcategories('https://gb.kompass.com/s/transport-logistics/10/')
+# subcats = get_all_subcategories('https://gb.kompass.com/s/transport-logistics/10/')
 
 #sum([cat['total'] for cat in subcats])
-import ssl
-ssl._create_default_https_context = ssl._create_unverified_context
 
 #tree = {}
 # json.load(open('/home/mindey/Projects/Research/kompass.com/tree.json'))
 
-for domain in get_domains()[:-1]:
-    if domain['country'] in tree.keys():
-        continue
-    if domain['country']:
-        continue
-    print(domain['url'], domain['country'])
-
-    tree.update({
-        domain['country']: {'domain': domain['url'],
-                            'categories': get_categories(domain['url'])}})
-
-    for i, category in enumerate(tree[domain['country']]['categories']):
-        tree[domain['country']]['categories'][i]['subcategories'] = get_all_subcategories(category['url'])
-
-
-
-records = []
-for i, category in enumerate(categories):
-    data = paginate(category_url)
-    records.extend(data)
+# for domain in get_domains()[:-1]:
+#     if domain['country'] in tree.keys():
+#         continue
+#     if domain['country']:
+#         continue
+#     print(domain['url'], domain['country'])
+#
+#     tree.update({
+#         domain['country']: {'domain': domain['url'],
+#                             'categories': get_categories(domain['url'])}})
+#
+#     for i, category in enumerate(tree[domain['country']]['categories']):
+#         tree[domain['country']]['categories'][i]['subcategories'] = get_all_subcategories(category['url'])
 
 
+#
+# records = []
+# for i, category in enumerate(categories):
+#     data = paginate(category_url)
+#     records.extend(data)
 
-tot = 0
-for t in tree:
-    for cat in tree[t]['categories']:
-        for sub in cat['subcategories']:
-            tot += sub['total']
 
+#
+# tot = 0
+# for t in tree:
+#     for cat in tree[t]['categories']:
+#         for sub in cat['subcategories']:
+#             tot += sub['total']
 
 
 # [Later] Visit each detail page
-
-     # Extract content, and parse it, and seve to db.]
