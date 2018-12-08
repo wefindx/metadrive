@@ -9,6 +9,11 @@ from urllib.parse import urlparse
 # Cause ecryptfs supports max 143 chars.
 FILENAME_LENGTH_LIMIT = 143
 
+@click.command()
+@click.help_option('-h')
+def server():
+    for i in range(100):
+        print(i)
 
 @click.command()
 @click.help_option('-h')
@@ -80,3 +85,4 @@ def harvest(resource, limit=None, output=None, db=None):
             with open(ID, 'w') as f:
                 print('FILE:INFO:', item['-'])
                 f.write(json.dumps(item))
+
