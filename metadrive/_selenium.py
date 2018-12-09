@@ -14,11 +14,7 @@ from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.action_chains import ActionChains
 
-class Chrome(webdriver.Chrome):
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.tabs = {'default': self.current_window_handle}
+class TabsMixin:
 
     def open_tab(self, name, url=None):
         if name not in self.tabs:
@@ -29,30 +25,20 @@ class Chrome(webdriver.Chrome):
                 raise Exception('Tab not found, and url not provided.')
         else:
             self.switch_to.window(self.tabs[name])
-
     def current_tab(self):
         return next(filter(lambda x: x[1] == self.current_window_handle, self.tabs.items()))
 
-
-class Remote(webdriver.Remote):
+class Chrome(webdriver.Chrome, TabsMixin):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.tabs = {'default': self.current_window_handle}
 
-    def open_tab(self, name, url=None):
-        if name not in self.tabs:
-            if url is not None:
-                self.execute_script("window.open('{}', '_blank');".format(url))
-                self.tabs[name] = self.window_handles[-1]
-            else:
-                raise Exception('Tab not found, and url not provided.')
-        else:
-            self.switch_to.window(self.tabs[name])
+class Remote(webdriver.Remote, TabsMixin):
 
-    def current_tab(self):
-        return next(filter(lambda x: x[1] == self.current_window_handle, self.tabs.items()))
-
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.tabs = {'default': self.current_window_handle}
 
 def get_driver(
         driver_location='',

@@ -1,3 +1,6 @@
+__site_url__ = 'https://www.linkedin.com'
+__base_url__ = 'https://api.linkedin.com'
+
 import time
 import bs4
 from metadrive import utils

@@ -1,3 +1,6 @@
+__site_url__ = 'https://www.hthworldwide.com'
+__base_url__ = 'https://ghsapi.hthworldwide.com'
+
 import apiage
 import random
 

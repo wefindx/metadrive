@@ -1,3 +1,6 @@
+__site_url__ = 'https://www.metaculus.com'
+__base_url__ = 'https://www.metaculus.com/api2'
+
 import apiage
 from .utils import clean_em
 

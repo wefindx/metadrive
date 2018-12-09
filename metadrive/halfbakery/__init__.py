@@ -1,3 +1,6 @@
+__site_url__ = 'http://www.halfbakery.com'
+__base_url__ = 'http://www.halfbakery.com'
+
 import os
 import requests
 import feedparser
