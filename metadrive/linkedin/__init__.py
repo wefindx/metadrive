@@ -4,7 +4,7 @@ from metadrive import utils
 import datetime
 import metawiki
 
-from _selenium import get_browser
+from _selenium import get_driver
 
 def login(username=None, password=None, profile=None, recreate_profile=False):
 
@@ -17,7 +17,7 @@ def login(username=None, password=None, profile=None, recreate_profile=False):
     #     # return session
     #     pass
 
-    driver = get_browser(recreate_profile=recreate_profile)
+    driver = get_driver(recreate_profile=recreate_profile)
     driver.get('https://www.linkedin.com/')
     soup = bs4.BeautifulSoup(driver.page_source, 'html.parser')
 

@@ -1,7 +1,7 @@
 '''
 Provides a function to get a new browser with session in specific directory.
 
-get_browser(profile_name='default', profiles_dir='.chrome-profile', local=DEVELOPMENT)
+get_driver(profile_name='default', profiles_dir='.chrome-profile', local=DEVELOPMENT)
 
 # To create selenium driver may use something like:
 docker run -d -p 4444:4444 selenium/standalone-chrome:3.7.1-beryllium
@@ -14,10 +14,50 @@ from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.action_chains import ActionChains
 
-def get_browser(
+class Chrome(webdriver.Chrome):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.tabs = {'default': self.current_window_handle}
+
+    def open_tab(self, name, url=None):
+        if name not in self.tabs:
+            if url is not None:
+                self.execute_script("window.open('{}', '_blank');".format(url))
+                self.tabs[name] = self.window_handles[-1]
+            else:
+                raise Exception('Tab not found, and url not provided.')
+        else:
+            self.switch_to.window(self.tabs[name])
+
+    def current_tab(self):
+        return next(filter(lambda x: x[1] == self.current_window_handle, self.tabs.items()))
+
+
+class Remote(webdriver.Remote):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.tabs = {'default': self.current_window_handle}
+
+    def open_tab(self, name, url=None):
+        if name not in self.tabs:
+            if url is not None:
+                self.execute_script("window.open('{}', '_blank');".format(url))
+                self.tabs[name] = self.window_handles[-1]
+            else:
+                raise Exception('Tab not found, and url not provided.')
+        else:
+            self.switch_to.window(self.tabs[name])
+
+    def current_tab(self):
+        return next(filter(lambda x: x[1] == self.current_window_handle, self.tabs.items()))
+
+
+def get_driver(
+        driver_location='',
         profile_name='selenium',
         porfiles_dir='.metadrive/sessions',
-        driver_location='',
         headless=False,
         load_images=True,
         load_adblocker=True,
@@ -102,14 +142,14 @@ def get_browser(
 
     if local:
         if CHROME_DRIVER_LOCATION:
-            browser = webdriver.Chrome(
+            browser = Chrome(
                 CHROME_DRIVER_LOCATION,
                 chrome_options=OPTIONS)
         else:
-            browser = webdriver.Chrome(
+            browser = Chrome(
                 chrome_options=OPTIONS)
     else:
-        browser = webdriver.Remote(
+        browser = Remote(
             SELENIUM_HUB_URL,
             dict(
                 webdriver.DesiredCapabilities.CHROME,
