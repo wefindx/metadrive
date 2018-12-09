@@ -8,7 +8,7 @@ with open('README.md', 'r') as f:
 
 setup(
     name='metadrive',
-    version='0.6.0',
+    version='0.6.1',
     description='Integration of controllers to drive tools.',
     long_description=long_description,
     long_description_content_type='text/markdown',
@@ -33,6 +33,9 @@ setup(
         'pyautogui',
         'python3-xlib',
         'pysocks',
+        'starlette',
+        'uvicorn',
+        'graphene',
         # 'selendroid',
     ],
     extras_require = {
@@ -42,7 +45,7 @@ setup(
     entry_points = {
         'console_scripts': [
             'harvest=metadrive.cli:harvest',
-            'server=metadrive.cli:server'
+            'provide=metadrive.cli:provide'
         ],
     }
 )

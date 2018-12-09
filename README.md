@@ -1,10 +1,16 @@
 # Metadrive
 
+The package that introduces simple generic interfaces to the objects within web APIs, allowing for generation (searching), and management of items on the web systems.
+
 The drivers shall define clients for [metaform](https://pypi.org/project/metaform/).
 
 `$ harvest <resource>`
+The first command allows to crawl custom source.
 
-The package that introduces simple generic interfaces to the objects within web APIs, allowing for generation (searching), and management of items on the web systems.
+`$ provide`
+The second command serves the API to the APIs and data.
+
+Use `pip install --editable .` to preview changes to the commands.
 
 # TODO
 

@@ -10,10 +10,10 @@ from urllib.parse import urlparse
 FILENAME_LENGTH_LIMIT = 143
 
 @click.command()
-@click.help_option('-h')
-def server():
-    for i in range(100):
-        print(i)
+def provide():
+    from metadrive import api
+    api.uvicorn.run(
+        api.app, host='0.0.0.0', port=7777)
 
 @click.command()
 @click.help_option('-h')
