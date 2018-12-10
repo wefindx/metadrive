@@ -76,7 +76,9 @@ To understand the links to `namespace` specified in the objects in the `api.py`,
 
 This is useful for records, that also have authentication data url in `+` field, that makes it possible to call methods on data records, no matter where the data is. The authentication data is stored on-line, on `+` folder on `-` repository. For example, `https://github.com/mindey/-/tree/master/+` (or, for example `metawiki.name_to_url('-:mindey/+/test.md')`), encrypted with GPG (e.g., `pip install gpgrecord`, and `gpgrecord.encrypt_data({'key': 'value'}, ['fingerprint1', 'fingerprint2',...])`.)
 
-The configuration resides on `config.py`.
+The sessions are stored locally in `sessions` folder, under `~/.metadrive` dot-folder, where the repos `-` is checked out to the `~/.metadrive/-` of the user specified via automation in the `config.py`, that generates `~/.metadrive/config` file, that specifies the default `GITHUB` username, and `GPG` key of the local user.
+
+The schema and authentication/permissions data could be stored anywhere by providing arbitrary URLs, where we store the data, but then, the automation here would have to reviewed a little.
 
 # TODO
 
