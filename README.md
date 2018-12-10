@@ -60,7 +60,7 @@ class ThingN:
     def method2():
        ...
 
-For if Mindey decided to crawl Wikipedia topics in his own way, it may be something like:
+For example, if Mindey decided to crawl Wikipedia topics in his own way, it may be something like:
 
 class Topic:
     namespace = '::mindey/topic#wikipedia'
