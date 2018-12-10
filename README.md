@@ -12,6 +12,70 @@ The second command serves the API to the APIs and data.
 
 Use `pip install --editable .` to preview changes to the commands.
 
+# Structure
+
+Metadrive contains:
+
+```
+metadrive/
+    service1
+        __init__.py
+        api.py
+    service2
+        __init__.py
+        api.py
+    ...
+    serviceN
+        __init__.py
+        api.py
+```
+
+## The `__init__` files provide:
+
+Variables
+`__site_url__` - a variable that specifies the site url, that provides site's UI (user interface).  The reason why we need it, is because, e.g., if we open a site via `"data browser"` relying metadrive, we can just enter the familiar url of the service.
+`__base_url__`, - a variable that specifies the site's API (application programming interface), if available.
+
+Functions
+`login()` - a function that provides a way to sign-in to resource.
+`search()` - a function that provides doing arbitrary queries to retrieve limited sections of data.
+`generate()` - a function that implements one-off non-stop continual crawling of the whole resource.
+
+## The `api.py` files provides:
+
+The internal structure of the objects within the service. For example:
+
+```
+class Topic:
+    namespace = '::someone/topic#service_name'
+    def method1():
+       ...
+    def method2():
+       ...
+
+class Comment:
+    namespace = '::someone/comment#service_name'
+    def method1():
+       ...
+    def method2():
+       ...
+
+class Transaction:
+    namespace = '::someone/transaction#service_name'
+    def method1():
+       ...
+    def method2():
+       ...
+```
+
+While the `search()` and `generate()` produces data records that follow metaformat ([MFT-1](https://book.mindey.com/metaformat/0002-data-object-format/0002-data-object-format.html)) specifications.
+
+That means, records have `*` field, that specifies the url of schema. The metawiki (`pip install metawiki`) provides mapping [map.py](https://github.com/mindey/metawiki/blob/master/metawiki/map.py) for `namespaces` for MFT-1. For example: `metawiki.name_to_url('::someone/transaction#service_name')` results in `https://github.com/someone/-/wiki/transaction#service_name'. (Everyone can create concept definitions under `-` repo wiki of their Github user, or just provide namespace URL.
+
+This is useful for records, that also have authentication data url in `+` field, that makes it possible to call methods on data records, no matter where the data is. The authentication data is stored on-line, on `+` folder on `-` repository. For example, `https://github.com/mindey/-/tree/master/+` (or, for example `metawiki.name_to_url('-:mindey/+/test.md')`, under metawiki url mappers, the `-:` provides links to folders, while `::` provides links to wiki of the GitHub repo), encrypted with GPG (e.g., `pip install gpgrecord`, and `gpgrecord.encrypt_data({'key': 'value'}, ['fingerprint1', 'fingerprint2',...])`.)
+
+The configuration resides on `config.py`.
+
 # TODO
 
 # Social information services
