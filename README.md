@@ -46,31 +46,35 @@ Functions
 The internal structure of the objects within the service. For example:
 
 ```
+class Thing1:
+    namespace = '::someone/thing#1'
+    def method1():
+       ...
+    def method2():
+       ...
+
+class ThingN:
+    namespace = 'https://github.com/someone/-/wiki/thing#N'
+    def method1():
+       ...
+    def method2():
+       ...
+
+For if Mindey decided to crawl Wikipedia topics in his own way, it may be something like:
+
 class Topic:
-    namespace = '::someone/topic#service_name'
-    def method1():
-       ...
-    def method2():
-       ...
-
-class Comment:
-    namespace = '::someone/comment#service_name'
-    def method1():
-       ...
-    def method2():
-       ...
-
-class Transaction:
-    namespace = '::someone/transaction#service_name'
+    namespace = '::mindey/topic#wikipedia'
     def method1():
        ...
     def method2():
        ...
 ```
 
-While the `search()` and `generate()` produces data records that follow metaformat ([MFT-1](https://book.mindey.com/metaformat/0002-data-object-format/0002-data-object-format.html)) specifications.
+The `search()` and `generate()` are generators, that must produce data records that follow metaformat ([MFT-1](https://book.mindey.com/metaformat/0002-data-object-format/0002-data-object-format.html)) specifications.
 
-That means, records have `*` field, that specifies the url of schema. The metawiki (`pip install metawiki`) provides mapping [map.py](https://github.com/mindey/metawiki/blob/master/metawiki/map.py) for `namespaces` for MFT-1. Under metawiki namespaces, the `-:` provides links to folders, while `::` provides links to wiki of a GitHub repo. For example, if the GitHub username is `someone`, then `metawiki.name_to_url('::someone/transaction#service_name')` results in `https://github.com/someone/-/wiki/transaction#service_name'`. (Everyone can create concept definitions under `-` repo wiki of their Github user, or just provide namespace URL.
+That means, records **must** have `*` field, that specifies the url of schema, and **may** have `-`, `+`, `^` fields, that specify location, authentication and permissions, and author intent urls.
+
+To understand the links to `namespace` specified in the objects in the `api.py`, we have shorthands the metawiki (`pip install metawiki`) provides mapping [map.py](https://github.com/mindey/metawiki/blob/master/metawiki/map.py) for `namespaces` for MFT-1. Under metawiki namespaces, the `-:` provides links to folders, while `::` provides links to wiki of a GitHub repo. For example, if the GitHub username is `someone`, then `metawiki.name_to_url('::someone/transaction#service_name')` results in `https://github.com/someone/-/wiki/transaction#service_name'`. (Everyone can create concept definitions under `-` repo wiki of their Github user, or just provide namespace URL.
 
 This is useful for records, that also have authentication data url in `+` field, that makes it possible to call methods on data records, no matter where the data is. The authentication data is stored on-line, on `+` folder on `-` repository. For example, `https://github.com/mindey/-/tree/master/+` (or, for example `metawiki.name_to_url('-:mindey/+/test.md')`), encrypted with GPG (e.g., `pip install gpgrecord`, and `gpgrecord.encrypt_data({'key': 'value'}, ['fingerprint1', 'fingerprint2',...])`.)
 
