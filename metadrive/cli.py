@@ -1,7 +1,7 @@
 import click
 import json
 import metadrive
-from metaform import slug
+from typology.utils import slug
 from metawiki import name_to_url
 import os
 from urllib.parse import urlparse

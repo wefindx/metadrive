@@ -13,7 +13,7 @@ if not os.path.exists(config.DEFAULT_LOCATION):
     os.makedirs(config.DEFAULT_LOCATION)
 
 
-from metaform import get_schema
+from typology.utils import get_schema
 
 
 def read(term, limit=None):

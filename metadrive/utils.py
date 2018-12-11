@@ -23,7 +23,7 @@ def get_credential(namespace):
     >>> get_credential('gmail')
     '''
 
-    from metaform import get_schema
+    from typology.utils import get_schema
 
     try:
         data = get_schema(get_metaname(namespace))
