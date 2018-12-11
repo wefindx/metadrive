@@ -28,6 +28,10 @@ metadrive/
     serviceN
         __init__.py
         api.py
+    _tool1.py
+    _tool2.py
+    ...
+    _toolN.py - pre-configured drivers for metatools (protocol-level interfaces to tools)
 ```
 
 ## The `__init__` files provide:
