@@ -17,9 +17,12 @@ def get_soup(url, session=None, use='requests'):
     elif use == 'selenium':
         if session is None:
             session = get_driver(headless=True)
-        session.get(url)
-        data = session.page_source
-        session.quit()
+            session.get(url)
+            data = session.page_source
+            session.quit()
+        else:
+            session.get(url)
+            data = session.page_source
 
     soup = bs4.BeautifulSoup(data, 'html.parser')
     return soup
