@@ -26,3 +26,18 @@ def get_soup(url, session=None, use='requests'):
 
     soup = bs4.BeautifulSoup(data, 'html.parser')
     return soup
+
+def dictify(ul):
+    '''
+    Source:
+    https://stackoverflow.com/questions/17850121/parsing-nested-html-list-with-beautifulsoup
+    '''
+    result = {}
+    for li in ul.find_all("li", recursive=False):
+        key = next(li.stripped_strings)
+        ul = li.find("ul")
+        if ul:
+            result[key] = dictify(ul)
+        else:
+            result[key] = None
+    return result
