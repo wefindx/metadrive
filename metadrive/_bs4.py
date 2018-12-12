@@ -19,6 +19,7 @@ def get_soup(url, session=None, use='requests'):
             session = get_driver(headless=True)
         session.get(url)
         data = session.page_source
+        session.quit()
 
     soup = bs4.BeautifulSoup(data, 'html.parser')
     return soup
