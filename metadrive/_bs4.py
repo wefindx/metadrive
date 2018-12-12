@@ -27,7 +27,7 @@ def get_soup(url, session=None, use='requests'):
     soup = bs4.BeautifulSoup(data, 'html.parser')
     return soup
 
-def dictify(ul):
+def dictify_ul(ul):
     '''
     Source:
     https://stackoverflow.com/questions/17850121/parsing-nested-html-list-with-beautifulsoup
