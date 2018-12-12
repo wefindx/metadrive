@@ -37,7 +37,7 @@ def dictify_ul(ul):
         key = next(li.stripped_strings)
         ul = li.find("ul")
         if ul:
-            result[key] = dictify(ul)
+            result[key] = dictify_ul(ul)
         else:
             result[key] = None
     return result
