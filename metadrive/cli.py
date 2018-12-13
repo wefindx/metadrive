@@ -7,11 +7,28 @@ import os
 from urllib.parse import urlparse
 
 @click.command()
+def console():
+    from metadrive import api
+
+    def serve():
+        api.uvicorn.run(
+            api.app, host='0.0.0.0', port=7001, log_level='error')
+
+    from multiprocessing import Process
+    server = Process( target=serve )
+    server.daemon = True
+    server.start()
+
+    from metadrive import console
+    console.repl()
+    server.terminate()
+
+@click.command()
 def provide():
     # https://www.starlette.io/applications/
     from metadrive import api
     api.uvicorn.run(
-        api.app, host='0.0.0.0', port=7000)
+        api.app, host='0.0.0.0', port=7000, log_level='info')
 
 @click.command()
 def consume():

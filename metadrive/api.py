@@ -29,7 +29,8 @@ async def websocket_endpoint(websocket):
 
 @app.on_event('startup')
 def startup():
-    print('Ready to go')
+    pass
+    # print('ready')
 
 class Query(graphene.ObjectType):
     hello = graphene.String(
@@ -44,4 +45,4 @@ app.add_route('/gq', GraphQLApp(
         query=Query)))
 
 if __name__ == '__main__':
-    uvicorn.run(app, host='0.0.0.0', port=7000)
+    uvicorn.run(app, host='0.0.0.0', port=8000)

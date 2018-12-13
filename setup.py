@@ -45,7 +45,8 @@ setup(
         'console_scripts': [
             'harvest=metadrive.cli:harvest',
             'provide=metadrive.cli:provide',
-            'consume=metadrive.cli:consume'
+            'consume=metadrive.cli:consume',
+            'console=metadrive.cli:console'
         ],
     }
 )
