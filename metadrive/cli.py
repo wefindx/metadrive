@@ -6,14 +6,27 @@ from metawiki import name_to_url
 import os
 from urllib.parse import urlparse
 
-# Cause ecryptfs supports max 143 chars.
-FILENAME_LENGTH_LIMIT = 143
-
 @click.command()
 def provide():
+    # https://www.starlette.io/applications/
     from metadrive import api
     api.uvicorn.run(
-        api.app, host='0.0.0.0', port=7777)
+        api.app, host='0.0.0.0', port=7000)
+
+@click.command()
+def consume():
+    # https://www.starlette.io/testclient/
+    from metadrive import api
+    from starlette.testclient import TestClient
+
+    client = TestClient(api.app)
+    with client.websocket_connect('/ws') as websocket:
+        data = websocket.receive_text()
+
+    print(data)
+
+# Cause ecryptfs supports max 143 chars.
+FILENAME_LENGTH_LIMIT = 143
 
 @click.command()
 @click.help_option('-h')

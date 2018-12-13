@@ -8,7 +8,7 @@ with open('README.md', 'r') as f:
 
 setup(
     name='metadrive',
-    version='0.7.5',
+    version='0.7.6',
     description='Integration of controllers to drive tools.',
     long_description=long_description,
     long_description_content_type='text/markdown',
@@ -44,7 +44,8 @@ setup(
     entry_points = {
         'console_scripts': [
             'harvest=metadrive.cli:harvest',
-            'provide=metadrive.cli:provide'
+            'provide=metadrive.cli:provide',
+            'consume=metadrive.cli:consume'
         ],
     }
 )
