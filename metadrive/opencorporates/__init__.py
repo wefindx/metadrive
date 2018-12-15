@@ -3,3 +3,13 @@ __base_url__ = 'https://api.opencorporates.com'
 
 # Documentation:
 # https://api.opencorporates.com/documentation/API-Reference
+
+
+def login():
+    pass
+
+def search():
+    pass
+
+def generate():
+    pass

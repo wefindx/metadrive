@@ -4,3 +4,4 @@ metadrive.egg-info/
 dist/
 data/
 *__pycache__*
+metadrive/.vscode/

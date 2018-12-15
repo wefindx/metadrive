@@ -9,10 +9,16 @@ from urllib.parse import urlparse
 @click.command()
 def console():
     from metadrive import api
+    host = '0.0.0.0'
+    port = 7001
 
     def serve():
         api.uvicorn.run(
-            api.app, host='0.0.0.0', port=7001, log_level='error')
+            api.app,
+            host=host,
+            port=port,
+            log_level='error'
+        )
 
     from multiprocessing import Process
     server = Process( target=serve )
@@ -20,8 +26,13 @@ def console():
     server.start()
 
     from metadrive import console
-    console.repl()
+    console.repl(host=host, port=port)
     server.terminate()
+
+@click.command()
+def browser():
+    import curses
+    pass
 
 @click.command()
 def provide():
