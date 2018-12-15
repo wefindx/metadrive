@@ -32,7 +32,7 @@ def repl(host=None, port=None):
             return []
 
     IPython.embed(
-        banner1="[{}:{}] Welcome to MetaDrive - A Web Driver.\n".format(host, port),
+        banner1="[http://{}:{}] Welcome to MetaDrive - A Web Driver.\n".format(host, port),
         banner2=":get('https://example.com')   -- retrieves website\n:list()                       -- lists available websites\n:update()                     -- refreshes the list of available websites\n",
         exit_msg="Bye~",
         config = Config({
