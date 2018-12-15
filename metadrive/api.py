@@ -30,13 +30,16 @@ class Address(HTTPEndpoint):
     async def post(self, request):
         return JSONResponse({"Hello": "POST"})
 
-@app.route('/thing/{this}')
-class Thing(HTTPEndpoint):
-    async def get(self, request):
-        data = request.path_params['this']
-        return PlainTextResponse(data)
+@app.route('/websites')
+async def reindex(request):
+    '''
+        Returns a list of all sites available via
+        __site_url__, prepared by reindex()
+    '''
 
-@app.route('/update')
+    return JSONResponse({'data': 'list-of-websites-availabe-via-__site_url__'})
+
+@app.route('/reindex')
 async def reindex(request):
     ''' Goes through all wikis, and all concept pages,
         and through all latest libraries, to see, what
@@ -51,7 +54,13 @@ async def reindex(request):
     # for url in wiki_home_urls:
     #     url
 
-    return JSONResponse({'hello': 'world'})
+    return JSONResponse({'data': 'note about indexing job started, and job id, e.g., celery job id'})
+
+@app.route('/thing/{this}')
+class Thing(HTTPEndpoint):
+    async def get(self, request):
+        data = request.path_params['this']
+        return PlainTextResponse(data)
 
 @app.websocket_route('/ws')
 async def websocket_endpoint(websocket):

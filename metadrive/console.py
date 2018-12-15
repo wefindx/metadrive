@@ -13,18 +13,18 @@ def repl(host=None, port=None):
         if response.ok:
             return response.json()
 
-    def list(url):
+    def list():
         response = requests.get(
-            'http://{host}:{port}/sites'.format(host=host, port=port)
+            'http://{host}:{port}/websites'.format(host=host, port=port)
         )
         if response.ok:
             return response.json()
         else:
             return []
 
-    def update(url):
+    def update():
         response = requests.get(
-            'http://{host}:{port}/index'.format(host=host, port=port)
+            'http://{host}:{port}/reindex'.format(host=host, port=port)
         )
         if response.ok:
             return response.json()
