@@ -67,12 +67,10 @@ def consume(ui=None):
 
     if ui is not None:
         # if ui == 'react'
-        print('using reactjs')
         from metadrive.ui import ReactJS
         ReactJS.start()
     else:
         # using ncurses
-        print('using ncurses')
         from metadrive.ui import NCurses
         NCurses().run()
 
