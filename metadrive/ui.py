@@ -12,7 +12,7 @@ class NCurses(npyscreen.NPSApp):
         t  = F.add(npyscreen.TitleText, name = "URL:",)
         ml = F.add(npyscreen.MultiLineEdit,
                value = """data output goes here...\n""",
-               max_height=15, rely=9)
+               max_height=45, rely=9)
 
         # This lets the user interact with the Form.
         F.edit()

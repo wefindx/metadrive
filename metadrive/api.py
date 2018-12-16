@@ -5,6 +5,8 @@ from starlette.responses import JSONResponse
 from starlette.websockets import WebSocket
 from starlette.graphql import GraphQLApp
 from starlette.endpoints import HTTPEndpoint
+from starlette.responses import HTMLResponse
+from starlette.staticfiles import StaticFiles
 
 import uvicorn
 import graphene
@@ -13,12 +15,14 @@ from urllib import parse
 
 # https://github.com/encode/starlette-example/blob/master/app.py
 
-app = Starlette()
+app = Starlette(template_directory='metadrive/_api_templates')
+app.mount('/static', StaticFiles(directory='metadrive/_api_static'), name='static')
 app.debug = True
 
 @app.route('/')
 def homepage(request):
-    return PlainTextResponse('Hello, world!')
+    return PlainTextResponse('Welcome to MetaDrive!')
+
 
 @app.route("/address")
 class Address(HTTPEndpoint):
@@ -51,9 +55,13 @@ async def reindex(request):
         'https://github.com/DimensionFoundation/-/wiki',
     ]
 
+    # sites_available = []
     # for url in wiki_home_urls:
-    #     url
-
+    #     for page in get_all_pages(url):
+    #         for schema in get_schemas(page):
+    #             pkg_fun = schema.get('_:emitter')
+    #             for file in get_pypi_package(pkg_fun):
+    #                 sites_available.append({'site': get_site_url(file), 'emitter': pkg_fun})
     return JSONResponse({'data': 'note about indexing job started, and job id, e.g., celery job id'})
 
 @app.route('/thing/{this}')
@@ -84,6 +92,30 @@ class Query(graphene.ObjectType):
 app.add_route('/gq', GraphQLApp(
     schema=graphene.Schema(
         query=Query)))
+
+@app.exception_handler(404)
+async def not_found(request, exc):
+    """
+    Return an HTTP 404 page.
+    """
+    template = app.get_template('404.html')
+    content = template.render(request=request)
+    return HTMLResponse(content, status_code=404)
+
+@app.exception_handler(500)
+async def server_error(request, exc):
+    """
+    Return an HTTP 500 page.
+    """
+    template = app.get_template('500.html')
+    content = template.render(request=request)
+    return HTMLResponse(content, status_code=500)
+
+@app.route('/index')
+async def index(request):
+    template = app.get_template('index.html')
+    content = template.render(request=request)
+    return HTMLResponse(content)
 
 if __name__ == '__main__':
     uvicorn.run(app, host='0.0.0.0', port=8000)

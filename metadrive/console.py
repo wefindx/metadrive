@@ -33,7 +33,7 @@ def repl(host=None, port=None):
 
     IPython.embed(
         banner1="[http://{}:{}] Welcome to MetaDrive - A Web Driver.\n".format(host, port),
-        banner2=":get('https://example.com')   -- retrieves website\n:list()                       -- lists available websites\n:update()                     -- refreshes the list of available websites\n",
+        banner2=":get('https://example.com')   -- retrieves website\n:list()                       -- lists available websites\n:update()                     -- refreshes the list of available websites\n \n:: note: calling .search() functions",
         exit_msg="Bye~",
         config = Config({
             'TerminalIPythonApp': {'display_banner': False},
