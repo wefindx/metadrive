@@ -22,6 +22,7 @@ setup(
         'typology',
         'gpgrecord',
         'requests',
+        'celery',
         'apiage',
         'paramiko',
         'selenium',

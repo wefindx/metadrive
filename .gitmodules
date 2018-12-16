@@ -1,0 +1,3 @@
+[submodule "metadrive/_react"]
+	path = metadrive/_react
+	url = https://github.com/wefindx/data-browser

@@ -30,11 +30,6 @@ def console():
     server.terminate()
 
 @click.command()
-def browser():
-    import curses
-    pass
-
-@click.command()
 def provide():
     # https://www.starlette.io/applications/
     from metadrive import api
@@ -42,16 +37,48 @@ def provide():
         api.app, host='0.0.0.0', port=7000, log_level='info')
 
 @click.command()
-def consume():
+@click.option('--ui', required=False, type=str, help='Save results to specified database.')
+def consume(ui=None):
     # https://www.starlette.io/testclient/
+    # from metadrive import api
+    # from starlette.testclient import TestClient
+    #
+    # client = TestClient(api.app)
+    # with client.websocket_connect('/ws') as websocket:
+    #     data = websocket.receive_text()
+    #
+    # print(data)
     from metadrive import api
-    from starlette.testclient import TestClient
+    host = '0.0.0.0'
+    port = 7001
 
-    client = TestClient(api.app)
-    with client.websocket_connect('/ws') as websocket:
-        data = websocket.receive_text()
+    def serve():
+        api.uvicorn.run(
+            api.app,
+            host=host,
+            port=port,
+            log_level='error'
+        )
 
-    print(data)
+    from multiprocessing import Process
+    server = Process( target=serve )
+    server.daemon = True
+    server.start()
+
+    if ui is not None:
+        # if ui == 'react'
+        print('using reactjs')
+        from metadrive.ui import ReactJS
+        ReactJS.start()
+    else:
+        # using ncurses
+        print('using ncurses')
+        from metadrive.ui import NCurses
+        NCurses().run()
+
+
+    server.terminate()
+
 
 # Cause ecryptfs supports max 143 chars.
 FILENAME_LENGTH_LIMIT = 143
