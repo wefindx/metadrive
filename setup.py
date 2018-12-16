@@ -8,7 +8,7 @@ with open('README.md', 'r') as f:
 
 setup(
     name='metadrive',
-    version='0.8.0',
+    version='0.8.1',
     description='Integration of controllers to drive tools.',
     long_description=long_description,
     long_description_content_type='text/markdown',
@@ -37,6 +37,7 @@ setup(
         'starlette',
         'uvicorn',
         'graphene',
+        'npyscreen'
         # 'selendroid',
     ],
     extras_require = {
