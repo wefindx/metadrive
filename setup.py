@@ -41,6 +41,7 @@ setup(
         'jinja2',
         'aiofiles',
         'yolk',
+        'gitpython',
         # 'selendroid',
     ],
     extras_require = {
