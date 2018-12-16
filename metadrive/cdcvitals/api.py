@@ -1,2 +1,0 @@
-class DeathCase:
-    pass

@@ -1,2 +1,0 @@
-class BodyPart:
-    pass

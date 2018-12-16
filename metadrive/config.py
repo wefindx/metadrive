@@ -27,6 +27,7 @@ config.read(CONFIG_LOCATION)
 
 GITHUB_USER = config['GITHUB']['USERNAME']
 REPO_PATH = os.path.join(DEFAULT_LOCATION, '-')
+DRIVERS_PATH = os.path.join(DEFAULT_LOCATION, 'drivers')
 
 
 def ENSURE_REPO():

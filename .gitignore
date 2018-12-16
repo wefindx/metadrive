@@ -5,3 +5,4 @@ dist/
 data/
 *__pycache__*
 metadrive/.vscode/
+drivers/
