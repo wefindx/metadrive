@@ -8,7 +8,7 @@ with open('README.md', 'r') as f:
 
 setup(
     name='metadrive',
-    version='0.8.9',
+    version='0.9.0',
     description='Integration of controllers to drive tools.',
     long_description=long_description,
     long_description_content_type='text/markdown',
@@ -55,5 +55,10 @@ setup(
             'consume=metadrive.cli:consume',
             'console=metadrive.cli:console'
         ],
+    },
+    package_data = {
+        'metadrive': [
+            '_api_templates/*.html',
+            '_api_static/css/*.css']
     }
 )
