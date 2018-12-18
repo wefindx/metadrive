@@ -13,10 +13,13 @@ import graphene
 
 from urllib import parse
 
+import os
+from metadrive.config import INSTALLED
+
 # https://github.com/encode/starlette-example/blob/master/app.py
 
-app = Starlette(template_directory='metadrive/_api_templates')
-app.mount('/static', StaticFiles(directory='metadrive/_api_static'), name='static')
+app = Starlette(template_directory=os.path.join(INSTALLED, '_api_templates'))
+app.mount('/static', StaticFiles(directory=os.path.join(INSTALLED, '_api_static')), name='static')
 app.debug = True
 
 @app.route('/')
