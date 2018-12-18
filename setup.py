@@ -42,6 +42,8 @@ setup(
         'aiofiles',
         'yolk3k',
         'gitpython',
+        'ipython',
+        'tqdm',
         # 'selendroid',
     ],
     extras_require = {

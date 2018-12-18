@@ -1,5 +1,6 @@
 import pkgutil
 import importlib
+import re
 
 __all__ = []
 for loader, module_name, is_pkg in  pkgutil.walk_packages(__path__):
@@ -124,7 +125,8 @@ def read(term, limit=None):
         def cmp_version(version1, version2):
             def norm(v):
                 return [int(x) for x in re.sub(r'(\.0+)*$','', v).split(".")]
-            return cmp(norm(version1), norm(version2))
+            a, b = norm(version1), norm(version2)
+            return (a > b) - (a < b)
 
         if latest_version is not None:
             if cmp_version(installed_version, latest_version) < 0:
