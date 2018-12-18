@@ -21,21 +21,21 @@ class NCurses(npyscreen.NPSApp):
 class ReactJS:
 
     def __init__(self):
-        self.path = os.path.join(INSTALLED, '_react')
+        self.path = os.path.join(INSTALLED, '_ui_scripts')
 
         if self.path == 'metadrive':
             self.path = os.getcwd()
 
-    def build():
+    def build(self):
 
-        if 'node_modules' in os.listdir(path):
+        if 'node_modules' in os.listdir(self.path):
             os.system('rm -rf {path}/node_modules && yarn install'.format(self.path))
         else:
             os.system('cd {path} && yarn install'.format(path=self.path))
 
-    def start():
+    def start(self):
 
-        if 'node_modules' in os.listdir(path):
+        if 'node_modules' in os.listdir(self.path):
             os.system('cd {path} && yarn start'.format(path=self.path))
         else:
             build()

@@ -71,24 +71,24 @@ def read(term, limit=None):
             )
         )
 
-    SUPPORTED_PACKAGES = [
-        'pypi:metadrive',
-        'pypi:drivers',
-        'pypi:subtools'
-    ]
-
+    # SUPPORTED_PACKAGES = [
+    #     'pypi:metadrive',
+    #     'pypi:drivers',
+    #     'pypi:subtools'
+    # ]
+    #
     package_name = reader.split('.', 1)[0].lower()
-
-    if package_name not in SUPPORTED_PACKAGES:
-        raise Exception(
-            "Unsupported reader package. " +
-            "Make sure the reader package is one of these: " +
-            "{}. Your chosen reader is: {}".format(
-                ', '.join(SUPPORTED_PACKAGES),
-                package_name
-            )
-
-        )
+    #
+    # if package_name not in SUPPORTED_PACKAGES:
+    #     raise Exception(
+    #         "Unsupported reader package. " +
+    #         "Make sure the reader package is one of these: " +
+    #         "{}. Your chosen reader is: {}".format(
+    #             ', '.join(SUPPORTED_PACKAGES),
+    #             package_name
+    #         )
+    #
+    #     )
 
     packman, package = package_name.split(':')
 
@@ -111,30 +111,30 @@ def read(term, limit=None):
         installed_version = pkg_resources.get_distribution(package).version
 
         # Check the latest version in PyPI
-        # from yolk.pypi import CheeseShop
+        from yolk.pypi import CheeseShop
 
-        # def get_lastest_version_number(package_name):
-        #     pkg, all_versions = CheeseShop().query_versions_pypi(package_name)
-        #     if len(all_versions):
-        #         return all_versions[0]
-        #     return None
+        def get_lastest_version_number(package_name):
+            pkg, all_versions = CheeseShop().query_versions_pypi(package_name)
+            if len(all_versions):
+                return all_versions[0]
+            return None
 
-        # latest_version = get_lastest_version_number(package)
+        latest_version = get_lastest_version_number(package)
 
-        # def cmp_version(version1, version2):
-        #     def norm(v):
-        #         return [int(x) for x in re.sub(r'(\.0+)*$','', v).split(".")]
-        #     return cmp(norm(version1), norm(version2))
+        def cmp_version(version1, version2):
+            def norm(v):
+                return [int(x) for x in re.sub(r'(\.0+)*$','', v).split(".")]
+            return cmp(norm(version1), norm(version2))
 
-        # if latest_version is not None:
-        #     if cmp_version(installed_version, latest_version) < 0:
-        #         print(latest_version, type(latest_version))
-        #         answer = input('You are running {}=={}'.format(package,installed_version)+", but there is newer ({}) version. Upgrade it? [y/N] ".format(latest_version))
-        #         if answer in ['y', 'Y']:
-        #             try:
-        #                 os.system('pip install --no-input -U {} --no-cache'.format(package))
-        #             except SystemExit as e:
-        #                 pass
+        if latest_version is not None:
+            if cmp_version(installed_version, latest_version) < 0:
+                print(latest_version, type(latest_version))
+                answer = input('You are running {}=={}'.format(package,installed_version)+", but there is newer ({}) version. Upgrade it? [y/N] ".format(latest_version))
+                if answer in ['y', 'Y']:
+                    try:
+                        os.system('pip install --no-input -U {} --no-cache'.format(package))
+                    except SystemExit as e:
+                        pass
 
 
 

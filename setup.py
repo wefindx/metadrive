@@ -40,7 +40,7 @@ setup(
         'npyscreen',
         'jinja2',
         'aiofiles',
-        'yolk',
+        'yolk3k',
         'gitpython',
         # 'selendroid',
     ],
