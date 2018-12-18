@@ -2,8 +2,7 @@ import os
 import imp
 import npyscreen
 
-INSTALLED = imp.find_module('metadrive')[1]
-
+from metadrive.config import INSTALLED
 
 class NCurses(npyscreen.NPSApp):
 

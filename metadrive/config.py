@@ -1,9 +1,12 @@
 import os
+import imp
 from pathlib import Path
 import configparser
 import requests
 import gpgrecord
 config = configparser.ConfigParser()
+
+INSTALLED = imp.find_module('metadrive')[1]
 
 HOME = str(Path.home())
 DEFAULT_LOCATION = os.path.join(HOME,'.metadrive')
