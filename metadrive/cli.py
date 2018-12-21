@@ -132,7 +132,9 @@ def harvest(resource, limit=None, output=None, db=None):
         item['*'] = resource
 
         if db:
-            ID = item['-']
+            ID = item.get('-')
+            if ID is None:
+                raise Exception("The crawler (controller) emitted items must have '-' key containing URLs of items.")
             # Writing to database:
             if dbinfo.scheme == 'mongodb':
                 print('DB:INFO:', item['-'])
@@ -140,7 +142,10 @@ def harvest(resource, limit=None, output=None, db=None):
                     {'-': ID}, {'$set': item}, upsert=True)
 
         else:
-            s = slug(item['-'])
+            ID = item.get('-')
+            if ID is None:
+                raise Exception("The crawler (controller) emitted items must have '-' key containing URLs of items.")
+            s = slug(ID)
             # c = slug(item['-'].rsplit('#')[0][-7:])
             ID = s[:FILENAME_LENGTH_LIMIT-12]+'#{}'.format(n)+'.json'
             # Writing to file:
