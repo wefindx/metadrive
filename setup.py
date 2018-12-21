@@ -44,6 +44,8 @@ setup(
         'gitpython',
         'ipython',
         'tqdm',
+        'scrapy',
+        # 'gain',
         # 'selendroid',
     ],
     extras_require = {
