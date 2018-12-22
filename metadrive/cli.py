@@ -153,6 +153,9 @@ def harvest(resource, limit=None, output=None, db=None):
             if output:
                 ID = os.path.join(output, ID)
 
+            if not os.path.exists(output):
+                os.makedirs(output)
+
             with open(ID, 'w') as f:
                 print('FILE:INFO:', item['-'])
                 f.write(json.dumps(item))
