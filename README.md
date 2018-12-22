@@ -4,6 +4,8 @@ The package that introduces simple generic interfaces to the objects within web 
 
 The drivers listed in `drivers.py` shall define controllers services and machines, to serialize data in [MFT-1](https://book.mindey.com/metaformat/0002-data-object-format/0002-data-object-format.html), making them convenient to automatically operate with [metaform](https://pypi.org/project/metaform/)).
 
+Installation may require `ncurses`.
+
 `$ harvest <resource>`
 The first command allows to crawl custom source.
 
