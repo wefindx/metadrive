@@ -48,12 +48,33 @@ def get_driver(
         load_images=True,
         load_adblocker=True,
         recreate_profile=False,
-        download_to=''
+        download_to='',
+        proxies={
+            'httpProxy': None,
+            'sslProxy': None,
+            'socksProxy': None,
+        }
     ):
 
     '''
     Gets a new browser, with session in specific directory.
     '''
+    # ------------- PROXIES SECTION ------------ #
+    proxy = {'proxyType': 'MANUAL'}
+    for key in proxies:
+        if proxies[key] is not None:
+            if key == 'http_proxy':
+                Key = 'httpProxy'
+            elif key == 'ssl_proxy':
+                Key = 'ssl_proxy'
+            elif key == 'socks_proxy':
+                Key = 'socksProxy'
+            else:
+                Key = key
+            proxy[Key] = proxies[key]
+    if len(proxy) <= 1:
+        proxy = None
+
     # ------------- OPTIONS SECTION ------------ #
     OPTIONS = Options()
 
@@ -61,6 +82,21 @@ def get_driver(
     OPTIONS.add_argument("--disable-infobars")
     OPTIONS.add_argument('--no-sandbox')
     OPTIONS.add_argument('--disable-dev-shm-usage')
+
+    if proxy.get('socksProxy') is not None:
+        OPTIONS.add_argument(
+            '--proxy-server=socks5://{}'.format(
+                proxy['socksProxy']))
+    elif proxy.get('sslProxy') is not None:
+        OPTIONS.add_argument(
+            '--proxy-server=https://{}'.format(
+                proxy['sslProxy']))
+    elif proxy.get('httpProxy') is not None:
+        OPTIONS.add_argument(
+            '--proxy-server=http://{}'.format(
+                proxy['httpProxy']))
+
+
 #    OPTIONS.add_argument('--ignore-ssl-errors=yes')
 #    OPTIONS.add_argument('--ssl-protocol=any')
 #    OPTIONS.add_argument('--web-security=no')
@@ -156,6 +192,13 @@ def get_driver(
                 'params': {
                     'behavior': 'allow',
                     'downloadPath': download_to}})
+
+    if proxy is not None:
+        print(proxy)
+
+        browser.desired_capabilities.update(
+            {'proxy': proxy}
+        )
 
     return browser
 
