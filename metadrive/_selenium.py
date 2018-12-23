@@ -83,18 +83,20 @@ def get_driver(
     OPTIONS.add_argument('--no-sandbox')
     OPTIONS.add_argument('--disable-dev-shm-usage')
 
-    if proxy.get('socksProxy') is not None:
-        OPTIONS.add_argument(
-            '--proxy-server=socks5://{}'.format(
-                proxy['socksProxy']))
-    elif proxy.get('sslProxy') is not None:
-        OPTIONS.add_argument(
-            '--proxy-server=https://{}'.format(
-                proxy['sslProxy']))
-    elif proxy.get('httpProxy') is not None:
-        OPTIONS.add_argument(
-            '--proxy-server=http://{}'.format(
-                proxy['httpProxy']))
+    if isinstance(proxy, dict):
+
+        if proxy.get('socksProxy') is not None:
+            OPTIONS.add_argument(
+                '--proxy-server=socks5://{}'.format(
+                    proxy['socksProxy']))
+        elif proxy.get('sslProxy') is not None:
+            OPTIONS.add_argument(
+                '--proxy-server=https://{}'.format(
+                    proxy['sslProxy']))
+        elif proxy.get('httpProxy') is not None:
+            OPTIONS.add_argument(
+                '--proxy-server=http://{}'.format(
+                    proxy['httpProxy']))
 
 
 #    OPTIONS.add_argument('--ignore-ssl-errors=yes')
@@ -194,8 +196,6 @@ def get_driver(
                     'downloadPath': download_to}})
 
     if proxy is not None:
-        print(proxy)
-
         browser.desired_capabilities.update(
             {'proxy': proxy}
         )
