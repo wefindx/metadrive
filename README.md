@@ -1,5 +1,32 @@
 # Metadrive
 
+## Usage
+
+Basic Installation:
+```
+pip install -U -i https://metaformat:internationalcooperationhappens@pypi.wefindx.io metadrive
+```
+
+Driver structure:
+```
+.
+├── driver_name
+│   ├── __init__.py   # login(), and an items generator function with optional name.
+│   └── api.py        # classes, that define methods available to crawled items.
+├── README.md
+└── setup.py
+```
+
+1. Publish drivers on `PyPI`.
+
+2. Reference them on `-` wikis on GitHub (example: [https://github.com/mindey/-/wiki/topic#halfbakery](https://github.com/mindey/-/wiki/topic#halfbakery).
+
+3. Use, like `harvest https://github.com/mindey/-/wiki/topic#halfbakery`.
+
+More advanced usage will be covered in the future.
+
+## About
+
 The package that introduces simple generic interfaces to the objects within web APIs, allowing for generation (searching), and management of items on the web systems.
 
 The drivers listed in `drivers.py` shall define controllers services and machines, to serialize data in [MFT-1](https://book.mindey.com/metaformat/0002-data-object-format/0002-data-object-format.html), making them convenient to automatically operate with [metaform](https://pypi.org/project/metaform/)). This list of drivers is to be provided in a distributed fashion, i.e., with GunDB.
