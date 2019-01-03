@@ -153,8 +153,8 @@ def ensure_driver_installed(driver_name):
     # Make sure we have that package installed.
     spec = importlib.util.find_spec(package)
     if spec is None:
-        answer = input(package +" is not installed. Install it? [y/N] ")
-        if answer in ['y', 'Y']:
+        answer = input(package +" is not installed. Install it? [Y/n] ")
+        if answer in ['y', 'Y', '']:
             try:
                 #easy_install.main( ["-U", package_name] )
                 os.system('pip install --no-input -U {} --no-cache'.format(package))
