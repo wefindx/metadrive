@@ -28,6 +28,14 @@ class TabsMixin:
     def current_tab(self):
         return next(filter(lambda x: x[1] == self.current_window_handle, self.tabs.items()))
 
+    def switch_tab(self, name):
+        self.open_tab(name)
+
+    def close_tab(self, name):
+        self.switch_tab(name)
+        self.close()
+
+
 class Chrome(webdriver.Chrome, TabsMixin):
 
     def __init__(self, *args, **kwargs):
