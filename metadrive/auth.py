@@ -38,7 +38,7 @@ class RequestsCookieAuthentication:
         else:
             session.headers.update({
                 'content-type':'text/plain',
-                'cookie': raw_cookie
+                'cookie': self.raw_cookie
             })
 
         return session
