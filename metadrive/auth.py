@@ -10,7 +10,7 @@ class RequestsCookieAuthentication:
         self.proxies = proxies
 
     def authenticate(self):
-        session = get_session(proxies=proxies)
+        session = get_session()
         session.metaname = utils.get_metaname(self.key_name)
 
         if self.raw_cookie is None:
