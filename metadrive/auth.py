@@ -4,12 +4,13 @@ from metadrive import utils
 
 class RequestsCookieAuthentication:
 
-    def __init__(self, raw_cookie, key_name):
+    def __init__(self, raw_cookie, key_name, proxies={}):
         self.key_name = key_name
         self.raw_cookie = raw_cookie
+        self.proxies = proxies
 
     def authenticate(self):
-        session = get_session()
+        session = get_session(proxies=proxies)
         session.metaname = utils.get_metaname(self.key_name)
 
         if self.raw_cookie is None:
