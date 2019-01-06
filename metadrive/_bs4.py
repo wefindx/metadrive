@@ -7,7 +7,10 @@ def get_soup(url, session=None, use='requests', proxies=None, headers=None):
         if session is None:
             session = get_session()
 
-        response = session.get(url, proxies=proxies, headers=headers)
+        if headers is not None:
+            session.headers.update(headers)
+
+        response = session.get(url, proxies=proxies)
         if response.ok:
             data = response.content
         else:
