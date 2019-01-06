@@ -2,12 +2,12 @@ import bs4
 from metadrive._requests import get_session
 from metadrive._selenium import get_driver
 
-def get_soup(url, session=None, use='requests', proxies=None):
+def get_soup(url, session=None, use='requests', proxies=None, headers=None):
     if use == 'requests':
         if session is None:
             session = get_session()
 
-        response = session.get(url, proxies=proxies)
+        response = session.get(url, proxies=proxies, headers=headers)
         if response.ok:
             data = response.content
         else:
