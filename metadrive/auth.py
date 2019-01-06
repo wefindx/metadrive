@@ -1,6 +1,16 @@
 from metadrive._requests import get_session
 from metadrive import utils
+from random import randint
+import requests
 
+class UserAgents:
+
+    user_agents = requests.get(
+            'https://raw.githubusercontent.com/N0taN3rd/userAgentLists/master/json/android-browser.json').json()
+
+    @classmethod
+    def random_android(self):
+        return self.user_agents[randint(0, len(self.user_agents))].get('ua')
 
 class RequestsCookieAuthentication:
 
