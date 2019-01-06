@@ -1,4 +1,5 @@
 import pkgutil
+import inspect
 import re
 
 from metadrive import utils
@@ -73,4 +74,9 @@ def read(term, limit=None):
     for name in namespace.split('.'):
         method = getattr(method, name)
 
-    return method(limit=limit)
+    method_args = inspect.getfullargspec(method).args
+
+    if 'limit' in method_args:
+        return method(limit=limit)
+    else:
+        return method()
