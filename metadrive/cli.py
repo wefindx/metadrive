@@ -144,7 +144,11 @@ def harvest(resource, limit=None, output=None, db=None):
         else:
             ID = item.get('-')
             if ID is None:
-                raise Exception("The crawler (controller) emitted items must have '-' key containing URLs of items.")
+                if item.get('url') is not None:
+                    item['-'] = item.get('url')
+                    ID = item.get('url')
+                else:
+                    raise Exception("The crawler (controller) emitted items must have '-' (or 'url') key containing URLs of items.")
             s = slug(ID)
             # c = slug(item['-'].rsplit('#')[0][-7:])
             ID = s[:FILENAME_LENGTH_LIMIT-12]+'#{}'.format(n)+'.json'
