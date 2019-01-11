@@ -91,6 +91,8 @@ def harvest(resource, limit=None, output=None, db=None):
     """Pulls data from a resource, and saves it in data items with metaformat metadata.
 
     $ harvest <resource>
+
+    $ harvest <resource> --db mongodb://localhost/<db-name>/<collection-name>
     """
     if db:
         # Creating db connection

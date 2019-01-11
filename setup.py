@@ -8,7 +8,7 @@ with open('README.md', 'r') as f:
 
 setup(
     name='metadrive',
-    version='1.1.6',
+    version='1.1.7',
     description='Integration of controllers to drive tools.',
     long_description=long_description,
     long_description_content_type='text/markdown',
@@ -45,6 +45,7 @@ setup(
         'gitpython',
         'ipython',
         'tqdm',
+        'pymongo',
         # 'scrapy',
         # 'gain',
         # 'selendroid',
