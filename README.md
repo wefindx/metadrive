@@ -4,7 +4,7 @@
 
 Basic Installation:
 ```
-pip install -U -i https://metaformat:internationalcooperationhappens@pypi.wefindx.io metadrive
+pip install metadrive
 ```
 
 Driver structure:
@@ -21,7 +21,7 @@ Driver structure:
 
 2. Reference them on `-` wikis on GitHub (example: [https://github.com/mindey/-/wiki/topic#halfbakery](https://github.com/mindey/-/wiki/topic#halfbakery).
 
-3. Use, like `harvest https://github.com/mindey/-/wiki/topic#halfbakery`.
+3. Use, like `harvest https://github.com/mindey/-/wiki/topic#halfbakery -o my_data`.
 
 More advanced usage will be covered in the future.
 
@@ -29,7 +29,7 @@ More advanced usage will be covered in the future.
 
 The package that introduces simple generic interfaces to the objects within web APIs, allowing for generation (searching), and management of items on the web systems.
 
-The drivers listed in `drivers.py` shall define controllers services and machines, to serialize data in [MFT-1](https://book.mindey.com/metaformat/0002-data-object-format/0002-data-object-format.html), making them convenient to automatically operate with [metaform](https://pypi.org/project/metaform/)). This list of drivers is to be provided in a distributed fashion, i.e., with GunDB.
+The drivers listed in [drivers.py](https://github.com/wefindx/metadrive/blob/master/metadrive/drivers.py) shall define controllers services and machines, to serialize data in [MFT-1](https://book.mindey.com/metaformat/0002-data-object-format/0002-data-object-format.html), making them convenient to automatically operate with [metaform](https://pypi.org/project/metaform/)). This list of drivers is to be provided in a distributed fashion, i.e., with GunDB.
 
 When writing drivers, optionally define `login()` function, and some generator function `harvest(limit=limit)` function in `__init__.py`. The generator function needs to return elements, where `-` key is the URL of the items.
 
