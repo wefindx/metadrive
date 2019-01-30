@@ -6,6 +6,7 @@ Basic Installation:
 ```
 pip install metadrive
 ```
+(check installation requirements for specific systems at the bottom)
 
 Driver structure:
 ```
@@ -67,3 +68,22 @@ Gmail API ( get all your mails ), LinkedIn, Google Plus, Twitter, Weibo, Telegra
 
 ## Private PyPI repository of drivers
 ## Private organization '-' repository
+
+# Installation requirements
+
+## Android
+
+If installed on Termux (Android), needs:
+```
+pkg i clang
+pkg i make
+pkg i python-dev
+pkg i libcrypt-dev
+pkg i libffi-dev
+pkg i openssl
+pkg i openssl-dev
+pkg i openssl-tool
+pkg i libjpeg-turbo-dev
+LDFLAGS="-L/system/lib/" CFLAGS="-I/data/data/com.termux/files/usr/include/" pip install Pillow
+OR LIBRARY_PATH="/system/lib" CPATH="$PREFIX/include" pip install pillow
+```
