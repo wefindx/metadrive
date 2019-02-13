@@ -1,11 +1,18 @@
 # Metadrive
 
+
+## Develop
+```
+uvicorn metadrive.api:app --debug
+```
+
 ## Usage
 
 Basic Installation:
 ```
 pip install metadrive
 ```
+
 (check installation requirements for specific systems at the bottom)
 
 Driver structure:

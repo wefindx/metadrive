@@ -2,14 +2,45 @@ import os
 import re
 import yaml
 import json
-import importlib
-
 import requests
 import gpgrecord
+import importlib
+import pkg_resources
 
 from metadrive import config
 
 MAIN = 'main'
+VENV = os.getenv('VIRTUAL_ENV')
+
+
+def find_drivers():
+    distros = pkg_resources.AvailableDistributions()
+
+    drivers = []
+
+    for key in distros:
+
+        resources = distros[key]
+        resource = resources[0]
+        egg = resource.egg_name()
+        folder = egg.split('-', 1)[0].lower()
+        path = os.path.join(resource.location, folder)
+        fname = os.path.join(path, '__init__.py')
+
+        if os.path.exists(fname):
+
+            with open(fname, 'r') as f:
+
+                for line in f:
+                    if '__site_url__' in line:
+
+                        site_url = line.split('=')[-1].strip()[1:-1]
+                        package = '{}=={}'.format(key, resource.version)
+
+                        drivers.append((site_url, package, path))
+                        break
+
+    return drivers
 
 
 def get_metaname(namespace):
@@ -196,3 +227,5 @@ def ensure_driver_installed(driver_name):
                         pass
 
     return package
+
+

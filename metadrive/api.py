@@ -1,5 +1,10 @@
-from starlette.applications import Starlette
+import os
+import yaml
+import uvicorn
+import graphene
+from urllib import parse
 
+from starlette.applications import Starlette
 from starlette.responses import PlainTextResponse
 from starlette.responses import JSONResponse
 from starlette.websockets import WebSocket
@@ -7,94 +12,94 @@ from starlette.graphql import GraphQLApp
 from starlette.endpoints import HTTPEndpoint
 from starlette.responses import HTMLResponse
 from starlette.staticfiles import StaticFiles
+from starlette.schemas import (
+    SchemaGenerator,
+    OpenAPIResponse
+)
 
-import uvicorn
-import graphene
-
-from urllib import parse
-
-import os
 from metadrive.config import INSTALLED
+from metadrive.utils import find_drivers
 
-# https://github.com/encode/starlette-example/blob/master/app.py
 
 app = Starlette(template_directory=os.path.join(INSTALLED, '_api_templates'))
 app.mount('/static', StaticFiles(directory=os.path.join(INSTALLED, '_api_static')), name='static')
 app.debug = True
+app.schema_generator = SchemaGenerator(
+    {"swagger": "2.0",
+     "info": {
+         "title": "MetaDrive API",
+         "version": "0.0.1"}})
 
-@app.route('/')
-def homepage(request):
-    return PlainTextResponse('Welcome to MetaDrive!')
+definitions = yaml.load('''
+definitions:
+  DriverItem:
+    properties:
+      site: {format: utf8, type: string}
+      package: {format: utf8, type: string}
+    type: object
+''')
 
+# -------------------------------------------- #
 
-@app.route("/address")
-class Address(HTTPEndpoint):
+@app.route('/drivers')
+async def drivers(request):
+    '''
+    summary: /drivers
+    description: Lists the drivers available in API.
+    responses:
+      200:
+        description: A list of drivers.
+        schema:
+          '$ref': '#/definitions/DriverItem'
+    '''
+    drivers = find_drivers()
 
+    items = [{
+        'site': driver[0],
+        'package': driver[1]}
+        for driver in drivers]
+
+    return JSONResponse(items)
+
+@app.route("/driver/{name}")
+class Driver(HTTPEndpoint):
     async def get(self, request):
-        address = request.query_params.get('url')
-        return JSONResponse({"url": "{}".format(address)})
+        '''
+        summary: /driver/{name}/
+        description: Provides description (schema) of driver's methods
+        '''
+        driver = request.path_params['name']
+        params = request.query_params
 
+        schema = {} # will depend on package!
+
+        return JSONResponse({
+            'driver': driver,
+            'schema': schema,
+            'params': dict(params),
+        })
+
+
+@app.route("/drive/{name}/{method}")
+class Drive(HTTPEndpoint):
     async def post(self, request):
-        return JSONResponse({"Hello": "POST"})
+        '''
+        summary: /drive/{name}/{method}
+        description: Calls driver's methods with parameters.
+        '''
+        driver = request.path_params['name']
+        method = request.path_params['method']
+        params = request.query_params
+        payload = await request.json()
 
-@app.route('/websites')
-async def reindex(request):
-    '''
-        Returns a list of all sites available via
-        __site_url__, prepared by reindex()
-    '''
+        return JSONResponse({
+            'driver': driver,
+            'method': method,
+            'params': dict(params),
+            'payload': payload
+        })
 
-    return JSONResponse({'data': 'list-of-websites-availabe-via-__site_url__'})
-
-@app.route('/reindex')
-async def reindex(request):
-    ''' Goes through all wikis, and all concept pages,
-        and through all latest libraries, to see, what
-        __site_url__ are available.
-    '''
-    wiki_home_urls = [
-        'https://github.com/mindey/-/wiki',
-        'https://github.com/wefindx/-/wiki',
-        'https://github.com/DimensionFoundation/-/wiki',
-    ]
-
-    # sites_available = []
-    # for url in wiki_home_urls:
-    #     for page in get_all_pages(url):
-    #         for schema in get_schemas(page):
-    #             pkg_fun = schema.get('_:emitter')
-    #             for file in get_pypi_package(pkg_fun):
-    #                 sites_available.append({'site': get_site_url(file), 'emitter': pkg_fun})
-    return JSONResponse({'data': 'note about indexing job started, and job id, e.g., celery job id'})
-
-@app.route('/thing/{this}')
-class Thing(HTTPEndpoint):
-    async def get(self, request):
-        data = request.path_params['this']
-        return PlainTextResponse(data)
-
-@app.websocket_route('/ws')
-async def websocket_endpoint(websocket):
-    await websocket.accept()
-    await websocket.send_text('Hello, websocket!')
-    await websocket.close()
-
-@app.on_event('startup')
-def startup():
-    pass
-    # print('ready')
-
-class Query(graphene.ObjectType):
-    hello = graphene.String(
-        name=graphene.String(
-            default_value="stranger"))
-
-    def resolve_hello(self, info, name):
-        return "Hello " + name
-
-app.add_route('/gq', GraphQLApp(
-    schema=graphene.Schema(
-        query=Query)))
+# -------------------------------------------- #
 
 @app.exception_handler(404)
 async def not_found(request, exc):
@@ -114,11 +119,16 @@ async def server_error(request, exc):
     content = template.render(request=request)
     return HTMLResponse(content, status_code=500)
 
-@app.route('/index')
+@app.route('/', include_in_schema=False)
 async def index(request):
-    template = app.get_template('index.html')
+    template = app.get_template('docs.html')
     content = template.render(request=request)
     return HTMLResponse(content)
+
+@app.route("/schema", include_in_schema=False)
+def schema(request):
+    return OpenAPIResponse(
+        dict(app.schema, **definitions))
 
 if __name__ == '__main__':
     uvicorn.run(app, host='0.0.0.0', port=8000)

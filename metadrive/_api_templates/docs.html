@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block content %}
+<main role="main">
+
+<redoc spec-url='/schema'></redoc>
+<script src="{{ '/static/js/redoc.standalone.js' }}"> </script>
+
+</main>
+{% endblock %}
