@@ -71,7 +71,14 @@ class Driver(HTTPEndpoint):
         driver = request.path_params['name']
         params = request.query_params
 
-        schema = {} # will depend on package!
+        schema = {
+            'methods': {
+                'auth': {},
+                'generators': {
+                },
+            }
+        }
+         # will depend on package!
 
         return JSONResponse({
             'driver': driver,
