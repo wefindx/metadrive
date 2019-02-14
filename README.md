@@ -19,8 +19,8 @@ Driver structure:
 ```
 .
 ├── driver_name
-│   ├── __init__.py   # login(), and an items generator function with optional name.
-│   └── api.py        # classes, that define methods available to crawled items.
+│   ├── __init__.py   # _login(), and an items generator function _harvest()
+│   └── api.py        # classes, that define methods _get() and _filter() generators.
 ├── README.md
 └── setup.py
 ```

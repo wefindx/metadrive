@@ -43,6 +43,9 @@ driver
     api.py
 ```
 
+- Each content type of source is represented by a class in `api.py`, which has two default methods - `_get()` and `_filter()`, which returns generators for content type.
+- The `__init__.py` contains two default functions - `_login()` and `_harvest()`, which orgnanizes continuous dumping of all site with filters (generators).
+
 ## The `__init__` files provide:
 
 Variables
@@ -50,9 +53,8 @@ Variables
 `__base_url__`, - a variable that specifies the site's API (application programming interface), if available.
 
 Functions
-`login()` - a function that provides a way to sign-in to resource.
-`search()` - a function that provides doing arbitrary queries to retrieve limited sections of data.
-`generate()` - a function that implements one-off non-stop continual crawling of the whole resource.
+`_login()` - a function that provides a way to sign-in to resource.
+`_harvest()` - a function that implements one-off non-stop continual crawling of the whole resource (but also accepts filters).
 
 ## The `api.py` files provides:
 
