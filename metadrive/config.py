@@ -79,3 +79,22 @@ def ENSURE_GPG():
         config.write(configfile)
 
     return GPG_KEY
+
+def ENSURE_PROXIES():
+    config.read(CONFIG_LOCATION)
+    if 'PROXIES' in config.keys():
+        return {key: 'socks5h://'+config['PROXIES'][key] or None
+                for key in config['PROXIES'] if config['PROXIES'][key]}
+
+    SOCKS5 = input('Type-in default socks5 proxy  (e.g., 127.0.0.1:9999) (leave emtpy to default to direct connections) [ENTER]: ')
+
+    config['PROXIES'] = {
+        'http': SOCKS5,
+        'https': SOCKS5
+    }
+
+    with open(CONFIG_LOCATION, 'w') as configfile:
+        config.write(configfile)
+
+    return {key: 'socks5h://'+config['PROXIES'][key] or None
+            for key in config['PROXIES'] if config['PROXIES'][key]}

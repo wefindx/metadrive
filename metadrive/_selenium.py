@@ -14,6 +14,8 @@ from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.action_chains import ActionChains
 
+from metadrive import config
+
 class TabsMixin:
 
     def open_tab(self, name, url=None):
@@ -57,16 +59,36 @@ def get_driver(
         load_adblocker=True,
         recreate_profile=False,
         download_to='',
-        proxies={
-            'httpProxy': None,
-            'sslProxy': None,
-            'socksProxy': None,
-        }
+        proxies='default',
     ):
 
     '''
     Gets a new browser, with session in specific directory.
+
+    proxies = {
+        'httpProxy': None,
+        'sslProxy': None,
+        'socksProxy': '127.0.0.1:9999',
+    }
+
+    Can use requests-like proxy specification, e.g.:
+
+    proxies= {
+        'http': 'socks5h://127.0.0.1:9999',
+        'https': 'socks5h://127.0.0.1:9999'
+    }
+
     '''
+    if proxies == 'default':
+        proxies = config.ENSURE_PROXIES()
+
+    if not proxies:
+        proxies = {
+            'httpProxy': None,
+            'sslProxy': None,
+            'socksProxy': None
+        }
+
     # ------------- PROXIES SECTION ------------ #
     proxy = {'proxyType': 'MANUAL'}
     for key in proxies:
@@ -74,12 +96,18 @@ def get_driver(
             if key == 'http_proxy':
                 Key = 'httpProxy'
             elif key == 'ssl_proxy':
-                Key = 'ssl_proxy'
+                Key = 'sslProxy'
             elif key == 'socks_proxy':
                 Key = 'socksProxy'
             else:
                 Key = key
-            proxy[Key] = proxies[key]
+
+            if Key in ['http', 'https']:
+                Value = proxies[key].rsplit('//', 1)[-1]
+                proxy['socksProxy'] = Value
+            else:
+                proxy[Key] = proxies[key]
+
     if len(proxy) <= 1:
         proxy = None
 
