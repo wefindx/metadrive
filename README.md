@@ -1,6 +1,5 @@
 # Metadrive
 
-
 ## Develop
 ```
 uvicorn metadrive.api:app --debug
@@ -55,6 +54,29 @@ Starts console application with `get(), list(), update()` methods to manage inde
 `$ consume`
 Starts a GUI-based application to manage index of all available controllers ( drivers ), and interact with data objects visually.
 
+## 驱动器基本结构
+
+```
+
+__init__.py 文件有：
+==================
+
+ 默认函数
+ _login()　: 登录信息
+ _harvest()　: 下载全网站的程序
+
+api.py 文件：
+============
+
+ 每个类，应该有默认的函数名
+
+ : 每个来源的对象种类 (类)
+ : 询问这些对象的方法 (函数)
+ _get()　: 用对象编号得到对象
+ @classmethod
+ _filter()　: 提供过滤，得到对象发生器
+ _update()　: 更新或者删除对象
+```
 
 # TODO
 

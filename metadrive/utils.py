@@ -9,7 +9,7 @@ import pkg_resources
 
 from metadrive import config
 
-MAIN = 'main'
+MAIN = 'default'
 VENV = os.getenv('VIRTUAL_ENV')
 
 
@@ -43,11 +43,18 @@ def find_drivers():
     return drivers
 
 
-def get_metaname(namespace):
+def get_metaname(namespace, anchor=None):
+    '''
+    A default place to store authentication information, like
+    passwords, encrypted with user's public key, in user's github.
+
+    By default, the auth data is stored in the markdown file, under
+    the main anchor.
+    '''
     return '-:{gituser}/+/{namespace}.md#{main}'.format(
         gituser=config.GITHUB_USER,
         namespace=namespace,
-        main=MAIN
+        main=anchor if anchor else MAIN
     )
 
 def get_credential(namespace):
