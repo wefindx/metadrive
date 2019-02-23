@@ -72,19 +72,27 @@ class Driver(HTTPEndpoint):
         params = request.query_params
 
         schema = {
-            'methods': {
-                'auth': {},
-                'generators': {
-                },
+            'driver': driver,
+            'calls': {
+                '_login': {
+                    'username': 'string',
+                    'password': 'string',
+                }
+            },
+            'types': {
+                'Contact': {
+                    '_get': {
+                        'url': 'string',
+                    },
+                    '_filter': {
+                        'keyword': 'string',
+                    }
+                }
             }
         }
          # will depend on package!
 
-        return JSONResponse({
-            'driver': driver,
-            'schema': schema,
-            'params': dict(params),
-        })
+        return JSONResponse(schema)
 
 
 @app.route("/drive/{name}/{method}")
