@@ -1,6 +1,7 @@
 import os
 import yaml
 import uvicorn
+import inspect
 import graphene
 from urllib import parse
 
@@ -55,6 +56,12 @@ async def drivers(request):
     drivers = find_drivers()
 
     items = [{
+        'id': '{scheme}://{host}{port}/driver/{name}'.format(
+            scheme=request.url.scheme,
+            host=request.client.host,
+            port=(request.url.port not in [80,443]
+                  and ':'+str(request.url.port) or ''),
+            name=driver[1].split('==')[0]),
         'site': driver[0],
         'package': driver[1]}
         for driver in drivers]
@@ -71,24 +78,39 @@ class Driver(HTTPEndpoint):
         driver = request.path_params['name']
         params = request.query_params
 
+        ndriver = driver.replace('-', '_')
+
+        module = __import__(ndriver)
+        api = __import__('{}.api'.format(ndriver), fromlist=[ndriver])
+
+        core = inspect.getmembers(module)
+        api = inspect.getmembers(api)
+
+        try:
+            auth = {
+                item[0]: inspect.getcallargs(item[1]) for item in core
+                if item[0].startswith('_') and
+                not item[0].startswith('__')}
+        except Exception as e:
+            auth = {}
+
+        try:
+            types = {
+                item[0]: {
+                    method[0]: str(inspect.signature(method[1]))
+                    for method in inspect.getmembers(
+                        item[1], predicate=inspect.ismethod)}
+                for item in api
+                if repr(item[-1]).startswith(
+                "<class '{}.api.".format(ndriver))}
+        except Exception as e:
+            types = {}
+
+
         schema = {
             'driver': driver,
-            'calls': {
-                '_login': {
-                    'username': 'string',
-                    'password': 'string',
-                }
-            },
-            'types': {
-                'Contact': {
-                    '_get': {
-                        'url': 'string',
-                    },
-                    '_filter': {
-                        'keyword': 'string',
-                    }
-                }
-            }
+            'auth': auth,
+            'types': types
         }
          # will depend on package!
 
