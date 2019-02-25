@@ -123,14 +123,31 @@ class Drive(HTTPEndpoint):
         '''
         summary: /drive/{name}/{method}
         description: Calls driver's methods with parameters.
+
+        If method is part of class, then it has '.'
+
+        Pass data as:
+        import requests
+        requests.post(url, json={'some': 'data'})
+
         '''
         driver = request.path_params['name']
         method = request.path_params['method']
+
+        if '.' in method:
+            classname, method = method.split('.', 1)
+        else:
+            classname, method = '', method
+
         params = request.query_params
-        payload = await request.json()
+        try:
+            payload = await request.json()
+        except:
+            payload = None
 
         return JSONResponse({
             'driver': driver,
+            'type': classname,
             'method': method,
             'params': dict(params),
             'payload': payload
