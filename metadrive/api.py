@@ -120,33 +120,58 @@ class Driver(HTTPEndpoint):
 @app.route("/drive/{name}/{method}")
 class Drive(HTTPEndpoint):
     async def post(self, request):
-        '''
+        """
         summary: /drive/{name}/{method}
-        description: Calls driver's methods with parameters.
+        description: |
+            Calls driver's methods with parameters.
+            If method is part of class, then it has '.'
 
-        If method is part of class, then it has '.'
+            Example:
+            requests.post(url, params={'a': 'data'}, json={'some': 'data'})
+        """
 
-        Pass data as:
-        import requests
-        requests.post(url, json={'some': 'data'})
-
-        '''
         driver = request.path_params['name']
+        ndriver = driver.replace('-', '_')
         method = request.path_params['method']
+        params = request.query_params
 
         if '.' in method:
             classname, method = method.split('.', 1)
         else:
-            classname, method = '', method
+            classname, method = None, method
 
-        params = request.query_params
         try:
             payload = await request.json()
         except:
             payload = None
 
+        drive_instance = params.get('drive_id')
+
+        if drive_instance is None and classname is not None:
+            return JSONResponse({
+                "drive_id": "Missing URL argument. To get drive_id, use _login() method"
+            })
+
+
+        if classname is None and method in ['_login']:
+            package = __import__(ndriver)
+            driver = getattr(package, '_login')()
+            print('hello, the driver was created')
+            print(dir(driver))
+        else:
+            print('oops')
+            print(classname, method)
+
+        #
+        # if classname is not None:
+        #     Klass = __import__(classname, fromlist=[ndriver, 'api'])
+        #
+        #     if method:
+        #         getattr(Klass, method)(driver=instance)
+
+
         return JSONResponse({
-            'driver': driver,
+            'driver': str(repr(driver)),
             'type': classname,
             'method': method,
             'params': dict(params),
