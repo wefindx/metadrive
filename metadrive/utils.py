@@ -100,6 +100,8 @@ def set_credential(namespace, credential):
             cont=yaml.dump(encrypted_credential)
         )
 
+        repo = config.ENSURE_REPO()
+
         with open(
                 os.path.join(
                     config.CREDENTIALS_DIR,
