@@ -8,7 +8,7 @@ with open('README.md', 'r') as f:
 
 setup(
     name='metadrive',
-    version='1.2.2',
+    version='1.2.3',
     description='Integration of controllers to drive tools.',
     long_description=long_description,
     long_description_content_type='text/markdown',
@@ -36,7 +36,7 @@ setup(
         'pyautogui',
         'python3-xlib',
         'pysocks',
-        'starlette',
+        'starlette==0.10.7',
         'uvicorn',
         'graphene',
         'npyscreen',
