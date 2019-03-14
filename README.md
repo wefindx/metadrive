@@ -2,6 +2,10 @@
 
 ## Develop
 ```
+git clone git@github.com:wefindx/metadrive.git && cd metadrive
+virtualenv -ppython3.7 .env && .env/bin/activate
+pip install -e .
+
 uvicorn metadrive.api:app --debug
 ```
 
@@ -14,7 +18,7 @@ pip install metadrive
 
 (check installation requirements for specific systems at the bottom)
 
-Driver structure:
+## Driver package structure:
 ```
 .
 ├── driver_name
@@ -24,11 +28,38 @@ Driver structure:
 └── setup.py
 ```
 
+### Defualt files structure
+
+```
+__init__.py file:
+=====================
+ _login(): authentication function
+
+ _harvest(): default downloading function
+
+api.py file:
+============
+ Classes represent data types available in data source of driver package.
+ Methods represent way to query for objects in the data source.
+
+ @classmethod
+ _filter(): Returns a generator of the objects of the class.
+
+ @classmethod
+ _get(): Returns a method to retrieve a single object.
+
+ @classmethod
+ _update(): A method to update or delete the object in source by ID.
+```
+
 1. Publish drivers on `PyPI`.
 
 2. Reference them on `-` wikis on GitHub (example: [https://github.com/mindey/-/wiki/topic#halfbakery](https://github.com/mindey/-/wiki/topic#halfbakery).
 
 3. Use, like `harvest https://github.com/mindey/-/wiki/topic#halfbakery -o my_data`.
+
+Alternatively, to database:
+`harvest https://github.com/user/-/wiki/concept\#source --db mongodb://username:password@hostname:27017/db_name/collection`
 
 More advanced usage will be covered in the future.
 
@@ -54,29 +85,6 @@ Starts console application with `get(), list(), update()` methods to manage inde
 `$ consume`
 Starts a GUI-based application to manage index of all available controllers ( drivers ), and interact with data objects visually.
 
-## 驱动器基本结构
-
-```
-
-__init__.py 文件有：
-==================
-
- 默认函数
- _login()　: 登录信息
- _harvest()　: 下载全网站的程序
-
-api.py 文件：
-============
-
- 每个类，应该有默认的函数名
-
- : 每个来源的对象种类 (类)
- : 询问这些对象的方法 (函数)
- _get()　: 用对象编号得到对象
- @classmethod
- _filter()　: 提供过滤，得到对象发生器
- _update()　: 更新或者删除对象
-```
 
 # TODO
 
