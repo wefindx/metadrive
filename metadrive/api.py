@@ -1,6 +1,7 @@
 import os
 import yaml
 import uvicorn
+import inspect
 import graphene
 from urllib import parse
 
@@ -55,6 +56,12 @@ async def drivers(request):
     drivers = find_drivers()
 
     items = [{
+        'id': '{scheme}://{host}{port}/driver/{name}'.format(
+            scheme=request.url.scheme,
+            host=request.client.host,
+            port=(request.url.port not in [80,443]
+                  and ':'+str(request.url.port) or ''),
+            name=driver[1].split('==')[0]),
         'site': driver[0],
         'package': driver[1]}
         for driver in drivers]
@@ -71,36 +78,101 @@ class Driver(HTTPEndpoint):
         driver = request.path_params['name']
         params = request.query_params
 
+        ndriver = driver.replace('-', '_')
+
+        module = __import__(ndriver)
+        api = __import__('{}.api'.format(ndriver), fromlist=[ndriver])
+
+        core = inspect.getmembers(module)
+        api = inspect.getmembers(api)
+
+        try:
+            auth = {
+                item[0]: inspect.getcallargs(item[1]) for item in core
+                if item[0].startswith('_') and
+                not item[0].startswith('__')}
+        except Exception as e:
+            auth = {}
+
+        try:
+            types = {
+                item[0]: {
+                    method[0]: str(inspect.signature(method[1]))
+                    for method in inspect.getmembers(
+                        item[1], predicate=inspect.ismethod)}
+                for item in api
+                if repr(item[-1]).startswith(
+                "<class '{}.api.".format(ndriver))}
+        except Exception as e:
+            types = {}
+
+
         schema = {
-            'methods': {
-                'auth': {},
-                'generators': {
-                },
-            }
+            'driver': driver,
+            'auth': auth,
+            'types': types
         }
          # will depend on package!
 
-        return JSONResponse({
-            'driver': driver,
-            'schema': schema,
-            'params': dict(params),
-        })
+        return JSONResponse(schema)
 
 
 @app.route("/drive/{name}/{method}")
 class Drive(HTTPEndpoint):
     async def post(self, request):
-        '''
+        """
         summary: /drive/{name}/{method}
-        description: Calls driver's methods with parameters.
-        '''
+        description: |
+            Calls driver's methods with parameters.
+            If method is part of class, then it has '.'
+
+            Example:
+            requests.post(url, params={'a': 'data'}, json={'some': 'data'})
+        """
+
         driver = request.path_params['name']
+        ndriver = driver.replace('-', '_')
         method = request.path_params['method']
         params = request.query_params
-        payload = await request.json()
+
+        if '.' in method:
+            classname, method = method.split('.', 1)
+        else:
+            classname, method = None, method
+
+        try:
+            payload = await request.json()
+        except:
+            payload = None
+
+        drive_instance = params.get('drive_id')
+
+        if drive_instance is None and classname is not None:
+            return JSONResponse({
+                "drive_id": "Missing URL argument. To get drive_id, use _login() method"
+            })
+
+
+        if classname is None and method in ['_login']:
+            package = __import__(ndriver)
+            driver = getattr(package, '_login')()
+            print('hello, the driver was created')
+            print(dir(driver))
+        else:
+            print('oops')
+            print(classname, method)
+
+        #
+        # if classname is not None:
+        #     Klass = __import__(classname, fromlist=[ndriver, 'api'])
+        #
+        #     if method:
+        #         getattr(Klass, method)(driver=instance)
+
 
         return JSONResponse({
-            'driver': driver,
+            'driver': str(repr(driver)),
+            'type': classname,
             'method': method,
             'params': dict(params),
             'payload': payload
