@@ -3,7 +3,7 @@
 ## Develop
 ```
 git clone git@github.com:wefindx/metadrive.git && cd metadrive
-virtualenv -ppython3.7 .env && .env/bin/activate
+virtualenv -ppython3.7 .env && . .env/bin/activate
 pip install -e .
 
 uvicorn metadrive.api:app --debug

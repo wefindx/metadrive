@@ -3,6 +3,7 @@ import yaml
 import uvicorn
 import inspect
 import graphene
+import collections
 from urllib import parse
 
 from starlette.applications import Starlette
@@ -39,6 +40,7 @@ definitions:
       package: {format: utf8, type: string}
     type: object
 ''')
+app.drives = {}
 
 # -------------------------------------------- #
 
@@ -145,29 +147,64 @@ class Drive(HTTPEndpoint):
         except:
             payload = None
 
-        drive_instance = params.get('drive_id')
+        drive_id = params.get('drive_id')
+        drive_instance = app.drives.get(drive_id)
 
-        if drive_instance is None and classname is not None:
+        if method in ['_login']:
+
+            package = __import__(ndriver)
+            drive_instance = getattr(package, '_login')()
+            app.drives[drive_instance.session_id] = drive_instance
+
             return JSONResponse({
-                "drive_id": "Missing URL argument. To get drive_id, use _login() method"
+                'info': "Drive created. Use it with other methods.",
+                'drive_id': drive_instance.session_id,
             })
 
+        if drive_instance is not None:
 
-        if classname is None and method in ['_login']:
-            package = __import__(ndriver)
-            driver = getattr(package, '_login')()
-            print('hello, the driver was created')
-            print(dir(driver))
-        else:
-            print('oops')
-            print(classname, method)
+            if classname is not None:
 
-        #
-        # if classname is not None:
-        #     Klass = __import__(classname, fromlist=[ndriver, 'api'])
-        #
-        #     if method:
-        #         getattr(Klass, method)(driver=instance)
+                module = __import__(ndriver)
+                api = __import__('{}.api'.format(ndriver), fromlist=[ndriver])
+                Klass = getattr(api, classname)
+
+                if method is not None:
+
+                    if method in ['_filter']:
+
+                        if not hasattr(drive_instance, 'generators'):
+                            drive_instance.generators = {}
+
+                        if '_filter' in drive_instance.generators:
+                            result = drive_instance.generators.get('_filter')
+                        else:
+                            result = getattr(Klass, method)(drive=drive_instance)
+                            drive_instance.generators['_filter'] = result
+
+
+                        PAGE_SIZE = 10
+
+                        results = []
+
+                        if '_filter' in drive_instance.generators:
+                            for i in range(PAGE_SIZE):
+                                results.append(
+                                    next(drive_instance.generators['_filter'])
+                                )
+
+                        return JSONResponse({
+                            'results': results,
+                            'next': [str(request.path_params), str(request.query_params)],
+                            'url': '{scheme}://{host}{port}{path}?drive_id={drive_id}'.format(
+                                scheme=request.url.scheme,
+                                host=request.client.host,
+                                port=(request.url.port not in [80,443]
+                                      and ':'+str(request.url.port) or ''),
+                                drive_id=drive_instance.session_id,
+                                path=request['path']
+                            ),
+                        })
 
 
         return JSONResponse({
@@ -175,7 +212,8 @@ class Drive(HTTPEndpoint):
             'type': classname,
             'method': method,
             'params': dict(params),
-            'payload': payload
+            'payload': payload,
+            'drives': str(app.drives),
         })
 
 # -------------------------------------------- #
