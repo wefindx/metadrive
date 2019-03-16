@@ -42,6 +42,9 @@ definitions:
 ''')
 app.drives = {}
 
+DEFAULT_MAX_COUNT = 20
+PAGE_SIZE = 10
+
 # -------------------------------------------- #
 
 @app.route('/drivers')
@@ -148,7 +151,11 @@ class Drive(HTTPEndpoint):
             payload = None
 
         drive_id = params.get('drive_id')
+        results_count = params.get('count')
         drive_instance = app.drives.get(drive_id)
+
+        if results_count is not None:
+            results_count = int(results_count)
 
         if method in ['_login']:
 
@@ -183,7 +190,6 @@ class Drive(HTTPEndpoint):
                             drive_instance.generators['_filter'] = result
 
 
-                        PAGE_SIZE = 10
 
                         results = []
 
@@ -195,8 +201,9 @@ class Drive(HTTPEndpoint):
 
                         return JSONResponse({
                             'results': results,
-                            'next': [str(request.path_params), str(request.query_params)],
-                            'url': '{scheme}://{host}{port}{path}?drive_id={drive_id}'.format(
+                            # 'next': [str(request.path_params), str(request.query_params)],
+                            'count': results_count or DEFAULT_MAX_COUNT,
+                            'next': '{scheme}://{host}{port}{path}?drive_id={drive_id}'.format(
                                 scheme=request.url.scheme,
                                 host=request.client.host,
                                 port=(request.url.port not in [80,443]
