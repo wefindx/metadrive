@@ -19,7 +19,11 @@ from starlette.schemas import (
     OpenAPIResponse
 )
 
-from metadrive.config import INSTALLED
+from metadrive.config import (
+    INSTALLED,
+    API_HOST,
+    API_PORT,
+)
 from metadrive.utils import find_drivers
 
 
@@ -255,4 +259,4 @@ def schema(request):
         dict(app.schema, **definitions))
 
 if __name__ == '__main__':
-    uvicorn.run(app, host='0.0.0.0', port=8000)
+    uvicorn.run(app, host=API_HOST, port=API_PORT)

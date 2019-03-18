@@ -21,16 +21,26 @@ if not os.path.exists(CONFIG_LOCATION):
     username = input("Type your GitHub username: ")
 
     config['GITHUB'] = {'USERNAME': username}
+    config['API'] = {'HOST': '0.0.0.0', 'PORT': 7000}
+    config['CONSOLE'] = {'HOST': '0.0.0.0', 'PORT': 7000}
+    config['DRIVER_BACKENDS'] = {
+        'CHROME': '/usr/bin/chromedriver' # e.g., or http://0.0.0.0:4444/wd/hub, etc.
+    }
 
     with open(CONFIG_LOCATION, 'w') as configfile:
         config.write(configfile)
-
 
 config.read(CONFIG_LOCATION)
 
 GITHUB_USER = config['GITHUB']['USERNAME']
 REPO_PATH = os.path.join(DEFAULT_LOCATION, '-')
 DRIVERS_PATH = os.path.join(DEFAULT_LOCATION, 'drivers')
+API_HOST= config['API']['HOST']
+API_PORT= int(config['API']['PORT'])
+CONSOLE_HOST= config['CONSOLE']['HOST']
+CONSOLE_PORT= int(config['CONSOLE']['PORT'])
+CHROME_DRIVER = config['DRIVER_BACKENDS']['CHROME']
+
 
 
 def ENSURE_REPO():

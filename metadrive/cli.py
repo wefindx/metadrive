@@ -5,12 +5,18 @@ from typology.utils import slug
 from metawiki import name_to_url
 import os
 from urllib.parse import urlparse
+from metadrive.config import (
+    API_HOST,
+    API_PORT,
+    CONSOLE_HOST,
+    CONSOLE_PORT,
+)
 
 @click.command()
 def console():
     from metadrive import api
-    host = '0.0.0.0'
-    port = 7001
+    host = CONSOLE_HOST
+    port = CONSOLE_PORT
 
     def serve():
         api.uvicorn.run(
@@ -34,7 +40,7 @@ def provide():
     # https://www.starlette.io/applications/
     from metadrive import api
     api.uvicorn.run(
-        api.app, host='0.0.0.0', port=7000, log_level='info')
+        api.app, host=API_HOST, port=API_PORT, log_level='info')
 
 @click.command()
 @click.option('--ui', required=False, type=str, help='Save results to specified database.')
@@ -49,8 +55,8 @@ def consume(ui=None):
     #
     # print(data)
     from metadrive import api
-    host = '0.0.0.0'
-    port = 7001
+    host = CONSOLE_HOST
+    port = CONSOLE_PORT
 
     def serve():
         api.uvicorn.run(

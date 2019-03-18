@@ -43,15 +43,17 @@ class Chrome(webdriver.Chrome, TabsMixin):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.tabs = {'default': self.current_window_handle}
+        self.metaname = ''
 
 class Remote(webdriver.Remote, TabsMixin):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.tabs = {'default': self.current_window_handle}
+        self.metaname = ''
 
 def get_driver(
-        driver_location='',
+        driver_location=config.CHROME_DRIVER,
         profile_name='selenium',
         porfiles_dir='.metadrive/sessions',
         headless=False,
