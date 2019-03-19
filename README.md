@@ -1,13 +1,51 @@
 # Metadrive
 
+## Prepare machine
+```
+sudo apt install virtualenv python3.7 python3.7-dev build-essential chromium-browser chromium-chromedriver
+```
+
 ## Develop
 ```
 git clone git@github.com:wefindx/metadrive.git && cd metadrive
 virtualenv -ppython3.7 .env && . .env/bin/activate
 pip install -e .
+```
+### First run
+```
+$ provide
+```
 
+```
 uvicorn metadrive.api:app --debug
 ```
+
+### Default ~/.metadrive/.config example:
+`docker run -d -p 4444:4444 selenium/standalone-chrome`
+
+```
+[GITHUB]
+username = mindey
+
+[API]
+host = 0.0.0.0
+port = 7000
+
+[CONSOLE]
+host = 0.0.0.0
+port = 7001
+
+[DRIVER_BACKENDS]
+chrome = http://0.0.0.0:4444/wd/hub
+
+[GPG]
+key = 5AFDB16B89805133F450688BDA580D1D5F5CC7AD
+
+[PROXIES]
+http =
+https =
+```
+
 
 ## Usage
 

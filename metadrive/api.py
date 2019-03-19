@@ -67,7 +67,7 @@ async def drivers(request):
     items = [{
         'id': '{scheme}://{host}{port}/driver/{name}'.format(
             scheme=request.url.scheme,
-            host=request.client.host,
+            host=API_HOST,
             port=(request.url.port not in [80,443]
                   and ':'+str(request.url.port) or ''),
             name=driver[1].split('==')[0]),
@@ -209,7 +209,7 @@ class Drive(HTTPEndpoint):
                             'count': results_count or DEFAULT_MAX_COUNT,
                             'next': '{scheme}://{host}{port}{path}?drive_id={drive_id}'.format(
                                 scheme=request.url.scheme,
-                                host=request.client.host,
+                                host=API_HOST,
                                 port=(request.url.port not in [80,443]
                                       and ':'+str(request.url.port) or ''),
                                 drive_id=drive_instance.session_id,
