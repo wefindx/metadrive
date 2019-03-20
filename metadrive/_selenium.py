@@ -1,7 +1,7 @@
 '''
 Provides a function to get a new browser with session in specific directory.
 
-get_driver(profile_name='default', profiles_dir='.chrome-profile', local=DEVELOPMENT)
+get_driver(profile='default', profiles_dir='.chrome-profile', local=DEVELOPMENT)
 
 # To create selenium driver may use something like:
 docker run -d -p 4444:4444 selenium/standalone-chrome:3.7.1-beryllium
@@ -54,8 +54,8 @@ class Remote(webdriver.Remote, TabsMixin):
 
 def get_driver(
         driver_location=config.CHROME_DRIVER,
-        profile_name='selenium',
-        porfiles_dir='.metadrive/sessions',
+        profile='default',
+        porfiles_dir='.metadrive/sessions/_selenium',
         headless=False,
         load_images=True,
         load_adblocker=True,
@@ -187,7 +187,7 @@ def get_driver(
     if local:
         profile = os.path.join(
             str(pathlib.Path.home()),
-            os.path.join(porfiles_dir, profile_name))
+            os.path.join(porfiles_dir, profile))
     else:
         profile = None
 
