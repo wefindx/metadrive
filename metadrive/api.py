@@ -126,6 +126,26 @@ class Driver(HTTPEndpoint):
         return JSONResponse(schema)
 
 
+@app.route('/drives')
+async def drives(request):
+    '''
+    summary: /drives
+    description: Lists the drives available in API.
+    responses:
+      200:
+        description: A list of drives.
+    '''
+
+    items = [
+        {'drive_id': v,
+         'drive_obj': repr(app.drives[v]),
+         # 'driver': app.drives[v].get('driver'),
+         }
+        for k, v in enumerate(app.drives)]
+
+    return JSONResponse(items)
+
+
 @app.route("/drive/{name}/{method}")
 class Drive(HTTPEndpoint):
     async def post(self, request):
