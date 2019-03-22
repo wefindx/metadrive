@@ -202,11 +202,12 @@ class Drive(HTTPEndpoint):
         if method in ['_login']:
 
             package = __import__(ndriver)
-            drive_obj = getattr(package, '_login')(drive='linkedin-driver:01')
+            drive_obj = getattr(package, '_login')(drive=drive_obj)
 
             return JSONResponse({
                 'info': "Drive created. Use it with other methods.",
-                'drive_id': drive_obj.drive_id,
+                'driver': drive_obj.drive_id.split(':')[0],
+                'drive_id': drive_obj.drive_id.split(':')[-1],
             })
 
         if drive_obj is not None:
