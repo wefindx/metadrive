@@ -174,11 +174,15 @@ class Drive(HTTPEndpoint):
             requests.post(url, params={'a': 'data'}, json={'some': 'data'})
         """
 
+        print(request.path_params)
+
+        # linkedin-driver   # linkedin-driver:xiaotink
         driver = request.path_params['name']
-        ndriver = driver.replace('-', '_')
+        ndriver = driver.split(':', 1)[0].replace('-', '_')
         method = request.path_params['method']
         params = request.query_params
-        drive_id = params.get('drive_id')
+        drive_id = driver.split(':', 1)[1]
+        # drive_id = params.get('drive_id')
         results_count = params.get('count')
 
         if '.' in method:
@@ -194,10 +198,12 @@ class Drive(HTTPEndpoint):
         if results_count is not None:
             results_count = int(results_count)
 
-        if drive_id is None:
-            drive_obj = mdrives.get(driver)
-        else:
-            drive_obj = mdrives.get('{}:{}'.format(driver,drive_id))
+        # if drive_id is None:
+        #     drive_obj = mdrives.get(driver)
+        # else:
+        #     drive_obj = mdrives.get('{}:{}'.format(driver,drive_id))
+
+        drive_obj = mdrives.get(driver)
 
         if method in ['_login']:
 
@@ -245,19 +251,18 @@ class Drive(HTTPEndpoint):
                             'results': results,
                             # 'next': [str(request.path_params), str(request.query_params)],
                             'count': results_count or DEFAULT_MAX_COUNT,
-                            'next': '{scheme}://{host}{port}{path}?drive_id={drive_id}'.format(
+                            'next': '{scheme}://{host}{port}{path}'.format(
                                 scheme=request.url.scheme,
                                 host=API_HOST,
                                 port=(request.url.port not in [80,443]
                                       and ':'+str(request.url.port) or ''),
-                                drive_id=drive_obj.drive_id.split(':')[-1],
                                 path=request['path']
                             ),
                         })
 
 
         return JSONResponse({
-            'driver': str(repr(driver)),
+            'driver': str(repr(driver.split(':', 1)[0])),
             'type': classname,
             'method': method,
             'params': dict(params),
