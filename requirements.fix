@@ -1,14 +1,16 @@
 aiofiles==0.4.0
 amqp==2.4.2
 aniso8601==3.0.2
-apiage==0.1.3
+apiage==0.1.4
 asn1crypto==0.24.0
 asyncio==3.4.3
 backcall==0.1.0
 bcrypt==3.1.6
 beautifulsoup4==4.7.1
 billiard==3.5.0.5
+blessings==1.7
 boltons==19.1.0
+bpython==0.17.1
 bs4==0.0.1
 celery==4.2.1
 certifi==2019.3.9
@@ -16,7 +18,8 @@ cffi==1.12.2
 chardet==3.0.4
 Click==7.0
 cryptography==2.6.1
-decorator==4.3.2
+curtsies==0.3.0
+decorator==4.4.0
 feedparser==5.2.1
 furl==2.0.0
 gitdb2==2.0.5
@@ -26,7 +29,9 @@ gpgrecord==0.0.4
 graphene==2.1.3
 graphql-core==2.1
 graphql-relay==0.4.5
+greenlet==0.4.15
 h11==0.8.1
+halfbakery==0.0.2
 hanziconv==0.3.2
 httptools==0.0.13
 idna==2.8
@@ -35,8 +40,10 @@ ipython-genutils==0.2.0
 jedi==0.13.3
 Jinja2==2.10
 kombu==4.4.0
+linkedin-driver==0.0.9
 MarkupSafe==1.1.1
--e git+git@github.com:wefindx/metadrive.git@dc239679e2de7f86c9f406669a71984267339a38#egg=metadrive
+metaculus==0.0.2
+-e git+git@github.com:wefindx/metadrive.git@caf6a6e4ab8aefd8328ab23e143857d4c83c47bb#egg=metadrive
 metatype==0.0.3
 metawiki==0.1.3
 mistune==0.8.4
@@ -82,11 +89,12 @@ starlette==0.10.7
 text-unidecode==1.2
 tqdm==4.31.1
 traitlets==4.3.2
+typing==3.6.6
 typology==0.2.0
 urllib3==1.24.1
-uvicorn==0.6.0
+uvicorn==0.6.1
 uvloop==0.12.1
-vine==1.2.0
+vine==1.3.0
 wcwidth==0.1.7
 websockets==7.0
 yolk3k==0.9

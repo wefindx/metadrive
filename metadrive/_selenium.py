@@ -184,23 +184,24 @@ def get_driver(
         CHROME_DRIVER_LOCATION = driver_location
         local = True
 
+
     if local:
-        profile = os.path.join(
+        profile_path = os.path.join(
             str(pathlib.Path.home()),
             os.path.join(porfiles_dir, profile))
     else:
-        profile = None
+        profile_path = None
 
-    if profile is not None:
+    if profile_path is not None:
 
-        OPTIONS.add_argument("--user-data-dir={}".format(profile));
+        OPTIONS.add_argument("--user-data-dir={}".format(profile_path));
 
-        if not profile:
-            os.makedirs(profile)
+        if not profile_path:
+            os.makedirs(profile_path)
         else:
             if recreate_profile:
                 import shutil
-                shutil.rmtree(profile)
+                shutil.rmtree(profile_path)
 
     if local:
         if CHROME_DRIVER_LOCATION:
@@ -237,6 +238,9 @@ def get_driver(
         browser.desired_capabilities.update(
             {'proxy': proxy}
         )
+
+    browser.profile = profile
+    browser.subtool = '_selenium'
 
     return browser
 

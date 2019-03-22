@@ -16,7 +16,7 @@ SESSIONS_DIR = os.path.join(DEFAULT_LOCATION, 'sessions')
 SUBTOOLS = [
     fn.rsplit('.py')[0]
     for fn in os.listdir(INSTALLED)
-    if fn.startswith('_') and fn.endswith('.py')
+    if fn.startswith('_') and fn.endswith('.py') and not fn == '__init__.py'
 ]
 
 if not os.path.exists(SESSIONS_DIR):

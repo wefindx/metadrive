@@ -25,7 +25,11 @@ from metadrive.config import (
     API_PORT,
 )
 from metadrive.utils import find_drivers
+from metadrive import drives as mdrives
 
+# TBD: Right now, (1) manually closing selenium driver, or (2) quitting from python,
+# while selenium browser is still open, breaks the integrity. To be
+# fixed later, by a externa management script, or introscpection to OS.
 
 app = Starlette(template_directory=os.path.join(INSTALLED, '_api_templates'))
 app.mount('/static', StaticFiles(directory=os.path.join(INSTALLED, '_api_static')), name='static')
@@ -44,7 +48,7 @@ definitions:
       package: {format: utf8, type: string}
     type: object
 ''')
-app.drives = {}
+
 
 DEFAULT_MAX_COUNT = 20
 PAGE_SIZE = 10
@@ -135,13 +139,24 @@ async def drives(request):
       200:
         description: A list of drives.
     '''
+    # active drives - those with drive instance
+    # passive drives - those that are saved to disk (on ~/.metadrive/sessions/)
 
     items = [
-        {'drive_id': v,
-         'drive_obj': repr(app.drives[v]),
-         # 'driver': app.drives[v].get('driver'),
-         }
-        for k, v in enumerate(app.drives)]
+        v
+        for k, v in enumerate(mdrives.all())
+    ]
+
+
+        # {'drive_id': v,
+        #  'driver': app.drives[v].driver_name,
+        #  'profile': app.drives[v].profile,
+        #  'subtool': app.drives[v].subtool,
+        #  'drive': repr(app.drives[v]),
+        #  'session_id': '',
+        #  'tab_id': ''
+        #  # 'driver': app.drives[v].get('driver'),
+        #  }
 
     return JSONResponse(items)
 
@@ -163,6 +178,8 @@ class Drive(HTTPEndpoint):
         ndriver = driver.replace('-', '_')
         method = request.path_params['method']
         params = request.query_params
+        drive_id = params.get('drive_id')
+        results_count = params.get('count')
 
         if '.' in method:
             classname, method = method.split('.', 1)
@@ -174,25 +191,25 @@ class Drive(HTTPEndpoint):
         except:
             payload = None
 
-        drive_id = params.get('drive_id')
-        results_count = params.get('count')
-        drive_instance = app.drives.get(drive_id)
-
         if results_count is not None:
             results_count = int(results_count)
+
+        if drive_id is None:
+            drive_obj = mdrives.get(driver)
+        else:
+            drive_obj = mdrives.get('{}:{}'.format(driver,drive_id))
 
         if method in ['_login']:
 
             package = __import__(ndriver)
-            drive_instance = getattr(package, '_login')() # profile=
-            app.drives[drive_instance.session_id] = drive_instance
+            drive_obj = getattr(package, '_login')(drive='linkedin-driver:01')
 
             return JSONResponse({
                 'info': "Drive created. Use it with other methods.",
-                'drive_id': drive_instance.session_id,
+                'drive_id': drive_obj.drive_id,
             })
 
-        if drive_instance is not None:
+        if drive_obj is not None:
 
             if classname is not None:
 
@@ -204,23 +221,23 @@ class Drive(HTTPEndpoint):
 
                     if method in ['_filter']:
 
-                        if not hasattr(drive_instance, 'generators'):
-                            drive_instance.generators = {}
+                        if not hasattr(drive_obj, 'generators'):
+                            drive_obj.generators = {}
 
-                        if '_filter' in drive_instance.generators:
-                            result = drive_instance.generators.get('_filter')
+                        if '_filter' in drive_obj.generators:
+                            result = drive_obj.generators.get('_filter')
                         else:
-                            result = getattr(Klass, method)(drive=drive_instance)
-                            drive_instance.generators['_filter'] = result
+                            result = getattr(Klass, method)(drive=drive_obj)
+                            drive_obj.generators['_filter'] = result
 
 
 
                         results = []
 
-                        if '_filter' in drive_instance.generators:
+                        if '_filter' in drive_obj.generators:
                             for i in range(PAGE_SIZE):
                                 results.append(
-                                    next(drive_instance.generators['_filter'])
+                                    next(drive_obj.generators['_filter'])
                                 )
 
                         return JSONResponse({
@@ -232,7 +249,7 @@ class Drive(HTTPEndpoint):
                                 host=API_HOST,
                                 port=(request.url.port not in [80,443]
                                       and ':'+str(request.url.port) or ''),
-                                drive_id=drive_instance.session_id,
+                                drive_id=drive_obj.drive_id.split(':')[-1],
                                 path=request['path']
                             ),
                         })
@@ -244,7 +261,7 @@ class Drive(HTTPEndpoint):
             'method': method,
             'params': dict(params),
             'payload': payload,
-            'drives': str(app.drives),
+            'drives': str(drives.ACTIVE),
         })
 
 # -------------------------------------------- #

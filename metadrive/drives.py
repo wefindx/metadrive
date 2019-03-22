@@ -25,8 +25,8 @@ def all():
         subtool_dir = os.path.join(SESSIONS_DIR,subtool)
 
         for drive_dir in os.listdir(subtool_dir):
+            drives_map.append((subtool, drive_dir, 'ALIVE' if ACTIVE.get(drive_dir) else 'DEAD'))
 
-            drives_map.append((subtool, drive_dir))
     return drives_map
 
 def next_string(s):
