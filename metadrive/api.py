@@ -25,7 +25,11 @@ from metadrive.config import (
     API_PORT,
 )
 from metadrive.utils import find_drivers
+from metadrive import drives as mdrives
 
+# TBD: Right now, (1) manually closing selenium driver, or (2) quitting from python,
+# while selenium browser is still open, breaks the integrity. To be
+# fixed later, by a externa management script, or introscpection to OS.
 
 app = Starlette(template_directory=os.path.join(INSTALLED, '_api_templates'))
 app.mount('/static', StaticFiles(directory=os.path.join(INSTALLED, '_api_static')), name='static')
@@ -44,7 +48,7 @@ definitions:
       package: {format: utf8, type: string}
     type: object
 ''')
-app.drives = {}
+
 
 DEFAULT_MAX_COUNT = 20
 PAGE_SIZE = 10
@@ -126,6 +130,37 @@ class Driver(HTTPEndpoint):
         return JSONResponse(schema)
 
 
+@app.route('/drives')
+async def drives(request):
+    '''
+    summary: /drives
+    description: Lists the drives available in API.
+    responses:
+      200:
+        description: A list of drives.
+    '''
+    # active drives - those with drive instance
+    # passive drives - those that are saved to disk (on ~/.metadrive/sessions/)
+
+    items = [
+        v
+        for k, v in enumerate(mdrives.all())
+    ]
+
+
+        # {'drive_id': v,
+        #  'driver': app.drives[v].driver_name,
+        #  'profile': app.drives[v].profile,
+        #  'subtool': app.drives[v].subtool,
+        #  'drive': repr(app.drives[v]),
+        #  'session_id': '',
+        #  'tab_id': ''
+        #  # 'driver': app.drives[v].get('driver'),
+        #  }
+
+    return JSONResponse(items)
+
+
 @app.route("/drive/{name}/{method}")
 class Drive(HTTPEndpoint):
     async def post(self, request):
@@ -139,10 +174,16 @@ class Drive(HTTPEndpoint):
             requests.post(url, params={'a': 'data'}, json={'some': 'data'})
         """
 
+        print(request.path_params)
+
+        # linkedin-driver   # linkedin-driver:xiaotink
         driver = request.path_params['name']
-        ndriver = driver.replace('-', '_')
+        ndriver = driver.split(':', 1)[0].replace('-', '_')
         method = request.path_params['method']
         params = request.query_params
+        drive_id = driver.split(':', 1)[1]
+        # drive_id = params.get('drive_id')
+        results_count = params.get('count')
 
         if '.' in method:
             classname, method = method.split('.', 1)
@@ -154,25 +195,28 @@ class Drive(HTTPEndpoint):
         except:
             payload = None
 
-        drive_id = params.get('drive_id')
-        results_count = params.get('count')
-        drive_instance = app.drives.get(drive_id)
-
         if results_count is not None:
             results_count = int(results_count)
+
+        # if drive_id is None:
+        #     drive_obj = mdrives.get(driver)
+        # else:
+        #     drive_obj = mdrives.get('{}:{}'.format(driver,drive_id))
+
+        drive_obj = mdrives.get(driver)
 
         if method in ['_login']:
 
             package = __import__(ndriver)
-            drive_instance = getattr(package, '_login')()
-            app.drives[drive_instance.session_id] = drive_instance
+            drive_obj = getattr(package, '_login')(drive=drive_obj)
 
             return JSONResponse({
                 'info': "Drive created. Use it with other methods.",
-                'drive_id': drive_instance.session_id,
+                'driver': drive_obj.drive_id.split(':')[0],
+                'drive_id': drive_obj.drive_id.split(':')[-1],
             })
 
-        if drive_instance is not None:
+        if drive_obj is not None:
 
             if classname is not None:
 
@@ -184,47 +228,46 @@ class Drive(HTTPEndpoint):
 
                     if method in ['_filter']:
 
-                        if not hasattr(drive_instance, 'generators'):
-                            drive_instance.generators = {}
+                        if not hasattr(drive_obj, 'generators'):
+                            drive_obj.generators = {}
 
-                        if '_filter' in drive_instance.generators:
-                            result = drive_instance.generators.get('_filter')
+                        if '_filter' in drive_obj.generators:
+                            result = drive_obj.generators.get('_filter')
                         else:
-                            result = getattr(Klass, method)(drive=drive_instance)
-                            drive_instance.generators['_filter'] = result
+                            result = getattr(Klass, method)(drive=drive_obj)
+                            drive_obj.generators['_filter'] = result
 
 
 
                         results = []
 
-                        if '_filter' in drive_instance.generators:
+                        if '_filter' in drive_obj.generators:
                             for i in range(PAGE_SIZE):
                                 results.append(
-                                    next(drive_instance.generators['_filter'])
+                                    next(drive_obj.generators['_filter'])
                                 )
 
                         return JSONResponse({
                             'results': results,
                             # 'next': [str(request.path_params), str(request.query_params)],
                             'count': results_count or DEFAULT_MAX_COUNT,
-                            'next': '{scheme}://{host}{port}{path}?drive_id={drive_id}'.format(
+                            'next': '{scheme}://{host}{port}{path}'.format(
                                 scheme=request.url.scheme,
                                 host=API_HOST,
                                 port=(request.url.port not in [80,443]
                                       and ':'+str(request.url.port) or ''),
-                                drive_id=drive_instance.session_id,
                                 path=request['path']
                             ),
                         })
 
 
         return JSONResponse({
-            'driver': str(repr(driver)),
+            'driver': str(repr(driver.split(':', 1)[0])),
             'type': classname,
             'method': method,
             'params': dict(params),
             'payload': payload,
-            'drives': str(app.drives),
+            'drives': str(drives.ACTIVE),
         })
 
 # -------------------------------------------- #
