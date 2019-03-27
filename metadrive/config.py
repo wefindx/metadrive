@@ -19,13 +19,17 @@ SUBTOOLS = [
     if fn.startswith('_') and fn.endswith('.py') and not fn == '__init__.py'
 ]
 
-if not os.path.exists(SESSIONS_DIR):
-    os.makedirs(SESSIONS_DIR)
+def ENSURE_SESSIONS():
+    if not os.path.exists(SESSIONS_DIR):
+        os.makedirs(SESSIONS_DIR)
+
     for subtool in SUBTOOLS:
         subtool_profiles_path = os.path.join(SESSIONS_DIR, subtool)
         if not os.path.exists(subtool_profiles_path):
             if subtool != '__init__':
                 os.makedirs(subtool_profiles_path)
+
+ENSURE_SESSIONS()
 
 if not os.path.exists(CONFIG_LOCATION):
     username = input("Type your GitHub username: ")

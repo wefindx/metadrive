@@ -58,7 +58,9 @@ def get(driver_or_drive, latest_or_new=True):
     package = utils.ensure_driver_installed(driver_name='pypi:{}'.format(ndriver))
     module = __import__(package)
 
-    drives = list(zip(*all()))[1]
+    d = all()
+    drives = list(zip(*d))[1] if d else []
+
     ids = sorted([d.split(':',1)[-1] for d in drives if ':' in d])
 
     if drive in drives:
@@ -81,7 +83,7 @@ def get(driver_or_drive, latest_or_new=True):
     return drive_obj
 
 
-def quit(drive):
+def close(drive):
     if drive in ACTIVE:
         ACTIVE[drive].quit()
         del ACTIVE[drive]
