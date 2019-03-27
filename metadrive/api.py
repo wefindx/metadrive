@@ -14,6 +14,7 @@ from starlette.graphql import GraphQLApp
 from starlette.endpoints import HTTPEndpoint
 from starlette.responses import HTMLResponse
 from starlette.staticfiles import StaticFiles
+from starlette.middleware.cors import CORSMiddleware
 from starlette.schemas import (
     SchemaGenerator,
     OpenAPIResponse
@@ -22,16 +23,14 @@ from starlette.schemas import (
 from metadrive.config import (
     INSTALLED,
     API_HOST,
-    API_PORT,
+    API_PORT
 )
 from metadrive.utils import find_drivers
 from metadrive import drives as mdrives
 
-# TBD: Right now, (1) manually closing selenium driver, or (2) quitting from python,
-# while selenium browser is still open, breaks the integrity. To be
-# fixed later, by a externa management script, or introscpection to OS.
 
 app = Starlette(template_directory=os.path.join(INSTALLED, '_api_templates'))
+app.add_middleware(CORSMiddleware, allow_origins=['*'])
 app.mount('/static', StaticFiles(directory=os.path.join(INSTALLED, '_api_static')), name='static')
 app.debug = True
 app.schema_generator = SchemaGenerator(
@@ -53,7 +52,6 @@ definitions:
 DEFAULT_MAX_COUNT = 20
 PAGE_SIZE = 10
 
-# -------------------------------------------- #
 
 @app.route('/drivers')
 async def drivers(request):
@@ -104,6 +102,11 @@ class Driver(HTTPEndpoint):
                 item[0]: inspect.getcallargs(item[1]) for item in core
                 if item[0].startswith('_') and
                 not item[0].startswith('__')}
+            auth.update({
+                '_logout': {
+                    'destroy': False
+                }
+            })
         except Exception as e:
             auth = {}
 
@@ -125,7 +128,6 @@ class Driver(HTTPEndpoint):
             'auth': auth,
             'types': types
         }
-         # will depend on package!
 
         return JSONResponse(schema)
 
@@ -139,24 +141,11 @@ async def drives(request):
       200:
         description: A list of drives.
     '''
-    # active drives - those with drive instance
-    # passive drives - those that are saved to disk (on ~/.metadrive/sessions/)
 
     items = [
         v
         for k, v in enumerate(mdrives.all())
     ]
-
-
-        # {'drive_id': v,
-        #  'driver': app.drives[v].driver_name,
-        #  'profile': app.drives[v].profile,
-        #  'subtool': app.drives[v].subtool,
-        #  'drive': repr(app.drives[v]),
-        #  'session_id': '',
-        #  'tab_id': ''
-        #  # 'driver': app.drives[v].get('driver'),
-        #  }
 
     return JSONResponse(items)
 
@@ -174,15 +163,11 @@ class Drive(HTTPEndpoint):
             requests.post(url, params={'a': 'data'}, json={'some': 'data'})
         """
 
-        print(request.path_params)
-
-        # linkedin-driver   # linkedin-driver:xiaotink
         driver = request.path_params['name']
         ndriver = driver.split(':', 1)[0].replace('-', '_')
         method = request.path_params['method']
         params = request.query_params
         drive_id = driver.split(':', 1)[1]
-        # drive_id = params.get('drive_id')
         results_count = params.get('count')
 
         if '.' in method:
@@ -198,23 +183,21 @@ class Drive(HTTPEndpoint):
         if results_count is not None:
             results_count = int(results_count)
 
-        # if drive_id is None:
-        #     drive_obj = mdrives.get(driver)
-        # else:
-        #     drive_obj = mdrives.get('{}:{}'.format(driver,drive_id))
-
         drive_obj = mdrives.get(driver)
 
-        if method in ['_login']:
+        if method in ['_login', '_start']:
 
             package = __import__(ndriver)
-            drive_obj = getattr(package, '_login')(drive=drive_obj)
+            drive_obj = getattr(package, method)(drive=drive_obj)
 
             return JSONResponse({
                 'info': "Drive created. Use it with other methods.",
                 'driver': drive_obj.drive_id.split(':')[0],
                 'drive_id': drive_obj.drive_id.split(':')[-1],
             })
+
+        if method in ['_logout', '_stop']:
+            pass
 
         if drive_obj is not None:
 
@@ -226,6 +209,7 @@ class Drive(HTTPEndpoint):
 
                 if method is not None:
 
+                    print('haha, method')
                     if method in ['_filter']:
 
                         if not hasattr(drive_obj, 'generators'):
@@ -249,7 +233,6 @@ class Drive(HTTPEndpoint):
 
                         return JSONResponse({
                             'results': results,
-                            # 'next': [str(request.path_params), str(request.query_params)],
                             'count': results_count or DEFAULT_MAX_COUNT,
                             'next': '{scheme}://{host}{port}{path}'.format(
                                 scheme=request.url.scheme,
@@ -270,7 +253,6 @@ class Drive(HTTPEndpoint):
             'drives': str(drives.ACTIVE),
         })
 
-# -------------------------------------------- #
 
 @app.exception_handler(404)
 async def not_found(request, exc):
