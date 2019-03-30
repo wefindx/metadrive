@@ -193,15 +193,15 @@ def ensure_driver_installed(driver_name):
     # Make sure we have that package installed.
     spec = importlib.util.find_spec(package)
     if spec is None:
-        answer = input(package +" is not installed. Install it? [Y/n] ")
-        if answer in ['y', 'Y', '']:
-            try:
-                #easy_install.main( ["-U", package_name] )
-                os.system('pip install --no-input -U {} --no-cache'.format(package))
-            except SystemExit as e:
-                pass
-        else:
-            raise Exception(package_name +" is required. Install it and run again.")
+        # answer = input(package +" is not installed. Install it? [Y/n] ")
+        # if answer in ['y', 'Y', '']:
+        try:
+            #easy_install.main( ["-U", package_name] )
+            os.system('pip install --no-input -U {} --no-cache'.format(package))
+        except SystemExit as e:
+            pass
+        # else:
+        #     raise Exception(package_name +" is required. Install it and run again.")
     else:
         # Check the version installed.
         import pkg_resources

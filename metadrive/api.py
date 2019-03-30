@@ -102,10 +102,18 @@ class Driver(HTTPEndpoint):
                 item[0]: inspect.getcallargs(item[1]) for item in core
                 if item[0].startswith('_') and
                 not item[0].startswith('__')}
+
+            if '_login' in auth.keys():
+                if 'create' not in auth['_login'].keys():
+                    auth['_login'].update({'create': True})
+
             auth.update({
                 '_logout': {
-                    'destroy': False
-                }
+                    'destroy': True
+                },
+                '_start': "()",
+                '_stop': "()",
+                '_restart': "()",
             })
         except Exception as e:
             auth = {}
@@ -178,7 +186,11 @@ class Drive(HTTPEndpoint):
         try:
             payload = await request.json()
         except:
-            payload = None
+            payload = {}
+
+        keyword = payload.get('keyword')
+
+
 
         if results_count is not None:
             results_count = int(results_count)
@@ -196,6 +208,9 @@ class Drive(HTTPEndpoint):
                 'drive_id': drive_obj.drive_id.split(':')[-1],
             })
 
+        if method in ['_restart']:
+            pass
+
         if method in ['_logout', '_stop']:
             pass
 
@@ -209,27 +224,32 @@ class Drive(HTTPEndpoint):
 
                 if method is not None:
 
-                    print('haha, method')
                     if method in ['_filter']:
 
-                        if not hasattr(drive_obj, 'generators'):
-                            drive_obj.generators = {}
+                        if not hasattr(drive_obj, 'generator'):
+                            result = getattr(Klass, method)(**dict({'drive': drive_obj}, **payload))
 
-                        if '_filter' in drive_obj.generators:
-                            result = drive_obj.generators.get('_filter')
-                        else:
-                            result = getattr(Klass, method)(drive=drive_obj)
-                            drive_obj.generators['_filter'] = result
+                            drive_obj.generator = {
+                                'name': '{}.{}'.format(classname, method),
+                                'iterator': result
+                            }
+                        elif drive_obj.generator.get('name') != '{}.{}'.format(classname, method):
+                            result = getattr(Klass, method)(**dict({'drive': drive_obj}, **payload))
 
+                            drive_obj.generator = {
+                                'name': '{}.{}'.format(classname, method),
+                                'iterator': result
+                            }
 
 
                         results = []
 
-                        if '_filter' in drive_obj.generators:
-                            for i in range(PAGE_SIZE):
-                                results.append(
-                                    next(drive_obj.generators['_filter'])
-                                )
+                        if hasattr(drive_obj, 'generator'):
+                            if drive_obj.generator.get('iterator'):
+                                for i in range(PAGE_SIZE):
+                                    results.append(
+                                        next(drive_obj.generator['iterator'])
+                                    )
 
                         return JSONResponse({
                             'results': results,
@@ -250,7 +270,7 @@ class Drive(HTTPEndpoint):
             'method': method,
             'params': dict(params),
             'payload': payload,
-            'drives': str(drives.ACTIVE),
+            # 'drives': str(drives.ACTIVE),
         })
 
 
