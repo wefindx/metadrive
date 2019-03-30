@@ -1,4 +1,5 @@
 # Metadrive
+![alt txt](https://wiki.mindey.com/shared/screens/drivers.jpg)
 
 ## Prepare machine
 ```
