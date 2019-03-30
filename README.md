@@ -163,3 +163,11 @@ pkg i libjpeg-turbo-dev
 LDFLAGS="-L/system/lib/" CFLAGS="-I/data/data/com.termux/files/usr/include/" pip install Pillow
 OR LIBRARY_PATH="/system/lib" CPATH="$PREFIX/include" pip install pillow
 ```
+## Extras
+
+As a plugin, data normalization package is available, to use it, install:
+```
+pip install -U --extra-index-url https://pypi.wefindx.io/ metaform --no-cache
+```
+
+then, pass `?normalize=true` as URL parameter as part of `POST` requests. The data `results` key will be normalized.
