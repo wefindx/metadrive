@@ -178,6 +178,7 @@ class Drive(HTTPEndpoint):
         params = request.query_params
         drive_id = driver.split(':', 1)[1]
         results_count = params.get('count')
+        normalize = params.get('normalize')
 
         if '.' in method:
             classname, method = method.split('.', 1)
@@ -302,18 +303,15 @@ class Drive(HTTPEndpoint):
                                         next(drive_obj.generator['iterator'])
                                     )
 
-                        if parameters.get('normalize'):
-                            normalize = True
+                        if normalize:
                             try:
-                                import metaform
+                                from metaform import List
                             except:
                                 normalize = False
                                 print("WARNING: metaform package is not installed. Cannot normalize.")
 
-                            results = [
-                                metaform.normalize(result)
-                                for result in results
-                            ]
+                            if normalize:
+                                results = List(results).normalize()
 
 
                         return JSONResponse({
