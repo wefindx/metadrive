@@ -83,7 +83,27 @@ def get(driver_or_drive, latest_or_new=True):
     return drive_obj
 
 
-def close(drive):
-    if drive in ACTIVE:
-        ACTIVE[drive].quit()
-        del ACTIVE[drive]
+def close(drive_obj):
+    found = False
+    for name, drive in ACTIVE.items():
+        if drive == drive_obj:
+            found = True
+            break
+
+    if found:
+        drive_obj.quit()
+        del ACTIVE[name]
+
+
+def remove(drive_obj):
+    drive_id = drive_obj.drive_id
+
+    subtool = None
+    for drive in all():
+        if drive[1] == drive_id:
+            subtool = drive[0]
+
+    if subtool is not None:
+        close(drive_obj)
+        import shutil
+        shutil.rmtree(os.path.join(SESSIONS_DIR, subtool, drive_id))

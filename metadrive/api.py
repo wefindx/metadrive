@@ -114,6 +114,7 @@ class Driver(HTTPEndpoint):
                 '_start': "()",
                 '_stop': "()",
                 '_restart': "()",
+                '_remove': "()",
             })
         except Exception as e:
             auth = {}
@@ -188,19 +189,17 @@ class Drive(HTTPEndpoint):
         except:
             payload = {}
 
-        keyword = payload.get('keyword')
-
-
+        parameters = payload
 
         if results_count is not None:
             results_count = int(results_count)
 
         drive_obj = mdrives.get(driver)
 
-        if method in ['_login', '_start']:
+        if method in ['_login']:
 
             package = __import__(ndriver)
-            drive_obj = getattr(package, method)(drive=drive_obj)
+            drive_obj = getattr(package, method)(drive=drive_obj) # create=False to avoid _start
 
             return JSONResponse({
                 'info': "Drive created. Use it with other methods.",
@@ -208,13 +207,65 @@ class Drive(HTTPEndpoint):
                 'drive_id': drive_obj.drive_id.split(':')[-1],
             })
 
-        if method in ['_restart']:
-            pass
+        if method in ['_start']:
+            if drive_obj is None:
+                package = __import__(ndriver)
+                drive_obj = getattr(package, '_login')(drive=None)
 
-        if method in ['_logout', '_stop']:
-            pass
+
+        if method in ['_stop']:
+            stopping_driver = drive_obj.drive_id.split(':')[0]
+            stopping_drive = drive_obj.drive_id.split(':')[-1]
+
+            mdrives.close(drive_obj)
+            drive_obj = None
+
+
+            return JSONResponse({
+                'info': 'Drive stopped.',
+                'drive': '{}:{}'.format(
+                    stopping_driver,
+                    stopping_drive,
+                )
+            })
+
+        if method in ['_restart']:
+
+            restarting_driver = drive_obj.drive_id.split(':')[0]
+            restarting_drive = drive_obj.drive_id.split(':')[-1]
+
+            mdrives.close(drive_obj)
+
+            package = __import__(ndriver)
+            drive_obj = getattr(package, '_login')(drive=None)
+
+            return JSONResponse({
+                'info': 'Drive restarted.',
+                'drive': '{}:{}'.format(
+                    restarting_driver,
+                    restarting_drive,
+                )
+            })
+
+        if method in ['_remove']:
+            stopping_driver = drive_obj.drive_id.split(':')[0]
+            stopping_drive = drive_obj.drive_id.split(':')[-1]
+
+            mdrives.remove(drive_obj)
+            drive_obj = None
+
+            return JSONResponse({
+                'info': 'Drive removed.',
+                'drive': '{}:{}'.format(
+                    stopping_driver,
+                    stopping_drive,
+                )
+            })
+
 
         if drive_obj is not None:
+
+            parameters = dict({'drive': drive_obj}, **parameters)
 
             if classname is not None:
 
@@ -227,14 +278,14 @@ class Drive(HTTPEndpoint):
                     if method in ['_filter']:
 
                         if not hasattr(drive_obj, 'generator'):
-                            result = getattr(Klass, method)(**dict({'drive': drive_obj}, **payload))
+                            result = getattr(Klass, method)(**parameters)
 
                             drive_obj.generator = {
                                 'name': '{}.{}'.format(classname, method),
                                 'iterator': result
                             }
                         elif drive_obj.generator.get('name') != '{}.{}'.format(classname, method):
-                            result = getattr(Klass, method)(**dict({'drive': drive_obj}, **payload))
+                            result = getattr(Klass, method)(**parameters)
 
                             drive_obj.generator = {
                                 'name': '{}.{}'.format(classname, method),
@@ -250,6 +301,20 @@ class Drive(HTTPEndpoint):
                                     results.append(
                                         next(drive_obj.generator['iterator'])
                                     )
+
+                        if parameters.get('normalize'):
+                            normalize = True
+                            try:
+                                import metaform
+                            except:
+                                normalize = False
+                                print("WARNING: metaform package is not installed. Cannot normalize.")
+
+                            results = [
+                                metaform.normalize(result)
+                                for result in results
+                            ]
+
 
                         return JSONResponse({
                             'results': results,
