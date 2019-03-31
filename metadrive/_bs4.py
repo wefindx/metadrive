@@ -1,6 +1,9 @@
 import bs4
 from metadrive._requests import get_session
-from metadrive._selenium import get_driver
+from metadrive._selenium import get_drive
+
+def get_drive():
+    raise NotImplemented
 
 def get_soup(url, session=None, use='requests', proxies=None, update_headers=None):
     if use == 'requests':
@@ -19,7 +22,7 @@ def get_soup(url, session=None, use='requests', proxies=None, update_headers=Non
                 response.status_code, data))
     elif use == 'selenium':
         if session is None:
-            session = get_driver(headless=True)
+            session = get_drive(headless=True)
             session.get(url)
             data = session.page_source
             session.quit()

@@ -64,9 +64,9 @@ def get(driver_or_drive, latest_or_new=True):
     ids = sorted([d.split(':',1)[-1] for d in drives if ':' in d])
 
     if drive in drives:
-        drive_obj = module.get_driver(profile=drive)
+        drive_obj = module.get_drive(profile=drive)
     elif drive is not None:
-        drive_obj = module.get_driver(profile=drive)
+        drive_obj = module.get_drive(profile=drive)
     else:
         if ids:
             i = ids[-1]
@@ -74,7 +74,7 @@ def get(driver_or_drive, latest_or_new=True):
             i = '0'
 
         drive = '{}:{}'.format(driver, next_string(i))
-        drive_obj = module.get_driver(profile=drive)
+        drive_obj = module.get_drive(profile=drive)
 
     ACTIVE[drive] = drive_obj
 

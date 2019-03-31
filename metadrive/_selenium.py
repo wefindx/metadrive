@@ -1,7 +1,7 @@
 '''
 Provides a function to get a new browser with session in specific directory.
 
-get_driver(profile='default', profiles_dir='.chrome-profile', local=DEVELOPMENT)
+get_drive(profile='default', profiles_dir='.chrome-profile', local=DEVELOPMENT)
 
 # To create selenium driver may use something like:
 docker run -d -p 4444:4444 selenium/standalone-chrome:3.7.1-beryllium
@@ -15,6 +15,7 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.action_chains import ActionChains
 
 from metadrive import config
+from deprecated import deprecated
 
 class TabsMixin:
 
@@ -52,7 +53,7 @@ class Remote(webdriver.Remote, TabsMixin):
         self.tabs = {'default': self.current_window_handle}
         self.metaname = ''
 
-def get_driver(
+def get_drive(
         driver_location=config.CHROME_DRIVER,
         profile='default',
         porfiles_dir='.metadrive/sessions/_selenium',
@@ -243,6 +244,32 @@ def get_driver(
     browser.subtool = '_selenium'
 
     return browser
+
+@deprecated(reason="Use get_drive() instead.")
+def get_driver(
+        driver_location=config.CHROME_DRIVER,
+        profile='default',
+        porfiles_dir='.metadrive/sessions/_selenium',
+        headless=False,
+        load_images=True,
+        load_adblocker=True,
+        recreate_profile=False,
+        download_to='',
+        proxies='default',
+    ):
+
+    return get_drive(
+        driver_location=driver_location,
+        profile=profile,
+        porfiles_dir=porfiles_dir,
+        headless=headless,
+        load_images=load_images,
+        load_adblocker=load_adblocker,
+        recreate_profile=recreate_profile,
+        download_to=download_to,
+        proxies=proxies
+    )
+
 
 def save_as(element, driver):
     '''
