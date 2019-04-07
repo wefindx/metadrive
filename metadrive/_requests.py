@@ -30,6 +30,10 @@ class RequestsDrive(requests.Session):
 
             utils.save_session_data(session_prefix_file, session_data)
 
+    def quit(self):
+        del self
+
+
 def get_drive(
         profile='default',
         porfiles_dir='.metadrive/sessions/_requests',
@@ -82,10 +86,10 @@ def get_drive(
 
         if not os.path.exists(profile_path):
             os.makedirs(profile_path)
-        else:
-            if recreate_profile:
-                import shutil
-                shutil.rmtree(profile_path)
+
+        elif recreate_profile:
+            import shutil
+            shutil.rmtree(profile_path)
 
     ## ----------- TO MOVE TO MIXIN --------------- #
 
