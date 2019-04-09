@@ -176,7 +176,12 @@ class Drive(HTTPEndpoint):
         ndriver = driver.split(':', 1)[0].replace('-', '_')
         method = request.path_params['method']
         params = request.query_params
-        drive_id = driver.split(':', 1)[1]
+
+        try:
+            drive_id = driver.split(':', 1)[1]
+        except Exception as e:
+            import pdb; pdb.set_trace()
+
         results_count = params.get('count')
         normalize = params.get('normalize')
 

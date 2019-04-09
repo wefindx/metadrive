@@ -1,6 +1,7 @@
 # Copyright (c) 2018 WeFindX Foundation, CLG.
 # All Rights Reserved.
 
+import os
 from setuptools import find_packages, setup
 
 with open('README.md', 'r') as f:
@@ -8,7 +9,7 @@ with open('README.md', 'r') as f:
 
 setup(
     name='metadrive',
-    version='1.3.9',
+    version='1.4.1',
     description='Integration of controllers to drive tools.',
     long_description=long_description,
     long_description_content_type='text/markdown',
@@ -65,8 +66,10 @@ setup(
         ],
     },
     package_data = {
-        'metadrive': [
-            '_api_templates/*.html',
-            '_api_static/css/*.css']
+        'metadrive':
+            ['_ui_scripts/*',
+             '_ui_scripts/**/*',
+             '_api_templates/*.html',
+             '_api_static/css/*.css']
     }
 )

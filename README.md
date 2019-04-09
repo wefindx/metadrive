@@ -1,11 +1,6 @@
 # Metadrive
 ![alt txt](https://wiki.mindey.com/shared/screens/drivers.jpg)
 
-*Status:* The codebase needs to be reviewed, tested, and documented (ideally - self-documented, that documentation gets produced as part of building), and the development and release cycle standardized and stabilized.
-
-The codebase powers the drivers (such as the examples at [[1]](https://github.com/drivernet), [[2]](https://github.com/dimensionfoundation/linkedin_driver), etc.), which provides generators based on generic drivers provided by the metadrive (e.g., [[1]](https://github.com/wefindx/metadrive/blob/master/metadrive/_selenium.py), [[2]](https://github.com/wefindx/metadrive/blob/master/metadrive/_requests.py), etc.), which provides sessions and authentication interfaces, as well as modular API, that automatically picks up installed driver packages (with `__site_url__` variable as part of `__init__.py`), and parses their class interfaces, and provides them over the API, that converts the generators into paginators of objects with methods to trigger original actions within the systems represented by the packages. The metadrive works as a locally-run generalized system to program one's own systems and their interactions with all systems of the web, while producing normalized and sharable data objects, methods and processes a as a user's asset.
-
-
 ## Prepare machine
 ```
 sudo apt install virtualenv python3.7 python3.7-dev build-essential chromium-browser chromium-chromedriver
@@ -14,6 +9,7 @@ sudo apt install virtualenv python3.7 python3.7-dev build-essential chromium-bro
 ## Develop
 ```
 git clone git@github.com:wefindx/metadrive.git && cd metadrive
+git submodule update --init --recursive
 virtualenv -ppython3.7 .env && . .env/bin/activate
 pip install -e .
 ```
@@ -24,6 +20,10 @@ $ provide
 
 ```
 uvicorn metadrive.api:app --debug
+```
+### To incorporate the latest data-browser
+```
+git update-index --cacheinfo 160000,<commit hash of data browser repo>,metadrive/_ui_scripts
 ```
 
 ### Default ~/.metadrive/.config example:

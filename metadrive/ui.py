@@ -37,6 +37,6 @@ class ReactJS:
         if 'node_modules' in os.listdir(self.path):
             os.system('cd {path} && yarn start'.format(path=self.path))
         else:
-            build()
+            self.build()
             os.system('cd {path} && yarn start'.format(path=self.path))
 

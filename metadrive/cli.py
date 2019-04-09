@@ -80,7 +80,6 @@ def consume(ui=None):
         from metadrive.ui import NCurses
         NCurses().run()
 
-
     server.terminate()
 
 
