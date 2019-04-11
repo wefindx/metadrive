@@ -9,7 +9,7 @@ with open('README.md', 'r') as f:
 
 setup(
     name='metadrive',
-    version='1.4.5',
+    version='1.4.6',
     description='Integration of controllers to drive tools.',
     long_description=long_description,
     long_description_content_type='text/markdown',
@@ -69,6 +69,11 @@ setup(
         'metadrive':
             ['_ui_scripts/*',
              '_ui_scripts/**/*',
+             '_ui_scripts/**/**/*',
+             '_ui_scripts/**/**/**/*',
+             '_ui_scripts/**/**/**/**/*',
+             '_ui_scripts/**/**/**/**/**/*',
+             '_ui_scripts/**/**/**/**/**/**/*',
              '_api_templates/*.html',
              '_api_static/css/*.css']
     }
