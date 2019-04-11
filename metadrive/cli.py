@@ -71,7 +71,7 @@ def consume(ui=None):
     server.daemon = True
     server.start()
 
-    if ui is not None:
+    if ui is None:
         # if ui == 'react'
         from metadrive.ui import ReactJS
         ReactJS().start()
