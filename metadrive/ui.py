@@ -2,7 +2,11 @@ import os
 import imp
 import npyscreen
 
-from metadrive.config import INSTALLED
+from metadrive.config import (
+    INSTALLED,
+    CONSOLE_HOST,
+    CONSOLE_PORT,
+)
 
 class NCurses(npyscreen.NPSApp):
 
@@ -26,6 +30,16 @@ class ReactJS:
             self.path = os.getcwd()
 
     def build(self):
+
+        if not os.path.exists('{path}/.env'.format(self.path)):
+            with open('{path}/.env'.format(self.path), 'w') as f:
+                f.write(
+                    'REACT_APP_API_SERVER=http://{host}:{port}'.format(
+                        host=CONSOLE_HOST,
+                        port=CONSOLE_PORT
+                    )
+                )
+
 
         if 'node_modules' in os.listdir(self.path):
             os.system('rm -rf {path}/node_modules && yarn install'.format(self.path))
