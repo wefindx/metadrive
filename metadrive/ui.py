@@ -31,8 +31,8 @@ class ReactJS:
 
     def build(self):
 
-        if not os.path.exists('{path}/.env'.format(self.path)):
-            with open('{path}/.env'.format(self.path), 'w') as f:
+        if not os.path.exists('{path}/.env'.format(path=self.path)):
+            with open('{path}/.env'.format(path=self.path), 'w') as f:
                 f.write(
                     'REACT_APP_API_SERVER=http://{host}:{port}'.format(
                         host=CONSOLE_HOST,
