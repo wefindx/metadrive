@@ -284,6 +284,11 @@ class Drive(HTTPEndpoint):
                     if method in ['_filter']:
 
                         if not hasattr(drive_obj, 'generator'):
+
+                            # TEMPORARY:
+                            if 'search' in parameters:
+                                del parameters['search']
+
                             result = getattr(Klass, method)(**parameters)
 
                             drive_obj.generator = {
