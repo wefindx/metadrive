@@ -1,6 +1,5 @@
 import os
 import imp
-import npyscreen
 
 from metadrive.config import (
     INSTALLED,
@@ -8,17 +7,26 @@ from metadrive.config import (
     CONSOLE_PORT,
 )
 
-class NCurses(npyscreen.NPSApp):
+class NCurses:
 
-    def main(self):
-        F  = npyscreen.Form(name = "Welcome to MetaDrive!",)
-        t  = F.add(npyscreen.TitleText, name = "URL:",)
-        ml = F.add(npyscreen.MultiLineEdit,
-               value = """data output goes here...\n""",
-               max_height=45, rely=9)
+    def run(self):
 
-        # This lets the user interact with the Form.
-        F.edit()
+        import npyscreen
+
+        class NCurse(npyscreen.NPSApp):
+
+            def main(self):
+
+                F  = npyscreen.Form(name = "Welcome to MetaDrive!",)
+                t  = F.add(npyscreen.TitleText, name = "URL:",)
+                ml = F.add(npyscreen.MultiLineEdit,
+                       value = """data output goes here...\n""",
+                       max_height=45, rely=9)
+
+                # This lets the user interact with the Form.
+                F.edit()
+
+        NCurse().run()
 
 
 class ReactJS:
