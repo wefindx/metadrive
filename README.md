@@ -3,6 +3,26 @@
 # Metadrive
 ![alt txt](https://wiki.mindey.com/shared/screens/drivers.jpg)
 
+Metadrive introduces simple generic interfaces to the objects within web APIs, allowing for generation (searching), and management of items on the web systems.
+
+The drivers listed in [drivers.py](https://github.com/wefindx/metadrive/blob/master/metadrive/drivers.py) shall define controllers services and machines, to serialize data in [MFT-1](https://book.mindey.com/metaformat/0002-data-object-format/0002-data-object-format.html), making them convenient to automatically operate with [metaform](https://pypi.org/project/metaform/)). This list of drivers is to be provided in a distributed fashion, i.e., with GunDB.
+
+When writing drivers, optionally define `login()` function, and some generator function `harvest(limit=limit)` function in `__init__.py`. The generator function needs to return elements, where `-` key is the URL of the items.
+
+Installation may require `ncurses`.
+
+`$ harvest <resource>`
+The first command allows to crawl custom source.
+
+`$ provide`
+The second command serves the API to the APIs and data.
+
+`$ console`
+Starts console application with `get(), list(), update()` methods to manage index of all available controllers ( drivers ), and get data.
+
+`$ consume`
+Starts a GUI-based application to manage index of all available controllers ( drivers ), and interact with data objects visually.
+
 ## Prepare machine
 ```
 sudo apt install virtualenv python3.7 python3.7-dev build-essential chromium-browser chromium-chromedriver
@@ -108,28 +128,6 @@ Alternatively, to database:
 `harvest https://github.com/user/-/wiki/concept\#source --db mongodb://username:password@hostname:27017/db_name/collection`
 
 More advanced usage will be covered in the future.
-
-## About
-
-The package that introduces simple generic interfaces to the objects within web APIs, allowing for generation (searching), and management of items on the web systems.
-
-The drivers listed in [drivers.py](https://github.com/wefindx/metadrive/blob/master/metadrive/drivers.py) shall define controllers services and machines, to serialize data in [MFT-1](https://book.mindey.com/metaformat/0002-data-object-format/0002-data-object-format.html), making them convenient to automatically operate with [metaform](https://pypi.org/project/metaform/)). This list of drivers is to be provided in a distributed fashion, i.e., with GunDB.
-
-When writing drivers, optionally define `login()` function, and some generator function `harvest(limit=limit)` function in `__init__.py`. The generator function needs to return elements, where `-` key is the URL of the items.
-
-Installation may require `ncurses`.
-
-`$ harvest <resource>`
-The first command allows to crawl custom source.
-
-`$ provide`
-The second command serves the API to the APIs and data.
-
-`$ console`
-Starts console application with `get(), list(), update()` methods to manage index of all available controllers ( drivers ), and get data.
-
-`$ consume`
-Starts a GUI-based application to manage index of all available controllers ( drivers ), and interact with data objects visually.
 
 ## Android
 
