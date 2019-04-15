@@ -28,28 +28,36 @@ Starts a GUI-based application to manage index of all available controllers ( dr
 sudo apt install virtualenv python3.7 python3.7-dev build-essential chromium-browser chromium-chromedriver
 ```
 
-## Develop
+## Installation
+
+The guide provides for the instructions on how to install Metadrive to a virtual environment, so create and activate it first, running the following commands:
+
 ```
-git clone git@github.com:wefindx/metadrive.git && cd metadrive
-git submodule update --init --recursive
-virtualenv -ppython3.7 .env && . .env/bin/activate
+virtualenv -p python3.7 metadrive-env
+. ./metadrive-env/bin/activate
+```
+
+Then, install Metadrive from its source code
+
+```
+git clone https://github.com/wefindx/metadrive.git
+cd metadrive
 pip install -e .
 ```
-### First run
-```
-$ provide
-```
+
+or from its package
 
 ```
-uvicorn metadrive.api:app --debug
-```
-### To incorporate the latest data-browser
-```
-git update-index --cacheinfo 160000,<commit hash of data browser repo>,metadrive/_ui_scripts
+pip install metadrive
 ```
 
-### Default ~/.metadrive/.config example:
-`docker run -d -p 4444:4444 selenium/standalone-chrome`
+Finally, run Metadrive, executing
+
+```
+provide
+```
+
+The command above will ask you to type your GitHub username. When you are done, the `.metadrive/config` will be created in your home directory and the server will start. The example of how `.metadrive/config` may look like:
 
 ```
 [GITHUB]
@@ -61,28 +69,11 @@ port = 7000
 
 [CONSOLE]
 host = 0.0.0.0
-port = 7001
+port = 7000
 
 [DRIVER_BACKENDS]
-chrome = http://0.0.0.0:4444/wd/hub
-
-[GPG]
-key = 5AFDB16B89805133F450688BDA580D1D5F5CC7AD
-
-[PROXIES]
-http =
-https =
+chrome = /usr/bin/chromedriver
 ```
-
-
-## Usage
-
-Basic Installation:
-```
-pip install metadrive
-```
-
-(check installation requirements for specific systems at the bottom)
 
 ## Driver package structure:
 ```
