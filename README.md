@@ -131,11 +131,6 @@ Starts console application with `get(), list(), update()` methods to manage inde
 `$ consume`
 Starts a GUI-based application to manage index of all available controllers ( drivers ), and interact with data objects visually.
 
-## Private PyPI repository of drivers
-## Private organization '-' repository
-
-# Installation requirements
-
 ## Android
 
 If installed on Termux (Android), needs:
