@@ -23,10 +23,15 @@ from starlette.schemas import (
 from metadrive.config import (
     INSTALLED,
     API_HOST,
-    API_PORT
+    API_PORT,
+    DATA_DIR,
+)
+from metadrive.cli import (
+    FILENAME_LENGTH_LIMIT
 )
 from metadrive.utils import find_drivers
 from metadrive import drives as mdrives
+from typology.utils import slug
 
 
 app = Starlette(template_directory=os.path.join(INSTALLED, '_api_templates'))
@@ -51,6 +56,8 @@ definitions:
 
 DEFAULT_MAX_COUNT = 20
 PAGE_SIZE = 10
+DATA_PATH = None
+DATA_FOLDER = None
 
 
 @app.route('/drivers')
@@ -176,11 +183,11 @@ class Drive(HTTPEndpoint):
         ndriver = driver.split(':', 1)[0].replace('-', '_')
         method = request.path_params['method']
         params = request.query_params
+        drive_id = driver.split(':', 1)[1]
 
-        try:
-            drive_id = driver.split(':', 1)[1]
-        except Exception as e:
-            import pdb; pdb.set_trace()
+        DATA_FOLDER = os.path.join(DATA_DIR, driver)
+        if not os.path.exists(DATA_FOLDER):
+            os.makedirs(DATA_FOLDER)
 
         results_count = params.get('count')
         normalize = params.get('normalize')
@@ -189,6 +196,11 @@ class Drive(HTTPEndpoint):
             classname, method = method.split('.', 1)
         else:
             classname, method = None, method
+
+        DATA_PATH = os.path.join(DATA_DIR, driver, classname)
+
+        if not os.path.exists(DATA_PATH):
+            os.makedirs(DATA_PATH)
 
         try:
             payload = await request.json()
@@ -309,9 +321,26 @@ class Drive(HTTPEndpoint):
                         if hasattr(drive_obj, 'generator'):
                             if drive_obj.generator.get('iterator'):
                                 for i in range(PAGE_SIZE):
-                                    results.append(
-                                        next(drive_obj.generator['iterator'])
-                                    )
+
+                                    item = next(drive_obj.generator['iterator'])
+                                    results.append(item)
+
+                                    # Creating Filename
+                                    # To refactor with cli.py:152
+                                    ID = item.get('-')
+                                    if ID is None:
+                                        if item.get('url') is not None:
+                                            item['-'] = item.get('url')
+                                            ID = item.get('url')
+                                        else:
+                                            raise Exception("The driver emitted items must have '-' (or 'url') key containing URLs of items.")
+                                    s = slug(ID)
+                                    ID = s[:FILENAME_LENGTH_LIMIT-5]+'.yaml'
+
+                                    location = os.path.join(DATA_PATH, ID)
+
+                                    with open(location, 'w') as f:
+                                        f.write(yaml.dump(results[-1]))
 
                         if normalize:
                             try:

@@ -13,11 +13,14 @@ DEFAULT_LOCATION = os.path.join(HOME,'.metadrive')
 CONFIG_LOCATION = os.path.join(DEFAULT_LOCATION, 'config')
 CREDENTIALS_DIR = os.path.join(DEFAULT_LOCATION, '-/+')
 SESSIONS_DIR = os.path.join(DEFAULT_LOCATION, 'sessions')
+DATA_DIR = os.path.join(DEFAULT_LOCATION, 'data')
+
 SUBTOOLS = [
     fn.rsplit('.py')[0]
     for fn in os.listdir(INSTALLED)
     if fn.startswith('_') and fn.endswith('.py') and not fn == '__init__.py'
 ]
+
 
 def ENSURE_SESSIONS():
     if not os.path.exists(SESSIONS_DIR):
@@ -30,6 +33,14 @@ def ENSURE_SESSIONS():
                 os.makedirs(subtool_profiles_path)
 
 ENSURE_SESSIONS()
+
+def ENSURE_DATA():
+    if not os.path.exists(DATA_DIR):
+        os.makedirs(DATA_DIR)
+
+ENSURE_DATA()
+
+
 
 if not os.path.exists(CONFIG_LOCATION):
     username = input("Type your GitHub username: ")
