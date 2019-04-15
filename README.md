@@ -1,3 +1,5 @@
+[![pypi](https://badge.fury.io/py/metadrive.svg)](https://badge.fury.io/py/metadrive)
+
 # Metadrive
 ![alt txt](https://wiki.mindey.com/shared/screens/drivers.jpg)
 
