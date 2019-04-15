@@ -4,7 +4,7 @@
 
 - `resource`: any addressable system with I/O capabilities.
 - `driver`: a package, that implements the below `Package Rules`.
-- `drive`: a pair of driver package name and session data, encoded and stored as an encapsuled unit in isolated location
+- `drive`: a pair of driver package name and session data, encoded and stored as an encapsuled unit in isolated location.
 - `subtool`: an property of metadrive, that implements a middleware and extension of a generic package, like selenium, ansible, etc., by providing (MUST) `get_drive` method, that returns a `drive` ([example](https://github.com/wefindx/metadrive/blob/master/metadrive/_requests.py#L12)), that binds session data with driver.
 - `types`: term describing groups of classes of things, that can have instances. (For example, term: user, class: AirBnbUser, instance: Joe) 
 
