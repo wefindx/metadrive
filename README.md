@@ -161,6 +161,10 @@ pip install -U --extra-index-url https://pypi.wefindx.io/ metaform --no-cache
 
 then, pass `?normalize=true` as URL parameter as part of `POST` requests. The data `results` key will be normalized.
 
+## Authors
+
+See [AUTHORS](AUTHORS.md).
+
 ## Licensing
 
 metadrive is available under the [Apache License, Version 2.0](LICENSE).
