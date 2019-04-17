@@ -21,4 +21,5 @@ In order to make your software package available as a metadrive API module, the 
   - Each `class` MUST have `@classmethod` method named `_filter`, that returns a generator for class instances.
   - Each `class` MAY have `@classmethod` method named `_get`, that returns an instance of class.
   - Each `class` MAY have `@classmethod` method named `_update`, that allows creating/modifying/deleting of class instances in `resource`.
+  - Each class method MUST return instance of classes that inherit from a `Dict` class specified in [metatype](https://github.com/wefindx/metatype/) package, which wraps various [LinkedData](https://en.wikipedia.org/wiki/Linked_data) formats.
 4. It MAY have `_harvest` function as the property of imported package, that returns a generator, made for dumping all data (full crawl) from resource.
