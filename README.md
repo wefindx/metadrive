@@ -75,6 +75,12 @@ port = 7000
 chrome = /usr/bin/chromedriver
 ```
 
+However, `provide` does not auto-reload and requires re-running, so if you want to run Metadrive for the development purposes, interrupt the `provide` process and execute the following command
+
+```
+uvicorn metadrive.api:app --debug
+```
+
 ## Driver package structure:
 ```
 .
