@@ -98,16 +98,6 @@ $ curl http://127.0.0.1:7000/drivers
 
 Here's the driver which has just been installed.
 
-## Driver package structure:
-```
-.
-├── driver_name
-│   ├── __init__.py   # _login(), and an items generator function _harvest()
-│   └── api.py        # classes, that define methods _get() and _filter() generators.
-├── README.md
-└── setup.py
-```
-
 ## Android
 
 If installed on Termux (Android), needs:
