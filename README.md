@@ -3,25 +3,16 @@
 # Metadrive
 ![alt txt](https://wiki.mindey.com/shared/screens/drivers.jpg)
 
-Metadrive introduces simple generic interfaces to the objects within web APIs, allowing for generation (searching), and management of items on the web systems.
+Metadrive helps users gather the information from different Internet resources (e.g. [Linkedin](https://linkedin.com), [HTH Worldwide](https://hthworldwide.com), etc). It provides one API to rule them all. To gather the information from this or that resource there must be so called driver written especially for the resource. There are drivers which already exist. For example,
+* Halfbakery: [halfbakery_driver](https://github.com/drivernet/halfbakery_driver)
+* HTH Worldwide: [hthworld_driver](https://github.com/drivernet/hthworld_driver)
+* Kompass: [kompass_driver](https://github.com/drivernet/kompass_driver)
+* Linkedin: [linkedin_driver](https://github.com/drivernet/linkedin_driver)
+* Metaculus: [metaculus_driver](https://github.com/drivernet/metaculus_driver)
+* ResearchGate: [researchgate_driver](https://github.com/drivernet/researchgate_driver)
+* Versli Lietuva: [verslilietuva_driver](https://github.com/drivernet/verslilietuva_driver)
 
-The drivers listed in [drivers.py](https://github.com/wefindx/metadrive/blob/master/metadrive/drivers.py) shall define controllers services and machines, to serialize data in [MFT-1](https://book.mindey.com/metaformat/0002-data-object-format/0002-data-object-format.html), making them convenient to automatically operate with [metaform](https://pypi.org/project/metaform/)). This list of drivers is to be provided in a distributed fashion, i.e., with GunDB.
-
-When writing drivers, optionally define `login()` function, and some generator function `harvest(limit=limit)` function in `__init__.py`. The generator function needs to return elements, where `-` key is the URL of the items.
-
-Installation may require `ncurses`.
-
-`$ harvest <resource>`
-The first command allows to crawl custom source.
-
-`$ provide`
-The second command serves the API to the APIs and data.
-
-`$ console`
-Starts console application with `get(), list(), update()` methods to manage index of all available controllers ( drivers ), and get data.
-
-`$ consume`
-Starts a GUI-based application to manage index of all available controllers ( drivers ), and interact with data objects visually.
+Some of the drivers are awaiting to be implemented. Studying the Metadrive API will help developers to write the drivers for those resources which are needed them right now. A unified API is the killer feature of Metadrive and allows writing drivers to have a unified UI to the whole world.
 
 ## Prepare machine
 ```
@@ -80,6 +71,32 @@ However, `provide` does not auto-reload and requires re-running, so if you want 
 ```
 uvicorn metadrive.api:app --debug
 ```
+
+### Installing drivers
+
+After finishing the Metadrive installation you may check the drivers available right now.
+
+```
+$ curl http://127.0.0.1:7000/drivers
+[]
+```
+
+So, there are no drivers and it's ok since they have to be installed separately.
+
+Choose one of the above-mentioned drivers. Let's say it's `linkedin_driver`. Execute the following command to install it
+
+```
+pip install linkedin_driver
+```
+
+and run the second-to-last command one more time
+
+```
+$ curl http://127.0.0.1:7000/drivers
+[{"id":"http://0.0.0.0:7000/driver/linkedin-driver","site":"https://www.linkedin.com","package":"linkedin-driver==0.1.8"}]
+```
+
+Here's the driver which has just been installed.
 
 ## Driver package structure:
 ```
