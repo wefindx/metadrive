@@ -236,5 +236,3 @@ def ensure_driver_installed(driver_name):
                         pass
 
     return package
-
-
