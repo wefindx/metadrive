@@ -185,7 +185,11 @@ class Drive(HTTPEndpoint):
         params = request.query_params
         drive_id = driver.split(':', 1)[1]
 
-        DATA_FOLDER = os.path.join(DATA_DIR, driver)
+        if os.name in ['nt']:
+            DATA_FOLDER = os.path.join(DATA_DIR, driver.replace(':', '__'))
+        else:
+            DATA_FOLDER = os.path.join(DATA_DIR, driver)
+
         if not os.path.exists(DATA_FOLDER):
             os.makedirs(DATA_FOLDER)
 
@@ -197,7 +201,10 @@ class Drive(HTTPEndpoint):
         else:
             classname, method = None, method
 
-        DATA_PATH = os.path.join(DATA_DIR, driver, classname)
+        if os.name in ['nt']:
+            DATA_PATH = os.path.join(DATA_DIR, driver.replace(':', '__'), classname)
+        else:
+            DATA_PATH = os.path.join(DATA_DIR, driver, classname)
 
         if not os.path.exists(DATA_PATH):
             os.makedirs(DATA_PATH)
