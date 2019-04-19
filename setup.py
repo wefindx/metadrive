@@ -9,14 +9,14 @@ with open('README.md', 'r') as f:
 
 setup(
     name='metadrive',
-    version='1.4.9',
+    version='1.4.9.1',
     description='Integration of controllers to drive tools.',
     long_description=long_description,
     long_description_content_type='text/markdown',
     url='https://gitlab.com/wefindx/metadrive',
     author='Mindey',
     author_email='mindey@qq.com',
-    license='MIT',
+    license='Apache 2.0',
     packages = find_packages(exclude=['docs', 'tests*']),
     install_requires=[
         'metawiki',

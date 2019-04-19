@@ -29,7 +29,7 @@ def find_drivers():
 
         if os.path.exists(fname):
 
-            with open(fname, 'r') as f:
+            with open(fname, 'r', encoding='utf-8') as f:
 
                 for line in f:
                     if '__site_url__' in line:
@@ -236,5 +236,3 @@ def ensure_driver_installed(driver_name):
                         pass
 
     return package
-
-

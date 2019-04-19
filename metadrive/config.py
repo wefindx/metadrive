@@ -48,6 +48,7 @@ if not os.path.exists(CONFIG_LOCATION):
     config['GITHUB'] = {'USERNAME': username}
     config['API'] = {'HOST': '0.0.0.0', 'PORT': 7000}
     config['CONSOLE'] = {'HOST': '0.0.0.0', 'PORT': 7000}
+    config['PROXIES'] = {'http': '', 'https': ''}
     config['DRIVER_BACKENDS'] = {
         'CHROME': '/usr/bin/chromedriver' # e.g., or http://0.0.0.0:4444/wd/hub, etc.
     }

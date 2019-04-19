@@ -66,7 +66,10 @@ def get(driver_or_drive, latest_or_new=True):
     if drive in drives:
         drive_obj = module.get_drive(profile=drive)
     elif drive is not None:
-        drive_obj = module.get_drive(profile=drive)
+        if os.name in ['nt']:
+            drive_obj = module.get_drive(profile=drive.replace(':', '__'))
+        else:
+            drive_obj = module.get_drive(profile=drive)
     else:
         if ids:
             i = ids[-1]
