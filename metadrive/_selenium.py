@@ -7,6 +7,7 @@ get_drive(profile='default', profiles_dir='.chrome-profile', local=DEVELOPMENT)
 docker run -d -p 4444:4444 selenium/standalone-chrome:3.7.1-beryllium
 '''
 import os
+import inspect
 import pathlib
 
 from selenium import webdriver
@@ -242,6 +243,7 @@ def get_drive(
 
     browser.profile = profile
     browser.subtool = '_selenium'
+    browser.caller_module = inspect.getmodule(inspect.currentframe().f_back)
 
     return browser
 
