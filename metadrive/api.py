@@ -332,22 +332,11 @@ class Drive(HTTPEndpoint):
                                     item = next(drive_obj.generator['iterator'])
                                     results.append(item)
 
-                                    # Creating Filename
-                                    # To refactor with cli.py:152
-                                    ID = item.get('-')
-                                    if ID is None:
-                                        if item.get('url') is not None:
-                                            item['-'] = item.get('url')
-                                            ID = item.get('url')
-                                        else:
-                                            raise Exception("The driver emitted items must have '-' (or 'url') key containing URLs of items.")
-                                    s = slug(ID)
-                                    ID = s[:FILENAME_LENGTH_LIMIT-5]+'.yaml'
+                                    if item.drive is None:
+                                        item.drive = drive_obj.drive_id
+                                        item['@'] = drive_obj.drive_id
 
-                                    location = os.path.join(DATA_PATH, ID)
-
-                                    with open(location, 'w') as f:
-                                        f.write(yaml.dump(results[-1]))
+                                    item.save()
 
                         if normalize:
                             try:
