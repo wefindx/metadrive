@@ -333,6 +333,9 @@ class Drive(HTTPEndpoint):
                                     results.append(item)
 
                                     # save #
+                                    if item.drive is None:
+                                        item.drive = drive_obj.drive_id
+
                                     item.save()
 
                         if normalize:
