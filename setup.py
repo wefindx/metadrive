@@ -9,7 +9,7 @@ with open('README.md', 'r') as f:
 
 setup(
     name='metadrive',
-    version='1.4.9.4',
+    version='1.4.9.5',
     description='Integration of controllers to drive tools.',
     long_description=long_description,
     long_description_content_type='text/markdown',
@@ -32,7 +32,7 @@ setup(
         'graphene==2.1.3',
         'ipython==7.3.0',
         'jinja2==2.10',
-        'metatype==0.0.3',
+        'metatype==0.0.5',
         'metawiki==0.1.3',
         'npyscreen==4.10.5',
         'paramiko==2.4.2',
