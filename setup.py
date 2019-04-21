@@ -32,7 +32,7 @@ setup(
         'graphene==2.1.3',
         'ipython==7.3.0',
         'jinja2==2.10',
-        'metatype==0.0.5',
+        'metatype==0.0.6',
         'metawiki==0.1.3',
         'npyscreen==4.10.5',
         'paramiko==2.4.2',
