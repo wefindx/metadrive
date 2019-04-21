@@ -332,9 +332,9 @@ class Drive(HTTPEndpoint):
                                     item = next(drive_obj.generator['iterator'])
                                     results.append(item)
 
-                                    # save #
                                     if item.drive is None:
                                         item.drive = drive_obj.drive_id
+                                        item['@'] = drive_obj.drive_id
 
                                     item.save()
 
