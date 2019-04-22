@@ -9,7 +9,7 @@ with open('README.md', 'r') as f:
 
 setup(
     name='metadrive',
-    version='1.4.10.1',
+    version='1.4.10.2',
     description='Integration of controllers to drive tools.',
     long_description=long_description,
     long_description_content_type='text/markdown',
