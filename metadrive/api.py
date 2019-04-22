@@ -334,7 +334,7 @@ class Drive(HTTPEndpoint):
 
                                     item.initialize()
 
-                                    if not hasattr(item.drive):
+                                    if not hasattr(item, 'drive'):
                                         item.drive = drive_obj.drive_id
                                         item['@'] = drive_obj.drive_id
                                     elif item.drive is None:
