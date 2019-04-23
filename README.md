@@ -14,6 +14,14 @@ Metadrive helps users gather the information from different Internet resources (
 
 Some of the drivers are awaiting to be implemented. Studying the Metadrive API will help developers to write the drivers for those resources which are needed them right now. A unified API is the killer feature of Metadrive and allows writing drivers to have a unified UI to the whole world.
 
+## Table of Contents
+
+- [Prepare machine](#prepare-machine)
+- [Installation](#installation)
+  * [Installing drivers](#installing-drivers)
+- [Authors](#authors)
+- [Licensing](#licensing)
+
 ## Prepare machine
 ```
 sudo apt install virtualenv python3.7 python3.7-dev build-essential chromium-browser chromium-chromedriver
