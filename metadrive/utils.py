@@ -188,7 +188,11 @@ def ensure_driver_installed(driver_name):
     #
     #     )
 
+    # cause in wikis, we used only one ':', e.g.,
+    # https://github.com/mindey/-/wiki/topic#linkedin
+    # TBD: unify the way we refer to package manager, use '::' in all cases
     packman, package = package_name.split(':')
+
 
     # Make sure we have that package installed.
     spec = importlib.util.find_spec(package)

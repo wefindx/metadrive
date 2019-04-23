@@ -5,6 +5,7 @@ import inspect
 import graphene
 import collections
 from urllib import parse
+import pkg_resources
 
 from starlette.applications import Starlette
 from starlette.responses import PlainTextResponse
@@ -184,6 +185,7 @@ class Drive(HTTPEndpoint):
         method = request.path_params['method']
         params = request.query_params
         drive_id = driver.split(':', 1)[1]
+        version = pkg_resources.require(ndriver)[0].version
 
         if os.name in ['nt']:
             DATA_FOLDER = os.path.join(DATA_DIR, driver.replace(':', '__'))
@@ -332,12 +334,26 @@ class Drive(HTTPEndpoint):
                                     item = next(drive_obj.generator['iterator'])
                                     results.append(item)
 
-                                    if not hasattr(item, '_drive'):
-                                        item._drive = drive_obj.drive_id
-                                        item['@'] = drive_obj.drive_id
-                                    elif item._drive is None:
-                                        item._drive = drive_obj.drive_id
-                                        item['@'] = drive_obj.drive_id
+                                    if (not hasattr(item, '_drive')) or (item._drive is None):
+
+
+                                        # TODO: refactor with drives.py#creating-informative-drive
+
+                                        # creating-informative-drive #
+                                        item._drive = '{packman}::{driver}=={version}:{profile}.{namespace}'.format(
+                                            packman='PyPI',
+                                            driver=drive_obj.drive_id.split(':',1)[0],
+                                            version=version,
+                                            profile=drive_obj.drive_id.rsplit(':',1)[-1],
+                                            namespace='{}.{}'.format(
+                                                item.__class__.__dict__['__module__'].split('.',1)[-1],
+                                                item.__class__.__name__,
+                                            )
+                                        )
+
+                                        item['@'] = item._drive
+
+                                        # import pdb; pdb.set_trace()
 
                                     item.save()
 
