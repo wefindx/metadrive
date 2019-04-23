@@ -8,6 +8,7 @@ from metadrive.config import (
 )
 from metadrive.utils import find_drivers
 from metadrive import utils
+import pkg_resources
 
 # This package manages what profiles are created, and actually the sessions on disk,
 # rather than active sessions on API.
@@ -82,6 +83,20 @@ def get(driver_or_drive, latest_or_new=True):
     ACTIVE[drive] = drive_obj
 
     drive_obj.drive_id = drive
+    driver_version = pkg_resources.require(module)[0].version
+
+    # TODO: refactor with api.py#creating-informative-drive
+    drive_obj.spec = '{packman}::{driver}=={version}:{profile}.{namespace}'.format(
+        packman='PyPI',
+        driver=drive_obj.drive_id.split(':',1)[0],
+        version=driver_version,
+        profile=drive_obj.drive_id.rsplit(':',1)[-1],
+        namespace='api.',
+        # namspace not present, because it's a drive, but we prepare based on drivers package convention, the .api.
+        # then, in packages we only have to provide type(self).__name__, e.g.:
+        # item['@'] = drive.spec + type(self).__name__
+    )
+
 
     return drive_obj
 

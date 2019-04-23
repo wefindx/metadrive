@@ -336,8 +336,10 @@ class Drive(HTTPEndpoint):
 
                                     if (not hasattr(item, '_drive')) or (item._drive is None):
 
-                                        # creating informative drive #
 
+                                        # TODO: refactor with drives.py#creating-informative-drive
+
+                                        # creating-informative-drive #
                                         item._drive = '{packman}::{driver}=={version}:{profile}.{namespace}'.format(
                                             packman='PyPI',
                                             driver=drive_obj.drive_id.split(':',1)[0],
