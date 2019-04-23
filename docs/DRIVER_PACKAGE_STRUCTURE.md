@@ -1,4 +1,15 @@
-# Defualt files structure
+# Driver package structure
+
+```
+.
+├── driver_name
+│   ├── __init__.py   # _login(), and an items generator function _harvest()
+│   └── api.py        # classes, that define methods _get() and _filter() generators.
+├── README.md
+└── setup.py
+```
+
+## Defualt files structure
 
 ```
 __init__.py file:

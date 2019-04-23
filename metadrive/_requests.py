@@ -1,4 +1,5 @@
 import os
+import inspect
 import pathlib
 import requests
 from metadrive import config
@@ -127,5 +128,9 @@ def get_drive(
             drive.desired_capabilities.update(
                 {'proxy': proxy}
             )
+
+
+        # LATER MOVE TO MIXIN
+        drive.caller_module = inspect.getmodule(inspect.currentframe().f_back)
 
     return drive
