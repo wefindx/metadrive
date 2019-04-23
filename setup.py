@@ -4,14 +4,18 @@
 import os
 from setuptools import find_packages, setup
 
-with open('README.md', 'r') as f:
-    long_description = f.read()
+try:
+    import pypandoc
+    LONG_DESCRIPTION = pypandoc.convert('README.md', 'rst')
+except ImportError:
+    LONG_DESCRIPTION = 'Integration of controllers to drive tools.'
+
 
 setup(
     name='metadrive',
     version='1.4.10.8',
     description='Integration of controllers to drive tools.',
-    long_description=long_description,
+    long_description=LONG_DESCRIPTION,
     long_description_content_type='text/markdown',
     url='https://gitlab.com/wefindx/metadrive',
     author='Mindey',
@@ -35,6 +39,7 @@ setup(
         'metatype',
         'metawiki',
         'npyscreen==4.10.5',
+        'pypandoc==1.4',  # only for converting README.md
         'paramiko==2.4.2',
         'pyautogui==0.9.42',
         'pymongo==3.7.2',

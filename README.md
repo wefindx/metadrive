@@ -14,6 +14,14 @@ Metadrive helps users gather the information from different Internet resources (
 
 Some of the drivers are awaiting to be implemented. Studying the Metadrive API will help developers to write the drivers for those resources which are needed them right now. A unified API is the killer feature of Metadrive and allows writing drivers to have a unified UI to the whole world.
 
+## Table of Contents
+
+- [Prepare machine](#prepare-machine)
+- [Installation](#installation)
+  * [Installing drivers](#installing-drivers)
+- [Authors](#authors)
+- [Licensing](#licensing)
+
 ## Prepare machine
 ```
 sudo apt install virtualenv python3.7 python3.7-dev build-essential chromium-browser chromium-chromedriver
@@ -105,30 +113,7 @@ $ curl http://127.0.0.1:7000/drivers
 
 Here's the driver which has just been installed.
 
-## Android
 
-If installed on Termux (Android), needs:
-```
-pkg i clang
-pkg i make
-pkg i python-dev
-pkg i libcrypt-dev
-pkg i libffi-dev
-pkg i openssl
-pkg i openssl-dev
-pkg i openssl-tool
-pkg i libjpeg-turbo-dev
-LDFLAGS="-L/system/lib/" CFLAGS="-I/data/data/com.termux/files/usr/include/" pip install Pillow
-OR LIBRARY_PATH="/system/lib" CPATH="$PREFIX/include" pip install pillow
-```
-## Extras
-
-As a plugin, data normalization package is available, to use it, install:
-```
-pip install -U --extra-index-url https://pypi.wefindx.io/ metaform --no-cache
-```
-
-then, pass `?normalize=true` as URL parameter as part of `POST` requests. The data `results` key will be normalized.
 
 ## Authors
 
