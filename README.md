@@ -3,7 +3,7 @@
 # Metadrive
 ![alt txt](https://wiki.mindey.com/shared/screens/drivers.jpg)
 
-Metadrive helps users gather the information from different Internet resources (e.g. [Linkedin](https://linkedin.com), [HTH Worldwide](https://hthworldwide.com), etc). It provides one API to rule them all. To gather the information from this or that resource there must be so called driver written especially for the resource. There are drivers which already exist. For example,
+Metadrive helps users gather the information from different Internet resources (e.g. [Linkedin](https://linkedin.com), [HTH Worldwide](https://hthworldwide.com), etc). It provides one API to rule them all. To gather the information from this or that resource there must be so called driver written specifically for the resource. There are drivers which already exist. For example,
 * Halfbakery: [halfbakery_driver](https://github.com/drivernet/halfbakery_driver)
 * HTH Worldwide: [hthworld_driver](https://github.com/drivernet/hthworld_driver)
 * Kompass: [kompass_driver](https://github.com/drivernet/kompass_driver)
@@ -60,10 +60,17 @@ port = 7000
 
 [CONSOLE]
 host = 0.0.0.0
-port = 7000
+port = 7001
 
 [DRIVER_BACKENDS]
 chrome = /usr/bin/chromedriver
+
+[PROXIES]
+http =
+https =
+
+[GPG]
+key = 5AFDB16B89805133F450688BDA580D1D5F5CC7AD
 ```
 
 However, `provide` does not auto-reload and requires re-running, so if you want to run Metadrive for the development purposes, interrupt the `provide` process and execute the following command

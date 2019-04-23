@@ -332,13 +332,11 @@ class Drive(HTTPEndpoint):
                                     item = next(drive_obj.generator['iterator'])
                                     results.append(item)
 
-                                    item.initialize()
-
-                                    if not hasattr(item, 'drive'):
-                                        item.drive = drive_obj.drive_id
+                                    if not hasattr(item, '_drive'):
+                                        item._drive = drive_obj.drive_id
                                         item['@'] = drive_obj.drive_id
-                                    elif item.drive is None:
-                                        item.drive = drive_obj.drive_id
+                                    elif item._drive is None:
+                                        item._drive = drive_obj.drive_id
                                         item['@'] = drive_obj.drive_id
 
                                     item.save()
