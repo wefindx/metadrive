@@ -83,7 +83,7 @@ def get(driver_or_drive, latest_or_new=True):
     ACTIVE[drive] = drive_obj
 
     drive_obj.drive_id = drive
-    driver_version = pkg_resources.require(module)[0].version
+    driver_version = pkg_resources.require(ndriver)[0].version
 
     # TODO: refactor with api.py#creating-informative-drive
     drive_obj.spec = '{packman}::{driver}=={version}:{profile}.{namespace}'.format(
