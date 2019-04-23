@@ -108,31 +108,6 @@ Here's the driver which has just been installed.
 └── setup.py
 ```
 
-## Android
-
-If installed on Termux (Android), needs:
-```
-pkg i clang
-pkg i make
-pkg i python-dev
-pkg i libcrypt-dev
-pkg i libffi-dev
-pkg i openssl
-pkg i openssl-dev
-pkg i openssl-tool
-pkg i libjpeg-turbo-dev
-LDFLAGS="-L/system/lib/" CFLAGS="-I/data/data/com.termux/files/usr/include/" pip install Pillow
-OR LIBRARY_PATH="/system/lib" CPATH="$PREFIX/include" pip install pillow
-```
-## Extras
-
-As a plugin, data normalization package is available, to use it, install:
-```
-pip install -U --extra-index-url https://pypi.wefindx.io/ metaform --no-cache
-```
-
-then, pass `?normalize=true` as URL parameter as part of `POST` requests. The data `results` key will be normalized.
-
 ## Authors
 
 See [AUTHORS](AUTHORS.md).
