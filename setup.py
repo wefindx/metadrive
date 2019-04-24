@@ -6,14 +6,14 @@ from setuptools import find_packages, setup
 
 try:
     import pypandoc
-    LONG_DESCRIPTION = pypandoc.convert('README.md', 'rst')
+    LONG_DESCRIPTION = pypandoc.convert_file('README.md', 'rst')
 except ImportError:
     LONG_DESCRIPTION = 'Integration of controllers to drive tools.'
 
 
 setup(
     name='metadrive',
-    version='1.4.10.8',
+    version='1.4.10.9',
     description='Integration of controllers to drive tools.',
     long_description=LONG_DESCRIPTION,
     long_description_content_type='text/markdown',
