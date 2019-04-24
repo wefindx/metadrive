@@ -6,7 +6,7 @@ from setuptools import find_packages, setup
 
 try:
     import pypandoc
-    LONG_DESCRIPTION = pypandoc.convert('README.md', 'rst')
+    LONG_DESCRIPTION = pypandoc.convert_text('README.md', 'rst')
 except ImportError:
     LONG_DESCRIPTION = 'Integration of controllers to drive tools.'
 
