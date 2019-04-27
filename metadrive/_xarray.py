@@ -13,7 +13,10 @@ class XarraDrive:
     def __init__(self):
         self.desired_capabilities = {}
         self.metaname = ''
-        setattr(self, 'read_csv', pandas.read_csv)
+        self.df = None
+
+    def read_csv(self, *args, **kwargs):
+        self.df = pandas.read_csv(*args, **kwargs)
 
 
 def get_drive(
