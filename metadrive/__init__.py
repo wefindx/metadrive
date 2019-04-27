@@ -20,6 +20,15 @@ if not os.path.exists(config.DEFAULT_LOCATION):
 from typology.utils import get_schema
 from metadrive import drives
 
+def get():
+    raise NotImplemented
+
+def filter():
+    raise NotImplemented
+
+def update():
+    raise NotImplemented
+
 def load(data):
     '''
     takes: saved data item
