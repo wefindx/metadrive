@@ -13,7 +13,7 @@ except ImportError:
 
 setup(
     name='metadrive',
-    version='1.4.10.9',
+    version='1.4.11.1',
     description='Integration of controllers to drive tools.',
     long_description=LONG_DESCRIPTION,
     long_description_content_type='text/markdown',
@@ -54,6 +54,7 @@ setup(
         'typology',
         'uvicorn==0.6.1',
         'yolk3k==0.9',
+        'xarray==0.12.1',
     ],
     extras_require = {
         'test': ['coverage', 'pytest', 'pytest-cov'],
