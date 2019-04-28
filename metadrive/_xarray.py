@@ -8,7 +8,7 @@ from metadrive import mixins
 SUBTOOL = os.path.basename(__file__).split('.py')[0]
 
 
-class XarraDrive:
+class XarrayDrive:
 
     def __init__(self):
         self.desired_capabilities = {}
@@ -28,7 +28,7 @@ def get_drive(
     proxy = mixins.set_proxies(proxies)
     local = mixins.init_profile(profile, porfiles_dir, recreate_profile)
 
-    drive = XarraDrive()
+    drive = XarrayDrive()
     drive.subtool = SUBTOOL
     drive.profile = profile
 
