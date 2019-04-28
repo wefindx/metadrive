@@ -302,6 +302,34 @@ class Drive(HTTPEndpoint):
 
                 if method is not None:
 
+                    # _get #
+
+                    if method in ['_get']:
+                        result = getattr(Klass, method)(**parameters)
+
+                        return JSONResponse({
+                            'result': result,
+                            'path': '{scheme}://{host}{port}{path}'.format(
+                                scheme=request.url.scheme,
+                                host=API_HOST,
+                                port=(request.url.port not in [80,443]
+                                      and ':'+str(request.url.port) or ''),
+                                path=request['path']
+                            ),
+                        })
+
+                        if normalize:
+                            try:
+                                from metaform import List
+                            except:
+                                normalize = False
+                                print("WARNING: metaform package is not installed. Cannot normalize.")
+
+                            if normalize:
+                                result ,= List([result]).normalize()
+
+                    # _filter #
+
                     if method in ['_filter']:
 
                         if not hasattr(drive_obj, 'generator'):
