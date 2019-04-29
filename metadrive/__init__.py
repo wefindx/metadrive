@@ -20,13 +20,32 @@ if not os.path.exists(config.DEFAULT_LOCATION):
 from typology.utils import get_schema
 from metadrive import drives
 
-def get():
+def search(source, features: dict):
+    '''
+    Object discovery by features in source.
+
+    Accepts:
+        source: drive and class, e.g. linkedin-driver:default.api.Post
+        features: object dictionary of serialized object
+
+    Returns:
+        generator of objects.
+
+    Note: url itself is a feature, too.
+    '''
     raise NotImplemented
 
-def filter():
-    raise NotImplemented
+def create(source, features: dict):
+    '''
+    Object creation by features in source.
 
-def update():
+    Accepts:
+        source: drive and class, e.g. linkedin-driver:default.api.Post
+        features: dictionary of serialized object.
+
+    Returns:
+        object's address, and success status and/or errors.
+    '''
     raise NotImplemented
 
 def load(data):
