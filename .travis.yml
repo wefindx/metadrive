@@ -1,0 +1,16 @@
+dist: xenial
+
+language: python
+
+python:
+  - 3.6
+
+install:
+  - sudo apt-get install pandoc
+  - pip install -r requirements.txt
+  - pip install pytest
+
+script:
+  - bash -c "mkdir ~/.metadrive && cp metadrive/tests/config.stub ~/.metadrive/config"
+  - py.test
+
