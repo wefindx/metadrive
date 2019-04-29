@@ -49,6 +49,7 @@ setup(
         'requests==2.21.0',
         'selenium==3.141.0',
         'slumber==0.7.1',
+        'Sphinx==2.0.1',
         'starlette==0.10.7',
         'tqdm==4.31.1',
         'typology',
