@@ -52,7 +52,7 @@ definitions:
       site: {format: utf8, type: string}
       package: {format: utf8, type: string}
     type: object
-''')
+''', Loader=yaml.FullLoader)
 
 
 DEFAULT_MAX_COUNT = 20
