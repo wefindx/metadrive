@@ -1,0 +1,20 @@
+[GITHUB]
+username = mindey
+
+[API]
+host = 0.0.0.0
+port = 7000
+
+[CONSOLE]
+host = 0.0.0.0
+port = 7001
+
+[DRIVER_BACKENDS]
+chrome = /usr/bin/chromedriver
+
+[PROXIES]
+http =
+https =
+
+[GPG]
+key = 5AFDB16B89805133F450688BDA580D1D5F5CC7AD
