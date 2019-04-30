@@ -44,6 +44,7 @@ setup(
         'pyautogui==0.9.42',
         'pymongo==3.7.2',
         'pysocks==1.6.8',
+        'pytest==4.4.1',
         'python-dateutil==2.8.0',
         'python3-xlib==0.15',
         'requests==2.21.0',
