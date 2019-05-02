@@ -35,7 +35,7 @@ setup(
         'gpgrecord==0.0.4',
         'graphene==2.1.3',
         'ipython==7.3.0',
-        'jinja2==2.10',
+        'jinja2==2.10.1',
         'metatype',
         'metawiki',
         'npyscreen==4.10.5',
