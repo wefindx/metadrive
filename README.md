@@ -19,6 +19,7 @@ Some of the drivers are awaiting to be implemented. Studying the Metadrive API w
 - [Prepare machine](#prepare-machine)
 - [Installation](#installation)
   * [Installing drivers](#installing-drivers)
+- [Documentation](#documentation)
 - [Authors](#authors)
 - [Licensing](#licensing)
 
@@ -113,7 +114,9 @@ $ curl http://127.0.0.1:7000/drivers
 
 Here's the driver which has just been installed.
 
+## Documentation
 
+The documentation for Metadrive can be found at [https://metadrive.readthedocs.io](https://metadrive.readthedocs.io/en/latest/).
 
 ## Authors
 
