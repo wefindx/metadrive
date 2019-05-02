@@ -1,3 +1,4 @@
+[![build](https://travis-ci.org/wefindx/metadrive.svg?branch=master)](https://travis-ci.org/wefindx/metadrive)
 [![pypi](https://badge.fury.io/py/metadrive.svg)](https://badge.fury.io/py/metadrive)
 
 # Metadrive
