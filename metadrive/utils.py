@@ -231,12 +231,24 @@ def ensure_driver_installed(driver_name):
 
         if latest_version is not None:
             if cmp_version(installed_version, latest_version) < 0:
-                print(latest_version, type(latest_version))
-                answer = input('You are running {}=={}'.format(package,installed_version)+", but there is newer ({}) version. Upgrade it? [y/N] ".format(latest_version))
-                if answer in ['y', 'Y']:
+
+                print('You are running {}=={}'.format(package,installed_version)+", but there is newer ({}) version.".format(latest_version))
+
+                if config.AUTO_UPGRADE_DRIVERS is None:
+                    answer = input("Upgrade it? [y/N] ")
+                    if answer in ['y', 'Y']:
+                        try:
+                            os.system('pip install --no-input -U {} --no-cache'.format(package))
+                        except SystemExit as e:
+                            pass
+
+                elif config.AUTO_UPGRADE_DRIVERS:
                     try:
                         os.system('pip install --no-input -U {} --no-cache'.format(package))
                     except SystemExit as e:
                         pass
+
+                else: # config.AUTO_UPGRADE_DRIVERS == False:
+                    pass
 
     return package
