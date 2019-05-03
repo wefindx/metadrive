@@ -9,6 +9,9 @@ port = 7000
 host = 0.0.0.0
 port = 7001
 
+[DRIVERS]
+auto_upgrade = False
+
 [DRIVER_BACKENDS]
 chrome = /usr/bin/chromedriver
 
