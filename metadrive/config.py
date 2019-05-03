@@ -67,7 +67,14 @@ API_PORT= int(config['API']['PORT'])
 CONSOLE_HOST= config['CONSOLE']['HOST']
 CONSOLE_PORT= int(config['CONSOLE']['PORT'])
 CHROME_DRIVER = config['DRIVER_BACKENDS']['CHROME']
-AUTO_UPGRADE_DRIVERS = config['DRIVERS']['auto_upgrade']
+
+if str(config['DRIVERS']['auto_upgrade']) == 'False':
+    AUTO_UPGRADE_DRIVERS = False
+elif str(config['DRIVERS']['auto_upgrade']) == 'True':
+    AUTO_UPGRADE_DRIVERS = True
+elif str(config['DRIVERS']['auto_upgrade']) == 'None':
+    AUTO_UPGRADE_DRIVERS = None
+
 
 
 
