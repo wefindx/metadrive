@@ -49,6 +49,7 @@ if not os.path.exists(CONFIG_LOCATION):
     config['API'] = {'HOST': '0.0.0.0', 'PORT': 7000}
     config['CONSOLE'] = {'HOST': '0.0.0.0', 'PORT': 7000}
     config['PROXIES'] = {'http': '', 'https': ''}
+    config['DRIVERS'] = {'auto_upgrade': False}
     config['DRIVER_BACKENDS'] = {
         'CHROME': '/usr/bin/chromedriver' # e.g., or http://0.0.0.0:4444/wd/hub, etc.
     }
@@ -67,6 +68,14 @@ CONSOLE_HOST= config['CONSOLE']['HOST']
 CONSOLE_PORT= int(config['CONSOLE']['PORT'])
 CHROME_DRIVER = config['DRIVER_BACKENDS']['CHROME']
 
+if str(config['DRIVERS']['auto_upgrade']) == 'False':
+    AUTO_UPGRADE_DRIVERS = False
+elif str(config['DRIVERS']['auto_upgrade']) == 'True':
+    AUTO_UPGRADE_DRIVERS = True
+elif str(config['DRIVERS']['auto_upgrade']) == 'None':
+    AUTO_UPGRADE_DRIVERS = None
+else:
+    AUTO_UPGRADE_DRIVERS = False
 
 
 def ENSURE_REPO():
