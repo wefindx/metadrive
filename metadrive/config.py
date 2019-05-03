@@ -74,8 +74,8 @@ elif str(config['DRIVERS']['auto_upgrade']) == 'True':
     AUTO_UPGRADE_DRIVERS = True
 elif str(config['DRIVERS']['auto_upgrade']) == 'None':
     AUTO_UPGRADE_DRIVERS = None
-
-
+else:
+    AUTO_UPGRADE_DRIVERS = False
 
 
 def ENSURE_REPO():
