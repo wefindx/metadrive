@@ -38,6 +38,7 @@ setup(
         'jinja2==2.10.1',
         'metatype',
         'metawiki',
+        'metaform',
         'npyscreen==4.10.5',
         'pypandoc==1.4',  # only for converting README.md
         'paramiko==2.4.2',
