@@ -1,10 +1,9 @@
-.. Metadrive documentation master file, created by
-   sphinx-quickstart on Sun Apr 28 22:26:41 2019.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
+Metadrive: Unified API for working with different kinds of resources
+====================================================================
 
-Welcome to Metadrive's documentation!
-=====================================
+**Metadrive** a unified API for gathering information from and performing operations on different kinds of resources.
+
+.. note:: **Metadrive** requires at least Python 3.6. Python 2 is not supported.
 
 .. toctree::
    :maxdepth: 2
