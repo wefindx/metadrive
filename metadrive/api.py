@@ -427,7 +427,7 @@ class Drive(HTTPEndpoint):
 
                             if template == 'yaml':
                                 return PlainTextResponse(
-                                    yaml.dump(metaform.metaplate(result, ret=True)[0], default_flow_style=False)
+                                    yaml.dump(metaform.metaplate(results, ret=True)[0], default_flow_style=False)
                                 )
 
                             return JSONResponse(
