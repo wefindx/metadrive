@@ -34,6 +34,9 @@ from metadrive.utils import find_drivers
 from metadrive import drives as mdrives
 from typology.utils import slug
 
+import metaform
+import metawiki
+
 
 app = Starlette(template_directory=os.path.join(INSTALLED, '_api_templates'))
 app.add_middleware(CORSMiddleware, allow_origins=['*'])
@@ -92,7 +95,7 @@ class Driver(HTTPEndpoint):
     async def get(self, request):
         '''
         summary: /driver/{name}/
-        description: Provides description (schema) of driver's methods
+        description: Provides description of driver's methods
         '''
         driver = request.path_params['name']
         params = request.query_params
@@ -140,13 +143,13 @@ class Driver(HTTPEndpoint):
             types = {}
 
 
-        schema = {
+        info = {
             'driver': driver,
             'auth': auth,
             'types': types
         }
 
-        return JSONResponse(schema)
+        return JSONResponse(info)
 
 
 @app.route('/drives')
@@ -196,7 +199,19 @@ class Drive(HTTPEndpoint):
             os.makedirs(DATA_FOLDER)
 
         results_count = params.get('count')
-        normalize = params.get('normalize')
+        schema = params.get('schema')
+        template = params.get('template')
+        refresh = params.get('refresh')
+
+        if isinstance(schema, str):
+            schema_url = metawiki.ext2url(schema)
+            if refresh is not None:
+                schema = metaform.get_schema(schema_url, refresh=True)
+            else:
+                schema = metaform.get_schema(schema_url)
+        else:
+            schema_url = None
+
 
         if '.' in method:
             classname, method = method.split('.', 1)
@@ -294,6 +309,7 @@ class Drive(HTTPEndpoint):
 
             parameters = dict({'drive': drive_obj}, **parameters)
 
+
             if classname is not None:
 
                 module = __import__(ndriver)
@@ -302,10 +318,30 @@ class Drive(HTTPEndpoint):
 
                 if method is not None:
 
-                    # _get #
+                    available_parameters = {}
+                    for key in parameters:
+                        if key in getattr(Klass, method).__code__.co_varnames:
+                            available_parameters.update({key: parameters[key]})
 
+
+                    # _get #
                     if method in ['_get']:
-                        result = getattr(Klass, method)(**parameters)
+
+                        try:
+                            result = getattr(Klass, method)(**available_parameters)
+                        except:
+                            raise Exception("Could not call method. Maybe not implemented?")
+
+                        # return if asks for template
+                        if template is not None:
+                            return JSONResponse(
+                                metaform.metaplate(result, ret=True)
+                            )
+
+                        # normalization
+                        if schema_url:
+                            result = metaform.normalize(result, schema=schema)
+                            result['*'] = schema_url
 
                         return JSONResponse({
                             'result': result,
@@ -318,15 +354,6 @@ class Drive(HTTPEndpoint):
                             ),
                         })
 
-                        if normalize:
-                            try:
-                                from metaform import List
-                            except:
-                                normalize = False
-                                print("WARNING: metaform package is not installed. Cannot normalize.")
-
-                            if normalize:
-                                result ,= List([result]).normalize()
 
                     # _filter #
 
@@ -334,18 +361,17 @@ class Drive(HTTPEndpoint):
 
                         if not hasattr(drive_obj, 'generator'):
 
-                            # TEMPORARY:
-                            if 'search' in parameters:
-                                del parameters['search']
-
-                            result = getattr(Klass, method)(**parameters)
+                            try:
+                                result = getattr(Klass, method)(**available_parameters)
+                            except:
+                                raise Exception("Could not call method. Maybe not implemented?")
 
                             drive_obj.generator = {
                                 'name': '{}.{}'.format(classname, method),
                                 'iterator': result
                             }
                         elif drive_obj.generator.get('name') != '{}.{}'.format(classname, method):
-                            result = getattr(Klass, method)(**parameters)
+                            result = getattr(Klass, method)(**available_parameters)
 
                             drive_obj.generator = {
                                 'name': '{}.{}'.format(classname, method),
@@ -360,7 +386,6 @@ class Drive(HTTPEndpoint):
                                 for i in range(PAGE_SIZE):
 
                                     item = next(drive_obj.generator['iterator'])
-                                    results.append(item)
 
                                     if (not hasattr(item, '_drive')) or (item._drive is None):
 
@@ -381,20 +406,20 @@ class Drive(HTTPEndpoint):
 
                                         item['@'] = item._drive
 
-                                        # import pdb; pdb.set_trace()
+                                    if schema_url:
+                                        item['*'] = schema_url
 
+                                    results.append(item)
                                     item.save()
 
-                        if normalize:
-                            try:
-                                from metaform import List
-                            except:
-                                normalize = False
-                                print("WARNING: metaform package is not installed. Cannot normalize.")
+                        if template is not None:
+                            return JSONResponse(
+                                metaform.metaplate(results, ret=True)[0]
+                            )
 
-                            if normalize:
-                                results = List(results).normalize()
-
+                        # normalization
+                        if schema_url:
+                            results = metaform.normalize(results, schema=[schema])
 
                         return JSONResponse({
                             'results': results,
