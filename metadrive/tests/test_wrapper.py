@@ -1,10 +1,8 @@
 import metadrive
 
-drive = metadrive.drives.get('table-driver:default')
-
-from table_driver.api import Row
-
 def test_read_table():
+    drive = metadrive.drives.get('table-driver:default')
+    from table_driver.api import Row
 
     expect = {'x': 1, 'y': 2, 'z': 3,
               '-': 'metadrive/tests/sample.csv#0',
