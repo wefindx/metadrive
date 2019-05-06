@@ -202,6 +202,7 @@ class Drive(HTTPEndpoint):
         schema = params.get('schema')
         template = params.get('template')
         refresh = params.get('refresh')
+        formatize = params.get('formatize')
 
         if isinstance(schema, str):
             schema_url = metawiki.ext2url(schema)
@@ -211,6 +212,10 @@ class Drive(HTTPEndpoint):
                 schema = metaform.get_schema(schema_url)
         else:
             schema_url = None
+
+        template_format = 'json'
+        if template in ['json', 'dict', 'yaml']:
+            template_format = template
 
 
         if '.' in method:
@@ -334,6 +339,12 @@ class Drive(HTTPEndpoint):
 
                         # return if asks for template
                         if template is not None:
+
+                            if template == 'yaml':
+                                return PlainTextResponse(
+                                    yaml.dump(metaform.metaplate(result, ret=True), default_flow_style=False)
+                                )
+
                             return JSONResponse(
                                 metaform.metaplate(result, ret=True)
                             )
@@ -413,8 +424,14 @@ class Drive(HTTPEndpoint):
                                     item.save()
 
                         if template is not None:
+
+                            if template == 'yaml':
+                                return PlainTextResponse(
+                                    yaml.dump(metaform.metaplate(result, ret=True)[0], default_flow_style=False)
+                                )
+
                             return JSONResponse(
-                                metaform.metaplate(results, ret=True)[0]
+                                metaform.metaplate(results, _format=template_format, ret=True)[0]
                             )
 
                         # normalization
