@@ -20,6 +20,17 @@ class RequestsDrive(requests.Session):
         self.metaname = ''
 
     def get(self, *args, **kwargs):
+
+        proxy = self.desired_capabilities.get('proxy')
+        if isinstance(proxy, dict):
+            socks = proxy.get('socksProxy')
+            if isinstance(socks, str):
+                proxies = {
+                    'http': 'socks5h://{}'.format(socks),
+                    'https': 'socks5h://{}'.format(socks)}
+                kwargs.update({'proxies': proxies})
+
+
         self.response = super().get(*args, **kwargs)
 
         if hasattr(self, 'profile'):
