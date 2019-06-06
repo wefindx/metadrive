@@ -4,12 +4,12 @@
 # Metadrive
 ![alt txt](https://wiki.mindey.com/shared/screens/drivers.jpg)
 
-Metadrive helps users gather the information from different Internet resources (e.g. [Linkedin](https://linkedin.com), [HTH Worldwide](https://hthworldwide.com), etc). It provides one API to rule them all. To gather the information from this or that resource there must be so called driver written specifically for the resource. There are drivers which already exist. For example,
+Metadrive helps users gather the information from different Internet resources (e.g. [Linkedin](https://linkedin.com), [HTH Worldwide](https://hthworldwide.com), etc). It provides one API to rule them all, and allows mounting and syncing web resources, as if they are disks on your operating system. To gather the information from a specific resource, there must be so called driver written specifically for the resource. There are drivers which already exist. For example,
 * Halfbakery: [halfbakery_driver](https://github.com/drivernet/halfbakery_driver)
-* HTH Worldwide: [hthworld_driver](https://github.com/drivernet/hthworld_driver)
-* Kompass: [kompass_driver](https://github.com/drivernet/kompass_driver)
 * Linkedin: [linkedin_driver](https://github.com/drivernet/linkedin_driver)
 * Metaculus: [metaculus_driver](https://github.com/drivernet/metaculus_driver)
+* HTH Worldwide: [hthworld_driver](https://github.com/drivernet/hthworld_driver)
+* Kompass: [kompass_driver](https://github.com/drivernet/kompass_driver)
 * ResearchGate: [researchgate_driver](https://github.com/drivernet/researchgate_driver)
 * Versli Lietuva: [verslilietuva_driver](https://github.com/drivernet/verslilietuva_driver)
 
