@@ -1,26 +1,47 @@
-#import git
-#git.Git("/your/directory/to/clone").clone("git://gitorious.org/git-python/mainline.git")
-
-# Known drivers
-# Github API
-
-# GET https://api.github.com/repos/:owner/:repo/contents/:path
-
 import io
+import os
 import bs4
 import tqdm
+import yaml
+import json
+import time
 import urllib
 import tarfile
 import requests
 
-def discover_drivers():
+from metadrive.config import KNOWN_DRIVERS
+
+
+def auto_discover(refresh=True):
     '''
     Goes over all PyPI packages in existence, which end with "-driver" in their name
     and returns those which have __site_url__ in their package __init__.py file, as
     a mapping enabling the discovery of drivers for Internet sites.
     '''
-    response = requests.get('https://pypi.org/simple/')
-    soup = bs4.BeautifulSoup(response.content, 'html.parser')
+
+    if os.path.exists(KNOWN_DRIVERS) and not refresh:
+        site_drivers = yaml.load(open(KNOWN_DRIVERS).read(), Loader=yaml.Loader)
+        return site_drivers
+
+    print("Downloading PyPI ...")
+    response = requests.get('https://pypi.org/simple/', stream=True)
+
+    f = io.BytesIO()
+    total_length = response.headers.get('content-length')
+    if total_length is None:
+        f.write(response.content)
+    else:
+        total_length = 10000000 #int(total_length)
+
+        with tqdm.tqdm(total=total_length) as pbar:
+            for data in response.iter_content(chunk_size=4096):
+                pbar.update(len(data))
+                f.write(data)
+
+    bindata = f.getvalue()
+    print("Done.")
+    print("Reading package URLs ...")
+    soup = bs4.BeautifulSoup(bindata, 'html.parser')
     links = soup.find_all('a')
 
     # packages known to be not a metadrive drivers
@@ -47,6 +68,14 @@ def discover_drivers():
 
     site_drivers = []
 
+    # This is for retrieving setup.py details.
+    from metadrive.utils import stdoutIO
+    import setuptools
+    def setup(**kwargs):
+        print(json.dumps(kwargs))
+    setuptools.setup = setup
+
+    print("Looking for driver packages and reading __init__.py files ...")
     for link in tqdm.tqdm(links):
         if link.attrs['href'].endswith('-driver/'):
 
@@ -72,6 +101,7 @@ def discover_drivers():
                             tar = None
 
                         if tar is not None:
+                            # import pdb; pdb.set_trace()
                             for member in tar.getnames():
 
                                 if member.endswith('driver/__init__.py'):
@@ -88,55 +118,34 @@ def discover_drivers():
                                                                 domain = urllib.parse.urlparse(site).hostname
                                                             else:
                                                                 domain = None
+
+                                                            for member in tar.getnames():
+                                                                if member.count('/') == 1:
+                                                                    if member.endswith('/setup.py'):
+                                                                        setup = tar.extractfile(member).read()
+                                                                        if setup:
+                                                                            info = setup.decode('utf-8')
+                                                                            with stdoutIO() as s:
+                                                                                exec(info)
+                                                                            info = json.loads(s.getvalue())
+                                                                        else:
+                                                                            info = None
+
                                                             site_drivers.append(
-                                                                {'domain': domain,
+                                                                {'site_url': site,
+                                                                 'domain': domain,
                                                                  'package': name,
-                                                                 'site_url': site})
+                                                                 'type': 'pypi',
+                                                                 'info': info})
                                                     break
                                     break
+
+    with open(KNOWN_DRIVERS, 'w') as f:
+        f.write(yaml.dump(site_drivers, Dumper=yaml.Dumper))
+
+    print("Saved to {}. Now you can use metadrive.drivers.all() to quickly access them.".format(KNOWN_DRIVERS))
+
     return site_drivers
 
-
-
-index = [
-    'https://gitlab.com/wefindx/infinity.git',
-    'https://gitlab.com/wefindx/metaculus.git',
-    'https://gitlab.com/wefindx/hthworldwide.git',
-    'https://gitlab.com/wefindx/kompass.git',
-    'https://gitlab.com/wefindx/linkedin.git',
-    'https://gitlab.com/wefindx/halfbakery.git',
-    'https://gitlab.com/wefindx/metaculus.git',
-    # 'https://gitlab.com/wefindx/3d-systems-prox-dmp-300.git',
-    # 'https://gitlab.com/wefindx/biodigitalapp.git',
-    # 'https://gitlab.com/wefindx/cdcvitals.git',
-    # 'https://gitlab.com/wefindx/flightradar24.git',
-    # 'https://gitlab.com/wefindx/google.git',
-    # 'https://gitlab.com/wefindx/hp-metal-jet.git',
-    # 'https://gitlab.com/wefindx/hscodeseu.git',
-    # 'https://gitlab.com/wefindx/huodongxing.git',
-    # 'https://gitlab.com/wefindx/infinity.git',
-    # 'https://gitlab.com/wefindx/jianshu.git',
-    # 'https://gitlab.com/wefindx/kakotalk.git',
-    # 'https://gitlab.com/wefindx/kik.git',
-    # 'https://gitlab.com/wefindx/kr36.git',
-    # 'https://gitlab.com/wefindx/lietuvai.git',
-    # 'https://gitlab.com/wefindx/lineapp.git',
-    # 'https://gitlab.com/wefindx/marinetraffic.git',
-    # 'https://gitlab.com/wefindx/meetupapp.git',
-    # 'https://gitlab.com/wefindx/opencorporates.git',
-    # 'https://gitlab.com/wefindx/quora.git',
-    # 'https://gitlab.com/wefindx/reddit.git',
-    # 'https://gitlab.com/wefindx/skyscanner.git',
-    # 'https://gitlab.com/wefindx/telegram.git',
-    # 'https://gitlab.com/wefindx/treebase.git',
-    # 'https://gitlab.com/wefindx/twitter.git',
-    # 'https://gitlab.com/wefindx/ubio.git',
-    # 'https://gitlab.com/wefindx/vimeo.git',
-    # 'https://gitlab.com/wefindx/wechat.git',
-    # 'https://gitlab.com/wefindx/weibo.git',
-    # 'https://gitlab.com/wefindx/whatsapp.git',
-    # 'https://gitlab.com/wefindx/windy.git',
-    # 'https://gitlab.com/wefindx/youku.git',
-    # 'https://gitlab.com/wefindx/youtube.git',
-    # 'https://gitlab.com/wefindx/zhihu.git',
-]
+def index():
+    return auto_discover(refresh=False)
