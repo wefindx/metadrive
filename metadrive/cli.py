@@ -291,20 +291,5 @@ https://github.com/drivernet/halfbakery-driver)")
     syncer.daemon = True
     syncer.start()
 
-
     mount(savedir, mountpoint)
     syncer.terminate()
-
-
-
-
-
-    # import inspect
-    # method_args = inspect.getfullargspec(method).args
-    #
-    # if 'limit' in method_args:
-    #     return method(limit=limit)
-    # else:
-    #     return method()
-    #
-
