@@ -272,13 +272,32 @@ https://github.com/drivernet/halfbakery-driver)")
         drive=drive_name
     )
 
-    drive == metadrive.drives.get(drive_fullname)
-
+    # drive == metadrive.drives.get(drive_fullname)
     savedir = os.path.join(metadrive.config.DATA_DIR, drive_fullname)
 
-    print("Connecting... [Done]")
-    print("{} -> {}".format(shorthand, mountpoint))
+    # drive = get_drive(
+    #     profile=profile,
+    #     recreate_profile=recreate_profile,
+    #     proxies=proxies)
+
+    def sync():
+        print("{} -> {}".format(shorthand, mountpoint))
+        drive = metadrive.drives.get(drive_fullname)
+        # drive = module._login(profile=drive_name) # maybe in the future we should change _login(profile->drive_name)
+        module._harvest(drive=drive)
+
+    from multiprocessing import Process
+    syncer = Process( target=sync )
+    syncer.daemon = True
+    syncer.start()
+
+
     mount(savedir, mountpoint)
+    syncer.terminate()
+
+
+
+
 
     # import inspect
     # method_args = inspect.getfullargspec(method).args
