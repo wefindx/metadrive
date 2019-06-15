@@ -44,6 +44,7 @@ def next_string(s):
                 return ns + chr(a[0])
 
 def get(driver_or_drive, latest_or_new=True):
+
     if driver_or_drive in ACTIVE:
         return ACTIVE[driver_or_drive]
 
@@ -88,7 +89,7 @@ def get(driver_or_drive, latest_or_new=True):
     # TODO: refactor with api.py#creating-informative-drive
     drive_obj.spec = '{packman}::{driver}=={version}:{profile}.{namespace}'.format(
         packman='PyPI',
-        driver=drive_obj.drive_id.split(':',1)[0],
+        driver=drive_obj.drive_id.split(':',1)[0], #.replace('-', '_'),
         version=driver_version,
         profile=drive_obj.drive_id.rsplit(':',1)[-1],
         namespace='api.',

@@ -14,6 +14,8 @@ CONFIG_LOCATION = os.path.join(DEFAULT_LOCATION, 'config')
 CREDENTIALS_DIR = os.path.join(DEFAULT_LOCATION, '-/+')
 SESSIONS_DIR = os.path.join(DEFAULT_LOCATION, 'sessions')
 DATA_DIR = os.path.join(DEFAULT_LOCATION, 'data')
+SITES_DIR = os.path.join(HOME, 'Sites')
+KNOWN_DRIVERS = os.path.join(DEFAULT_LOCATION, 'known_drivers')
 
 SUBTOOLS = [
     fn.rsplit('.py')[0]
@@ -40,6 +42,11 @@ def ENSURE_DATA():
 
 ENSURE_DATA()
 
+def ENSURE_SITES():
+    if not os.path.exists(SITES_DIR):
+        os.makedirs(SITES_DIR)
+
+ENSURE_SITES()
 
 
 if not os.path.exists(CONFIG_LOCATION):

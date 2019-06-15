@@ -13,7 +13,7 @@ except ImportError:
 
 setup(
     name='metadrive',
-    version='1.4.18',
+    version='1.4.19',
     description='Integration of controllers to drive tools.',
     long_description=LONG_DESCRIPTION,
     long_description_content_type='text/markdown',
@@ -24,6 +24,9 @@ setup(
     packages = find_packages(exclude=['docs', 'tests*']),
     install_requires=[
         'Deprecated==1.2.5',
+        'fusepy==3.0.1',
+        # 'PyGithub==1.43.7',
+        # 'pygithub3==0.5.1',
         'aiofiles==0.4.0',
         'apiage==0.1.4',
         'asyncio==3.4.3',
@@ -68,7 +71,8 @@ setup(
             'harvest=metadrive.cli:harvest',
             'provide=metadrive.cli:provide',
             'consume=metadrive.cli:consume',
-            'console=metadrive.cli:console'
+            'console=metadrive.cli:console',
+            'connect=metadrive.cli:connect'
         ],
     },
     package_data = {
