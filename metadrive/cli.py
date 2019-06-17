@@ -182,7 +182,8 @@ def harvest(resource, limit=None, output=None, db=None):
 @click.command()
 @click.argument('resource', required=True, metavar='<resource>')
 @click.argument('mountpoint', required=False, metavar='<mountpoint>')
-def connect(resource, mountpoint=None):
+@click.option('-u', '--user', required=False, type=str, help='Reuse a drive by name.')
+def connect(resource, mountpoint=None, user=None):
     """
     Mounts interactive data from a resource as a filesystem to OS.
     $ connnect <resource> [location]
@@ -263,6 +264,23 @@ https://github.com/drivernet/halfbakery-driver)")
 
     drive_name = 'default' #input("Enter the name of drive [default]: ") or 'default'
 
+    # drive = get_drive(
+    #     profile=profile,
+    #     recreate_profile=recreate_profile,
+    #     proxies=proxies)
+
+    if user is None:
+        drive = metadrive.drives.get(package.replace('_', '-'), interactive=True)
+        drive_name = drive.drive_id.rsplit(':', 1)[-1]
+    else:
+        drive_name = user
+        drive_fullname = '{package}:{drive}'.format(
+            package=package.replace('_', '-'),
+            drive=drive_name
+        )
+        drive = metadrive.drives.get(drive_fullname, interactive=False)
+
+
     mountpoint = '{}:{}'.format(mountpoint, drive_name)
     if not os.path.exists(mountpoint):
         os.makedirs(mountpoint)
@@ -275,15 +293,8 @@ https://github.com/drivernet/halfbakery-driver)")
     # drive == metadrive.drives.get(drive_fullname)
     savedir = os.path.join(metadrive.config.DATA_DIR, drive_fullname)
 
-    # drive = get_drive(
-    #     profile=profile,
-    #     recreate_profile=recreate_profile,
-    #     proxies=proxies)
-
     def sync():
         print("{} -> {}".format(shorthand, mountpoint))
-        drive = metadrive.drives.get(drive_fullname)
-        # drive = module._login(profile=drive_name) # maybe in the future we should change _login(profile->drive_name)
         module._harvest(drive=drive)
 
     from multiprocessing import Process

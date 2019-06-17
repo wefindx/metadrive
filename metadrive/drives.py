@@ -43,7 +43,7 @@ def next_string(s):
                 ns = next_string(s[:-1]) if s[:-1] else chr(a[0])
                 return ns + chr(a[0])
 
-def get(driver_or_drive, latest_or_new=True):
+def get(driver_or_drive, interactive=False):
 
     if driver_or_drive in ACTIVE:
         return ACTIVE[driver_or_drive]
@@ -53,8 +53,8 @@ def get(driver_or_drive, latest_or_new=True):
         drive = driver_or_drive
     else:
         driver = driver_or_drive
-        drive_id = None
         drive = None
+        drive_id = None
 
     ndriver = driver.replace('-', '_')
     package = utils.ensure_driver_installed(driver_name='pypi:{}'.format(ndriver))
@@ -78,8 +78,15 @@ def get(driver_or_drive, latest_or_new=True):
         else:
             i = '0'
 
-        drive = '{}:{}'.format(driver, next_string(i))
-        drive_obj = module.get_drive(profile=drive)
+        import inspect
+        if interactive and 'interactive' in inspect.getfullargspec(module._login).args:
+            drive_obj = module._login(interactive=interactive)
+            drive = drive_obj.profile.rsplit(':', 1)[-1]
+            drive = '{}:{}'.format(driver, drive)
+        else:
+            drive = '{}:{}'.format(driver, 'default')
+            # drive = '{}:{}'.format(driver, next_string(i))
+            drive_obj = module.get_drive(profile=drive)
 
     ACTIVE[drive] = drive_obj
 
@@ -97,7 +104,6 @@ def get(driver_or_drive, latest_or_new=True):
         # then, in packages we only have to provide type(self).__name__, e.g.:
         # item['@'] = drive.spec + type(self).__name__
     )
-
 
     return drive_obj
 
