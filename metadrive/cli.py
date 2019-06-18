@@ -226,14 +226,14 @@ https://github.com/drivernet/halfbakery-driver)")
 
     first_driver = results[0]
 
-    print("\nDriver found: {packname}=={version}".format(
+    print("-================================================-\n using: [PyPI:{packname}=={version}]".format(
         packname=first_driver.get('package'),
-        version=first_driver.get('info')['version'])
+        version=first_driver.get('info')['version']),
     )
 
     if mountpoint is None:
         mountpoint = os.path.join(SITES_DIR, shorthand)
-        print("Assuming mount point: {}".format(mountpoint))
+        # print("Assuming mount point: {}".format(mountpoint))
 
     package = utils.ensure_driver_installed(
         '{packman}:{packname}'.format(
@@ -245,22 +245,17 @@ https://github.com/drivernet/halfbakery-driver)")
     module = __import__(package)
     api = importlib.import_module('{}.api'.format(package))
 
-    print('\nTop level methods:\n')
-    for met in dir(module):
-        if not met.startswith('__') and met not in ['api']:
-            print(' - ', met)
+    # print('\nTop level methods:\n')
+    # for met in dir(module):
+    #     if not met.startswith('__') and met not in ['api']:
+    #         print(' - ', met)
+    #
 
-    print('\nAvailable api classes:\n')
-    for cls in dir(api):
-        if cls[0].isupper() and not cls.startswith('_') and cls not in ['Dict']:
-            print(' - ', cls)
-
-
-    print('\n\nNow:')
-    print('\nStill, need to create drive and log-in. (Need to choose drive name, which would return data path)\n')
-
-    print('\n1. _harvest should orchestrate synchronization using (cls)._sync() methods...')
-    print('\n2. we should use () ...')
+    # print('\nAvailable api classes:\n')
+    # for cls in dir(api):
+    #     if cls[0].isupper() and not cls.startswith('_') and cls not in ['Dict']:
+    #         print(' - ', cls)
+    #
 
     drive_name = 'default' #input("Enter the name of drive [default]: ") or 'default'
 
@@ -294,7 +289,7 @@ https://github.com/drivernet/halfbakery-driver)")
     savedir = os.path.join(metadrive.config.DATA_DIR, drive_fullname)
 
     def sync():
-        print("{} -> {}".format(shorthand, mountpoint))
+        print(" mount: {}\n-================================================-".format(mountpoint))
         module._harvest(drive=drive)
 
     from multiprocessing import Process
