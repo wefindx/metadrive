@@ -229,8 +229,12 @@ https://github.com/drivernet/halfbakery-driver)")
 
     first_driver = results[0]
 
-    import pkg_resources
-    package_version = pkg_resources.require(first_driver.get('package'))[0].version
+    try:
+        import pkg_resources
+        package_version = pkg_resources.require(first_driver.get('package'))[0].version
+    except:
+        # print("The package not yet installed. Latest package found.")
+        package_version = first_driver.get('info')['version']
 
     print("-================================================-\n[*] using: [PyPI:{packname}=={version}]".format(
         packname=first_driver.get('package'),
