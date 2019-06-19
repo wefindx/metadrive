@@ -183,11 +183,14 @@ def harvest(resource, limit=None, output=None, db=None):
 @click.argument('resource', required=True, metavar='<resource>')
 @click.argument('mountpoint', required=False, metavar='<mountpoint>')
 @click.option('-u', '--user', required=False, type=str, help='Reuse a drive by name.')
-def connect(resource, mountpoint=None, user=None):
+@click.option('-p', '--period', required=False, type=float, help='Period of resynchronization in number of seconds.')
+def connect(resource, mountpoint=None, user=None, period=900):
     """
     Mounts interactive data from a resource as a filesystem to OS.
     $ connnect <resource> [location]
     """
+    if period is None:
+        period = 900
     shorthand = resource
 
     from metadrive import drivers
@@ -226,14 +229,22 @@ https://github.com/drivernet/halfbakery-driver)")
 
     first_driver = results[0]
 
-    print("\nDriver found: {packname}=={version}".format(
+    try:
+        import pkg_resources
+        package_version = pkg_resources.require(first_driver.get('package'))[0].version
+    except:
+        # print("The package not yet installed. Latest package found.")
+        package_version = first_driver.get('info')['version']
+
+    print("-================================================-\n[*] using: [PyPI:{packname}=={version}]".format(
         packname=first_driver.get('package'),
-        version=first_driver.get('info')['version'])
+        version=package_version #'>'+first_driver.get('info')['version']
+        ),
     )
 
     if mountpoint is None:
         mountpoint = os.path.join(SITES_DIR, shorthand)
-        print("Assuming mount point: {}".format(mountpoint))
+        # print("Assuming mount point: {}".format(mountpoint))
 
     package = utils.ensure_driver_installed(
         '{packman}:{packname}'.format(
@@ -245,22 +256,17 @@ https://github.com/drivernet/halfbakery-driver)")
     module = __import__(package)
     api = importlib.import_module('{}.api'.format(package))
 
-    print('\nTop level methods:\n')
-    for met in dir(module):
-        if not met.startswith('__') and met not in ['api']:
-            print(' - ', met)
+    # print('\nTop level methods:\n')
+    # for met in dir(module):
+    #     if not met.startswith('__') and met not in ['api']:
+    #         print(' - ', met)
+    #
 
-    print('\nAvailable api classes:\n')
-    for cls in dir(api):
-        if cls[0].isupper() and not cls.startswith('_') and cls not in ['Dict']:
-            print(' - ', cls)
-
-
-    print('\n\nNow:')
-    print('\nStill, need to create drive and log-in. (Need to choose drive name, which would return data path)\n')
-
-    print('\n1. _harvest should orchestrate synchronization using (cls)._sync() methods...')
-    print('\n2. we should use () ...')
+    # print('\nAvailable api classes:\n')
+    # for cls in dir(api):
+    #     if cls[0].isupper() and not cls.startswith('_') and cls not in ['Dict']:
+    #         print(' - ', cls)
+    #
 
     drive_name = 'default' #input("Enter the name of drive [default]: ") or 'default'
 
@@ -293,9 +299,16 @@ https://github.com/drivernet/halfbakery-driver)")
     # drive == metadrive.drives.get(drive_fullname)
     savedir = os.path.join(metadrive.config.DATA_DIR, drive_fullname)
 
+    if user is None:
+        print("Pass '--user {}' next time, to reuse the session.".format(drive_name))
+
     def sync():
-        print("{} -> {}".format(shorthand, mountpoint))
-        module._harvest(drive=drive)
+        print("[*] mount: {}\n-================================================-".format(mountpoint))
+        import inspect
+        if 'period' in inspect.getfullargspec(module._harvest).args:
+            module._harvest(drive=drive, period=period)
+        else:
+            module._harvest(drive=drive)
 
     from multiprocessing import Process
     syncer = Process( target=sync )
