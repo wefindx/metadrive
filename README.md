@@ -26,7 +26,7 @@ Some of the drivers are awaiting to be implemented. Studying the Metadrive API w
 
 ## Prepare machine
 ```
-sudo apt install virtualenv python3.7 python3.7-dev build-essential chromium-browser chromium-chromedriver
+sudo apt install virtualenv python3 python3-dev build-essential chromium-browser chromium-chromedriver pandoc
 ```
 
 ## Installation

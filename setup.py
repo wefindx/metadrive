@@ -13,7 +13,7 @@ except ImportError:
 
 setup(
     name='metadrive',
-    version='1.4.24',
+    version='1.4.25',
     description='Integration of controllers to drive tools.',
     long_description=LONG_DESCRIPTION,
     long_description_content_type='text/markdown',
