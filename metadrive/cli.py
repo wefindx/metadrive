@@ -183,11 +183,14 @@ def harvest(resource, limit=None, output=None, db=None):
 @click.argument('resource', required=True, metavar='<resource>')
 @click.argument('mountpoint', required=False, metavar='<mountpoint>')
 @click.option('-u', '--user', required=False, type=str, help='Reuse a drive by name.')
-def connect(resource, mountpoint=None, user=None):
+@click.option('-p', '--period', required=False, type=float, help='Period of resynchronization in number of seconds.')
+def connect(resource, mountpoint=None, user=None, period=900):
     """
     Mounts interactive data from a resource as a filesystem to OS.
     $ connnect <resource> [location]
     """
+    if period is None:
+        period = 900
     shorthand = resource
 
     from metadrive import drivers
@@ -226,9 +229,13 @@ https://github.com/drivernet/halfbakery-driver)")
 
     first_driver = results[0]
 
-    print("-================================================-\n using: [PyPI:{packname}=={version}]".format(
+    import pkg_resources
+    package_version = pkg_resources.require(first_driver.get('package'))[0].version
+
+    print("-================================================-\n[*] using: [PyPI:{packname}=={version}]".format(
         packname=first_driver.get('package'),
-        version=first_driver.get('info')['version']),
+        version=package_version #'>'+first_driver.get('info')['version']
+        ),
     )
 
     if mountpoint is None:
@@ -288,9 +295,16 @@ https://github.com/drivernet/halfbakery-driver)")
     # drive == metadrive.drives.get(drive_fullname)
     savedir = os.path.join(metadrive.config.DATA_DIR, drive_fullname)
 
+    if user is None:
+        print("Pass '--user {}' next time, to reuse the session.".format(drive_name))
+
     def sync():
-        print(" mount: {}\n-================================================-".format(mountpoint))
-        module._harvest(drive=drive)
+        print("[*] mount: {}\n-================================================-".format(mountpoint))
+        import inspect
+        if 'period' in inspect.getfullargspec(module._harvest).args:
+            module._harvest(drive=drive, period=period)
+        else:
+            module._harvest(drive=drive)
 
     from multiprocessing import Process
     syncer = Process( target=sync )
