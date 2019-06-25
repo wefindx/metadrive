@@ -178,7 +178,6 @@ def harvest(resource, limit=None, output=None, db=None):
                 print('FILE:INFO:', item['-'])
                 f.write(json.dumps(item))
 
-
 @click.command()
 @click.argument('resource', required=True, metavar='<resource>')
 @click.argument('mountpoint', required=False, metavar='<mountpoint>')

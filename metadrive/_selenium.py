@@ -58,7 +58,7 @@ def get_drive(
         driver_location=config.CHROME_DRIVER,
         profile='default',
         porfiles_dir='.metadrive/sessions/_selenium',
-        headless=False,
+        headless=config.SELENIUM.get('headless') == 'True' or False,
         load_images=True,
         load_adblocker=True,
         recreate_profile=False,
