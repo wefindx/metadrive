@@ -70,10 +70,6 @@ config.read(CONFIG_LOCATION)
 GITHUB_USER = config['GITHUB']['USERNAME']
 REPO_PATH = os.path.join(DEFAULT_LOCATION, '-')
 DRIVERS_PATH = os.path.join(DEFAULT_LOCATION, 'drivers')
-API_HOST= config['API']['HOST']
-API_PORT= int(config['API']['PORT'])
-CONSOLE_HOST= config['CONSOLE']['HOST']
-CONSOLE_PORT= int(config['CONSOLE']['PORT'])
 CHROME_DRIVER = config['DRIVER_BACKENDS']['CHROME']
 SELENIUM = config['SELENIUM']
 

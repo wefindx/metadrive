@@ -1,8 +1,6 @@
 import os
 from metadrive.config import (
     INSTALLED,
-    API_HOST,
-    API_PORT,
     SESSIONS_DIR,
     SUBTOOLS
 )
