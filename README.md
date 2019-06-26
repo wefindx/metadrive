@@ -4,7 +4,7 @@
 # Metadrive
 ![alt txt](https://wiki.mindey.com/shared/screens/drivers.jpg)
 
-Metadrive helps users gather the information from different Internet resources (e.g. [Linkedin](https://linkedin.com), [HTH Worldwide](https://hthworldwide.com), etc). It provides one API to rule them all, and allows mounting and syncing web resources, as if they are disks on your operating system. To gather the information from a specific resource, there must be so called driver written specifically for the resource. There are drivers which already exist. For example,
+Metadrive helps control information from different Internet resources (e.g. [Linkedin](https://linkedin.com), [Halfbakery](https://www.halfbakery.com), etc). It provides one API to rule them all at the operating system filesystem level, via allowing to mount and syncing web resources, as if they are disks (mounted filesystems) on your operating system. To gather the information from a specific resource, there must be so called driver written specifically for the resource. There are drivers which already exist. For example,
 * Halfbakery: [halfbakery_driver](https://github.com/drivernet/halfbakery_driver)
 * Linkedin: [linkedin_driver](https://github.com/drivernet/linkedin_driver)
 * Metaculus: [metaculus_driver](https://github.com/drivernet/metaculus_driver)
@@ -13,7 +13,7 @@ Metadrive helps users gather the information from different Internet resources (
 * ResearchGate: [researchgate_driver](https://github.com/drivernet/researchgate_driver)
 * Versli Lietuva: [verslilietuva_driver](https://github.com/drivernet/verslilietuva_driver)
 
-Some of the drivers are awaiting to be implemented. Studying the Metadrive API will help developers to write the drivers for those resources which are needed them right now. A unified API is the killer feature of Metadrive and allows writing drivers to have a unified UI to the whole world.
+Many drivers are awaiting to be implemented at [drivernet][https://github.com/drivernet]. Studying the Metadrive will help developers to write the drivers for those resources which are needed them right now. A unified API is the killer feature of Metadrive and allows writing drivers to have a unified UI to the whole world.
 
 ## Table of Contents
 
@@ -34,7 +34,7 @@ sudo apt install virtualenv python3 python3-dev build-essential chromium-browser
 The guide provides for the instructions on how to install Metadrive to a virtual environment, so create and activate it first, running the following commands:
 
 ```
-virtualenv -p python3.7 metadrive-env
+virtualenv -p python3 metadrive-env
 . ./metadrive-env/bin/activate
 ```
 
@@ -55,7 +55,7 @@ pip install metadrive
 Finally, run Metadrive, executing
 
 ```
-provide
+connect <resource>
 ```
 
 The command above will ask you to type your GitHub username. When you are done, the `.metadrive/config` will be created in your home directory and the server will start. The example of how `.metadrive/config` may look like:
@@ -63,14 +63,6 @@ The command above will ask you to type your GitHub username. When you are done, 
 ```
 [GITHUB]
 username = mindey
-
-[API]
-host = 0.0.0.0
-port = 7000
-
-[CONSOLE]
-host = 0.0.0.0
-port = 7001
 
 [DRIVER_BACKENDS]
 chrome = /usr/bin/chromedriver
@@ -83,37 +75,13 @@ https =
 key = 5AFDB16B89805133F450688BDA580D1D5F5CC7AD
 ```
 
-However, `provide` does not auto-reload and requires re-running, so if you want to run Metadrive for the development purposes, interrupt the `provide` process and execute the following command
-
-```
-uvicorn metadrive.api:app --debug
-```
-
 ### Installing drivers
 
-After finishing the Metadrive installation you may check the drivers available right now.
+Drivers are automatically installed, when a drive is requested and a driver exists.
 
 ```
-$ curl http://127.0.0.1:7000/drivers
-[]
-```
-
-So, there are no drivers and it's ok since they have to be installed separately.
-
-Choose one of the above-mentioned drivers. Let's say it's `linkedin_driver`. Execute the following command to install it
-
-```
-pip install linkedin_driver
-```
-
-and run the second-to-last command one more time
-
-```
-$ curl http://127.0.0.1:7000/drivers
-[{"id":"http://0.0.0.0:7000/driver/linkedin-driver","site":"https://www.linkedin.com","package":"linkedin-driver==0.1.8"}]
-```
-
-Here's the driver which has just been installed.
+import metadrive
+drive = metadrive.drives.get('halfbakery-driver:Mindey')
 
 ## Documentation
 
