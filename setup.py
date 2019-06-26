@@ -65,8 +65,6 @@ setup(
     zip_safe=False,
     entry_points = {
         'console_scripts': [
-            'harvest=metadrive.cli:harvest',
-            'console=metadrive.cli:console',
             'connect=metadrive.cli:connect'
         ],
     },

@@ -53,8 +53,6 @@ if not os.path.exists(CONFIG_LOCATION):
     username = input("Type your GitHub username: ")
 
     config['GITHUB'] = {'USERNAME': username}
-    config['API'] = {'HOST': '0.0.0.0', 'PORT': 7000}
-    config['CONSOLE'] = {'HOST': '0.0.0.0', 'PORT': 7000}
     config['PROXIES'] = {'http': '', 'https': ''}
     config['DRIVERS'] = {'auto_upgrade': False}
     config['SELENIUM'] = {'headless': False}
