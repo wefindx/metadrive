@@ -36,13 +36,11 @@ setup(
         'feedparser==5.2.1',
         'gitpython==2.1.11',
         'gpgrecord==0.0.4',
-        'graphene==2.1.3',
         'ipython==7.3.0',
         'jinja2==2.10.1',
         'metatype',
         'metawiki',
         'metaform',
-        'npyscreen==4.10.5',
         'pypandoc==1.4',  # only for converting README.md
         'paramiko==2.4.2',
         'pyautogui==0.9.42',
@@ -55,10 +53,8 @@ setup(
         'selenium==3.141.0',
         'slumber==0.7.1',
         'Sphinx==2.0.1',
-        'starlette==0.10.7',
         'tqdm==4.31.1',
         'typology',
-        'uvicorn==0.6.1',
         'yolk3k==0.9',
         'xarray==0.12.1',
         'urllib3==1.24.3' # not sure if necessary
@@ -70,23 +66,12 @@ setup(
     entry_points = {
         'console_scripts': [
             'harvest=metadrive.cli:harvest',
-            'provide=metadrive.cli:provide',
-            'consume=metadrive.cli:consume',
             'console=metadrive.cli:console',
             'connect=metadrive.cli:connect'
         ],
     },
     package_data = {
         'metadrive':
-            ['_ui_scripts/*',
-             '_ui_scripts/**/*',
-             '_ui_scripts/**/**/*',
-             '_ui_scripts/**/**/**/*',
-             '_ui_scripts/**/**/**/**/*',
-             '_ui_scripts/**/**/**/**/**/*',
-             '_ui_scripts/**/**/**/**/**/**/*',
-             '_api_templates/*.html',
-             '_api_static/js/*.js',
-             '_api_static/css/*.css']
+            []
     }
 )
