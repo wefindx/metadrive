@@ -1,16 +1,15 @@
-import click
 import importlib
 import json
-import metadrive
-from metadrive import utils
-from typology.utils import slug
-from metawiki import name_to_url
 import os
 from urllib.parse import urlparse
-from metadrive.config import (
-    ENSURE_SITES,
-    SITES_DIR,
-)
+
+import click
+from metawiki import name_to_url
+from typology.utils import slug
+
+import metadrive
+from metadrive import utils
+from metadrive.config import ENSURE_SITES, SITES_DIR
 from metadrive.mnt import mount
 
 # Cause ecryptfs supports max 143 chars.

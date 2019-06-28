@@ -1,9 +1,11 @@
-import os
-import imp
-from pathlib import Path
 import configparser
-import requests
+import imp
+import os
+from pathlib import Path
+
 import gpgrecord
+import requests
+
 config = configparser.ConfigParser()
 
 INSTALLED = imp.find_module('metadrive')[1]
@@ -50,14 +52,14 @@ ENSURE_SITES()
 
 
 if not os.path.exists(CONFIG_LOCATION):
-    username = input("Type your GitHub username: ")
+    username = "seva" #input("Type your GitHub username: ")
 
     config['GITHUB'] = {'USERNAME': username}
     config['PROXIES'] = {'http': '', 'https': ''}
     config['DRIVERS'] = {'auto_upgrade': False}
     config['SELENIUM'] = {'headless': False}
     config['DRIVER_BACKENDS'] = {
-        'CHROME': '/usr/bin/chromedriver' # e.g., or http://0.0.0.0:4444/wd/hub, etc.
+        'CHROME': '/usr/local/bin/chromedriver' # e.g., or http://0.0.0.0:4444/wd/hub, etc.
     }
 
     with open(CONFIG_LOCATION, 'w') as configfile:

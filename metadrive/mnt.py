@@ -1,8 +1,8 @@
 from __future__ import with_statement
 
+import errno
 import os
 import sys
-import errno
 
 from fuse import FUSE, FuseOSError, Operations
 

@@ -1,9 +1,13 @@
-import yaml
-import pkgutil
 import inspect
+import os
+import pkgutil
 import re
 
-from metadrive import utils
+import config
+import yaml
+from metaform import get_schema
+
+from metadrive import drives, utils
 
 __all__ = []
 for loader, module_name, is_pkg in  pkgutil.walk_packages(__path__):
@@ -11,14 +15,11 @@ for loader, module_name, is_pkg in  pkgutil.walk_packages(__path__):
     _module = loader.find_module(module_name).load_module(module_name)
     globals()[module_name] = _module
 
-import os, config
 
 if not os.path.exists(config.DEFAULT_LOCATION):
     os.makedirs(config.DEFAULT_LOCATION)
 
 
-from metaform import get_schema
-from metadrive import drives
 
 
 def load(data, iterator=False):

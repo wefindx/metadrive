@@ -6,17 +6,18 @@ get_drive(profile='default', profiles_dir='.chrome-profile', local=DEVELOPMENT)
 # To create selenium driver may use something like:
 docker run -d -p 4444:4444 selenium/standalone-chrome:3.7.1-beryllium
 '''
-import os
 import inspect
+import os
 import pathlib
 
+from deprecated import deprecated
 from selenium import webdriver
-from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.action_chains import ActionChains
+from selenium.webdriver.support.wait import WebDriverWait
 
 from metadrive import config
-from deprecated import deprecated
+
 
 class TabsMixin:
 

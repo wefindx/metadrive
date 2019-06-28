@@ -1,6 +1,8 @@
 import os
 import pathlib
+
 from metadrive import config
+
 
 def set_proxies(proxies):
 

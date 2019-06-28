@@ -1,8 +1,10 @@
 import random
+
 import requests
 
-from metadrive._requests import get_session
 from metadrive import utils
+from metadrive._requests import get_session
+
 
 class UserAgents:
 

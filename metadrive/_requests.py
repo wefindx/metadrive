@@ -1,10 +1,10 @@
-import os
 import inspect
+import os
 import pathlib
+
 import requests
-from metadrive import config
-from metadrive import utils
-from metadrive import mixins
+
+from metadrive import config, mixins, utils
 
 SUBTOOL = os.path.basename(__file__).split('.py')[0]
 

@@ -1,13 +1,14 @@
 import io
-import os
-import bs4
-import tqdm
-import yaml
 import json
+import os
+import tarfile
 import time
 import urllib
-import tarfile
+
+import bs4
 import requests
+import tqdm
+import yaml
 
 from metadrive.config import KNOWN_DRIVERS
 

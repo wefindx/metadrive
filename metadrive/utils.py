@@ -1,11 +1,15 @@
+import contextlib
+import importlib
+import json
 import os
 import re
-import yaml
-import json
-import requests
+import sys
+from io import StringIO
+
 import gpgrecord
-import importlib
 import pkg_resources
+import requests
+import yaml
 
 from metadrive import config
 
@@ -255,9 +259,6 @@ def ensure_driver_installed(driver_name):
 
 
 
-import sys
-from io import StringIO
-import contextlib
 
 @contextlib.contextmanager
 def stdoutIO(stdout=None):
@@ -267,4 +268,3 @@ def stdoutIO(stdout=None):
     sys.stdout = stdout
     yield stdout
     sys.stdout = old
-

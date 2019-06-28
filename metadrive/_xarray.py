@@ -1,9 +1,10 @@
+import inspect
 import os
+
 # import xarray
 import pandas
-import inspect
-from metadrive import mixins
 
+from metadrive import mixins
 
 SUBTOOL = os.path.basename(__file__).split('.py')[0]
 

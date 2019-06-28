@@ -1,5 +1,6 @@
 import metadrive
 
+
 def test_read_table():
     drive = metadrive.drives.get('table-driver:default')
     from table_driver.api import Row
@@ -16,4 +17,3 @@ def test_read_table():
     del expect['@']
     del result['@']
     assert expect == result
-

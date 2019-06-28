@@ -1,5 +1,7 @@
-import yaml
 import inspect
+
+import yaml
+
 
 def get_actions(cls):
     '''
