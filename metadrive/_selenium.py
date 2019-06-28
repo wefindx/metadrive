@@ -6,17 +6,18 @@ get_drive(profile='default', profiles_dir='.chrome-profile', local=DEVELOPMENT)
 # To create selenium driver may use something like:
 docker run -d -p 4444:4444 selenium/standalone-chrome:3.7.1-beryllium
 '''
-import os
 import inspect
+import os
 import pathlib
 
+from deprecated import deprecated
 from selenium import webdriver
-from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.common.action_chains import ActionChains
 
 from metadrive import config
-from deprecated import deprecated
+
+# from selenium.webdriver.support.wait import WebDriverWait
+
 
 class TabsMixin:
 
@@ -29,6 +30,7 @@ class TabsMixin:
                 raise Exception('Tab not found, and url not provided.')
         else:
             self.switch_to.window(self.tabs[name])
+
     def current_tab(self):
         return next(filter(lambda x: x[1] == self.current_window_handle, self.tabs.items()))
 
@@ -47,6 +49,7 @@ class Chrome(webdriver.Chrome, TabsMixin):
         self.tabs = {'default': self.current_window_handle}
         self.metaname = ''
 
+
 class Remote(webdriver.Remote, TabsMixin):
 
     def __init__(self, *args, **kwargs):
@@ -54,18 +57,18 @@ class Remote(webdriver.Remote, TabsMixin):
         self.tabs = {'default': self.current_window_handle}
         self.metaname = ''
 
-def get_drive(
-        driver_location=config.CHROME_DRIVER,
-        profile='default',
-        porfiles_dir='.metadrive/sessions/_selenium',
-        headless=config.SELENIUM.get('headless') == 'True' or False,
-        load_images=True,
-        load_adblocker=True,
-        recreate_profile=False,
-        download_to='',
-        proxies='default',
-    ):
 
+def get_drive(
+    driver_location=config.CHROME_DRIVER,
+    profile='default',
+    porfiles_dir='.metadrive/sessions/_selenium',
+    headless=config.SELENIUM.get('headless') == 'True' or False,
+    load_images=True,
+    load_adblocker=True,
+    recreate_profile=False,
+    download_to='',
+    proxies='default',
+):
     '''
     Gets a new browser, with session in specific directory.
 
@@ -143,9 +146,8 @@ def get_drive(
 #    OPTIONS.add_argument('--ssl-protocol=any')
 #    OPTIONS.add_argument('--web-security=no')
 
-
     PREFERENCES = {}
-    #OPTIONS.experimental_options["prefs"] = PREFERENCES
+    # OPTIONS.experimental_options["prefs"] = PREFERENCES
 
     if headless:
         OPTIONS.add_argument('--headless')
@@ -159,7 +161,7 @@ def get_drive(
 
     if download_to:
         PREFERENCES.update(
-            {'download.default_directory' : download_to,
+            {'download.default_directory': download_to,
              'download.prompt_for_download': False,
              'download.directory_upgrade': True,
              'safebrowsing.enabled': False,
@@ -172,7 +174,7 @@ def get_drive(
             # OPTIONS.add_extension(os.path.join(os.getcwd(), 'subtools/extensions/ghostery.crx'))
             OPTIONS.add_extension(
                 os.path.join(os.getcwd(), 'subtools/selenium/extensions/ublock_origin.crx'))
-        except:
+        except Exception:
             pass
 
     # ------------- INITIALIZATION SECTION ------------ #
@@ -186,7 +188,6 @@ def get_drive(
         CHROME_DRIVER_LOCATION = driver_location
         local = True
 
-
     if local:
         profile_path = os.path.join(
             str(pathlib.Path.home()),
@@ -196,7 +197,7 @@ def get_drive(
 
     if profile_path is not None:
 
-        OPTIONS.add_argument("--user-data-dir={}".format(profile_path));
+        OPTIONS.add_argument("--user-data-dir={}".format(profile_path))
 
         if not profile_path:
             os.makedirs(profile_path)
@@ -247,18 +248,19 @@ def get_drive(
 
     return browser
 
+
 @deprecated(reason="Use get_drive() instead.")
 def get_driver(
-        driver_location=config.CHROME_DRIVER,
-        profile='default',
-        porfiles_dir='.metadrive/sessions/_selenium',
-        headless=False,
-        load_images=True,
-        load_adblocker=True,
-        recreate_profile=False,
-        download_to='',
-        proxies='default',
-    ):
+    driver_location=config.CHROME_DRIVER,
+    profile='default',
+    porfiles_dir='.metadrive/sessions/_selenium',
+    headless=False,
+    load_images=True,
+    load_adblocker=True,
+    recreate_profile=False,
+    download_to='',
+    proxies='default',
+):
 
     return get_drive(
         driver_location=driver_location,
@@ -285,15 +287,15 @@ def save_as(element, driver):
     from PIL import Image
     from io import BytesIO
 
-    as__ = Image.open(
+    as__ = Image.open( # noqa
         BytesIO(
             base64.b64decode(
-                'iVBORw0KGgoAAAANSUhEUgAAACMAAAAQCAIAAAATVVENAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH4gsTAjMlHs+8UAAAAB1pVFh0Q29tbWVudAAAAAAAQ3JlYXRlZCB3aXRoIEdJTVBkLmUHAAABrElEQVQ4y2P8//8/A10AEwO9wKhNlAAWZM7SFStXrVn78tUrXl5eTzfXvOwsFhYWiPiSZcs/ffrExsbm7elRUlhAjlX/kcCOXbsfPX7879+/e/fvewcELVm2/P///w8ePDSxsrl3//7///+/fft26cqV/2QBlNBzd3WRlZFhZGRUVFAIDw05efo0AwMDCwvL////r9+4+fnLF05OTl1tbfJCjxE5Px06cnThkiVPnjxlYGD4/uO7nKzckvlzGRgY9h04uHzVqsuXr6ioqKQlJ9nZWFMUem/fvTM0tzx4+Mjfv3////+/eOmy6PhEZO///Plz1dq1RhZWX758oSj0vn/7/u/fPw01VSYmpg8fP67buBEi/vDho+MnT/78+ZONjU1QQJCRkZGJmZmBgeHYiRPzFy2GqHnz9m3vhIlv3r6FcOcvWnzsxAmcaU9aWqogJzs5I0tQUICPl8/R3v7kqdMMDAw/f/2cOn3m/QcPGJmYpKUk+7o6OTk4GBgYLl66vH3XrsS4WAYGhg8fPixauszf10dEWJiBgWH9pk2ebm5WFhY442m0jBi0NgEAiOU/HUCPdjUAAAAASUVORK5CYII=')))
+                'iVBORw0KGgoAAAANSUhEUgAAACMAAAAQCAIAAAATVVENAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH4gsTAjMlHs+8UAAAAB1pVFh0Q29tbWVudAAAAAAAQ3JlYXRlZCB3aXRoIEdJTVBkLmUHAAABrElEQVQ4y2P8//8/A10AEwO9wKhNlAAWZM7SFStXrVn78tUrXl5eTzfXvOwsFhYWiPiSZcs/ffrExsbm7elRUlhAjlX/kcCOXbsfPX7879+/e/fvewcELVm2/P///w8ePDSxsrl3//7///+/fft26cqV/2QBlNBzd3WRlZFhZGRUVFAIDw05efo0AwMDCwvL////r9+4+fnLF05OTl1tbfJCjxE5Px06cnThkiVPnjxlYGD4/uO7nKzckvlzGRgY9h04uHzVqsuXr6ioqKQlJ9nZWFMUem/fvTM0tzx4+Mjfv3////+/eOmy6PhEZO///Plz1dq1RhZWX758oSj0vn/7/u/fPw01VSYmpg8fP67buBEi/vDho+MnT/78+ZONjU1QQJCRkZGJmZmBgeHYiRPzFy2GqHnz9m3vhIlv3r6FcOcvWnzsxAmcaU9aWqogJzs5I0tQUICPl8/R3v7kqdMMDAw/f/2cOn3m/QcPGJmYpKUk+7o6OTk4GBgYLl66vH3XrsS4WAYGhg8fPixauszf10dEWJiBgWH9pk2ebm5WFhY442m0jBi0NgEAiOU/HUCPdjUAAAAASUVORK5CYII='))) # noqa
 
     position = pyautogui.locateOnScreen(as__)
 
     if position:
         print(position)
-        pyautogui.click(x=position[0],y=position[1])
+        pyautogui.click(x=position[0], y=position[1])
     else:
         print('Could find "Save as ..." position. Try local, non-headless.')

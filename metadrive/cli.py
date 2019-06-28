@@ -1,16 +1,11 @@
-import click
-import importlib
-import json
-import metadrive
-from metadrive import utils
-from typology.utils import slug
-from metawiki import name_to_url
 import os
 from urllib.parse import urlparse
-from metadrive.config import (
-    ENSURE_SITES,
-    SITES_DIR,
-)
+
+import click
+
+import metadrive
+from metadrive import utils
+from metadrive.config import ENSURE_SITES, SITES_DIR
 from metadrive.mnt import mount
 
 # Cause ecryptfs supports max 143 chars.
@@ -47,7 +42,7 @@ def connect(resource, mountpoint=None, user=None, period=900):
 
     # 2. Checking for driver with it.
     index = drivers.index()
-    results = list(filter(lambda x: x['domain']==default_domain, index))
+    results = list(filter(lambda x: x['domain'] == default_domain, index))
 
     if not results:
         print("No drivers found for {}.".format(resource))
@@ -70,14 +65,14 @@ https://github.com/drivernet/halfbakery-driver)")
     try:
         import pkg_resources
         package_version = pkg_resources.require(first_driver.get('package'))[0].version
-    except:
+    except Exception:
         # print("The package not yet installed. Latest package found.")
         package_version = first_driver.get('info')['version']
 
     print("-================================================-\n[*] using: [PyPI:{packname}=={version}]".format(
         packname=first_driver.get('package'),
-        version=package_version #'>'+first_driver.get('info')['version']
-        ),
+        version=package_version  # '>'+first_driver.get('info')['version']
+    ),
     )
 
     if mountpoint is None:
@@ -92,7 +87,7 @@ https://github.com/drivernet/halfbakery-driver)")
     )
 
     module = __import__(package)
-    api = importlib.import_module('{}.api'.format(package))
+    # api = importlib.import_module('{}.api'.format(package))
 
     # print('\nTop level methods:\n')
     # for met in dir(module):
@@ -106,7 +101,7 @@ https://github.com/drivernet/halfbakery-driver)")
     #         print(' - ', cls)
     #
 
-    drive_name = 'default' #input("Enter the name of drive [default]: ") or 'default'
+    drive_name = 'default'  # input("Enter the name of drive [default]: ") or 'default'
 
     # drive = get_drive(
     #     profile=profile,
@@ -124,7 +119,6 @@ https://github.com/drivernet/halfbakery-driver)")
         )
         drive = metadrive.drives.get(drive_fullname, interactive=False)
 
-
     mountpoint = '{}:{}'.format(mountpoint, drive_name)
     if not os.path.exists(mountpoint):
         os.makedirs(mountpoint)
@@ -141,7 +135,6 @@ https://github.com/drivernet/halfbakery-driver)")
         print("Pass '--user {}' next time, to reuse the session.".format(drive_name))
 
     def sync():
-        print("[*] mount: {}\n-================================================-".format(mountpoint))
         import inspect
         if 'period' in inspect.getfullargspec(module._harvest).args:
             module._harvest(drive=drive, period=period)
@@ -149,9 +142,10 @@ https://github.com/drivernet/halfbakery-driver)")
             module._harvest(drive=drive)
 
     from multiprocessing import Process
-    syncer = Process( target=sync )
+    syncer = Process(target=sync)
     syncer.daemon = True
     syncer.start()
 
+    print("[*] mount: {}\n-================================================-".format(mountpoint))
     mount(savedir, mountpoint)
     syncer.terminate()

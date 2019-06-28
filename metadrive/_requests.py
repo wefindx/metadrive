@@ -1,15 +1,16 @@
-import os
 import inspect
-import pathlib
+import os
+
 import requests
-from metadrive import config
-from metadrive import utils
-from metadrive import mixins
+
+from metadrive import config, mixins, utils
 
 SUBTOOL = os.path.basename(__file__).split('.py')[0]
 
+
 def get_session(*args, **kwargs):
     return requests.Session(*args, **kwargs)
+
 
 class RequestsDrive(requests.Session):
 
@@ -30,7 +31,6 @@ class RequestsDrive(requests.Session):
                     'https': 'socks5h://{}'.format(socks)}
                 kwargs.update({'proxies': proxies})
 
-
         self.response = super().get(*args, **kwargs)
 
         if hasattr(self, 'profile'):
@@ -39,7 +39,7 @@ class RequestsDrive(requests.Session):
             session_prefix_file = os.path.join(
                 SUBTOOL, '{drive_id}/cookies.json'.format(
                     drive_id=self.profile
-            ))
+                ))
 
             utils.save_session_data(session_prefix_file, session_data)
 
@@ -53,7 +53,7 @@ def get_drive(
         recreate_profile=False,
         proxies='default'):
 
-    ## ----------- TO MOVE TO MIXIN --------------- #
+    # ----------- TO MOVE TO MIXIN --------------- #
     proxy = mixins.set_proxies(proxies)
     local = mixins.init_profile(profile, porfiles_dir, recreate_profile)
 
@@ -66,13 +66,12 @@ def get_drive(
     else:
         drive = None
 
-
     if drive is not None:
 
         session_prefix_file = os.path.join(
             drive.subtool, '{drive_id}/cookies.json'.format(
                 drive_id=profile
-        ))
+            ))
 
         if os.path.exists(os.path.join(config.SESSIONS_DIR, session_prefix_file)):
             session_data = utils.load_session_data(session_prefix_file)
@@ -91,7 +90,6 @@ def get_drive(
             drive.desired_capabilities.update(
                 {'proxy': proxy}
             )
-
 
         # LATER MOVE TO MIXIN
         drive.caller_module = inspect.getmodule(inspect.currentframe().f_back)

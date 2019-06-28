@@ -1,8 +1,10 @@
 import random
+
 import requests
 
-from metadrive._requests import get_session
 from metadrive import utils
+from metadrive._requests import get_session
+
 
 class UserAgents:
 
@@ -16,6 +18,7 @@ class UserAgents:
         user_agent = random.choice(self.user_agents).get('ua')
 
         return user_agent
+
 
 class RequestsCookieAuthentication:
 
@@ -45,14 +48,14 @@ class RequestsCookieAuthentication:
 
                 if credential:
                     session.headers.update(dict({
-                        'content-type':'text/plain',
+                        'content-type': 'text/plain',
                     }, **credential))
                 else:
                     raise Warning("Credential is not provided, some data may not be retrieved.")
 
         else:
             session.headers.update({
-                'content-type':'text/plain',
+                'content-type': 'text/plain',
                 'cookie': self.raw_cookie
             })
 

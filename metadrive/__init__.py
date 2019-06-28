@@ -1,24 +1,20 @@
-import yaml
-import pkgutil
 import inspect
-import re
+import os
+import pkgutil
 
-from metadrive import utils
+from metaform import get_schema
+
+from metadrive import drives, utils, config
 
 __all__ = []
-for loader, module_name, is_pkg in  pkgutil.walk_packages(__path__):
+for loader, module_name, is_pkg in pkgutil.walk_packages(__path__):
     __all__.append(module_name)
     _module = loader.find_module(module_name).load_module(module_name)
     globals()[module_name] = _module
 
-import os, config
 
 if not os.path.exists(config.DEFAULT_LOCATION):
     os.makedirs(config.DEFAULT_LOCATION)
-
-
-from metaform import get_schema
-from metadrive import drives
 
 
 def load(data, iterator=False):
@@ -38,6 +34,7 @@ def load(data, iterator=False):
     elif isinstance(data, dict):
         return instantiate(data)
 
+
 def search(source, features: dict):
     '''
     Object discovery by features in source.
@@ -51,7 +48,8 @@ def search(source, features: dict):
 
     Note: url itself is a feature, too.
     '''
-    raise NotImplemented
+    raise NotImplementedError
+
 
 def create(source, features: dict):
     '''
@@ -64,7 +62,7 @@ def create(source, features: dict):
     Returns:
         object's address, and success status and/or errors.
     '''
-    raise NotImplemented
+    raise NotImplementedError
 
 
 def read(term, limit=None):
@@ -89,7 +87,7 @@ def read(term, limit=None):
     if isinstance(readers, list):
 
         for i, reader in enumerate(readers):
-            print(i+1, reader)
+            print(i + 1, reader)
 
         reader_id = input("Choose reader [1] ")
 
@@ -98,7 +96,7 @@ def read(term, limit=None):
         else:
             reader_id = int(reader_id)
 
-        if reader_id not in range(1, len(readers)+1):
+        if reader_id not in range(1, len(readers) + 1):
             raise Exception("The choice does not exist.")
 
         reader_id -= 1
@@ -109,9 +107,7 @@ def read(term, limit=None):
     else:
         raise Exception("Reader defined as anything other than string or list is not supported.")
 
-
     package = utils.ensure_driver_installed(reader)
-
 
     module = __import__(package)
 
@@ -129,29 +125,31 @@ def read(term, limit=None):
     else:
         return method()
 
+
 def instantiate(data):
     _id = data.get('-')
     _drive = data.get('@')
 
     if _id is not None and _drive is not None:
 
-        # parsing '@' field:                                    #sample: PyPI::halfbakery_driver==0.0.1:default.api.Topic
+        # parsing '@' field:
+        # sample: PyPI::halfbakery_driver==0.0.1:default.api.Topic
 
         # TBD: refactor by importing from metatype
-        packman = _drive.split('::', 1)[0]                 #sample: PyPI  (Conan, NPM, Paket, etc.)
-        drivespec = _drive.split('::', 1)[-1]              #sample: halfbakery_driver==0.0.1:default.api.Topic
-        driver_name_version = drivespec.split(':',1)[0]         #sample: halfbakery_driver==0.0.1
-        driver_name = driver_name_version.split('==',1)[0]      #sample: halfbakery_driver
-        driver_version = driver_name_version.rsplit('==',1)[-1] #sample: 0.0.1
-        profile_name_pkg_path = drivespec.rsplit(':',1)[-1]     #sample: default.api.Topic
-        profile_name = profile_name_pkg_path.split('.',1)[0]    #sample: default
-        pkg_path = profile_name_pkg_path.split('.',1)[-1]       #sample: api.Topic
+        # packman = _drive.split('::', 1)[0]  # sample: PyPI  (Conan, NPM, Paket, etc.)
+        drivespec = _drive.split('::', 1)[-1]  # sample: halfbakery_driver==0.0.1:default.api.Topic
+        driver_name_version = drivespec.split(':', 1)[0]  # sample: halfbakery_driver==0.0.1
+        driver_name = driver_name_version.split('==', 1)[0]  # sample: halfbakery_driver
+        # driver_version = driver_name_version.rsplit('==', 1)[-1]  # sample: 0.0.1
+        profile_name_pkg_path = drivespec.rsplit(':', 1)[-1]  # sample: default.api.Topic
+        profile_name = profile_name_pkg_path.split('.', 1)[0]  # sample: default
+        # pkg_path = profile_name_pkg_path.split('.', 1)[-1]  # sample: api.Topic
 
         # TBD: refactor by reusing metadrive/api.py# around 90 line
         ndriver = driver_name.replace('-', '_')
-        module = __import__(ndriver)
+        # module = __import__(ndriver)
         api = __import__('{}.api'.format(ndriver), fromlist=[ndriver])
-        classname = _drive.rsplit('.',1)[-1]
+        classname = _drive.rsplit('.', 1)[-1]
         Klass = getattr(api, classname)
 
         item = Klass(data)

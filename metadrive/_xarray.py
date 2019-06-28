@@ -1,9 +1,10 @@
+import inspect
 import os
+
 # import xarray
 import pandas
-import inspect
-from metadrive import mixins
 
+from metadrive import mixins
 
 SUBTOOL = os.path.basename(__file__).split('.py')[0]
 
@@ -25,8 +26,8 @@ def get_drive(
         recreate_profile=False,
         proxies='default'):
 
-    proxy = mixins.set_proxies(proxies)
-    local = mixins.init_profile(profile, porfiles_dir, recreate_profile)
+    mixins.set_proxies(proxies)
+    mixins.init_profile(profile, porfiles_dir, recreate_profile)
 
     drive = XarrayDrive()
     drive.subtool = SUBTOOL

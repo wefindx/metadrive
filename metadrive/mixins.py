@@ -1,6 +1,8 @@
 import os
 import pathlib
+
 from metadrive import config
+
 
 def set_proxies(proxies):
 
@@ -36,6 +38,7 @@ def set_proxies(proxies):
         proxy = None
 
     return proxy
+
 
 def init_profile(profile, porfiles_dir, recreate_profile):
 

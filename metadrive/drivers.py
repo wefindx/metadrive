@@ -1,13 +1,13 @@
 import io
+import json
 import os
+import tarfile
+import urllib
+
 import bs4
+import requests
 import tqdm
 import yaml
-import json
-import time
-import urllib
-import tarfile
-import requests
 
 from metadrive.config import KNOWN_DRIVERS
 
@@ -31,7 +31,7 @@ def auto_discover(refresh=True):
     if total_length is None:
         f.write(response.content)
     else:
-        total_length = 10000000 #int(total_length)
+        total_length = 10000000  # int(total_length)
 
         with tqdm.tqdm(total=total_length) as pbar:
             for data in response.iter_content(chunk_size=4096):
@@ -71,6 +71,7 @@ def auto_discover(refresh=True):
     # This is for retrieving setup.py details.
     from metadrive.utils import stdoutIO
     import setuptools
+
     def setup(**kwargs):
         print(json.dumps(kwargs))
     setuptools.setup = setup
@@ -96,8 +97,8 @@ def auto_discover(refresh=True):
                         response = requests.get(last_version.attrs['href'])
 
                         try:
-                            tar = tarfile.open(mode= "r:gz", fileobj = io.BytesIO(response.content))
-                        except:
+                            tar = tarfile.open(mode="r:gz", fileobj=io.BytesIO(response.content))
+                        except Exception:
                             tar = None
 
                         if tar is not None:
@@ -112,7 +113,7 @@ def auto_discover(refresh=True):
                                             for line in text.split('\n'):
                                                 if '__site_url__' in line:
                                                     if '=' in line:
-                                                        site = line.split('=',1)[-1].strip()[1:-1]
+                                                        site = line.split('=', 1)[-1].strip()[1:-1]
                                                         if site:
                                                             if site.startswith('http'):
                                                                 domain = urllib.parse.urlparse(site).hostname
@@ -146,6 +147,7 @@ def auto_discover(refresh=True):
     print("Saved to {}. Now you can use metadrive.drivers.all() to quickly access them.".format(KNOWN_DRIVERS))
 
     return site_drivers
+
 
 def index():
     return auto_discover(refresh=False)
