@@ -11,7 +11,7 @@ config = configparser.ConfigParser()
 INSTALLED = imp.find_module('metadrive')[1]
 
 HOME = str(Path.home())
-DEFAULT_LOCATION = os.path.join(HOME,'.metadrive')
+DEFAULT_LOCATION = os.path.join(HOME, '.metadrive')
 CONFIG_LOCATION = os.path.join(DEFAULT_LOCATION, 'config')
 CREDENTIALS_DIR = os.path.join(DEFAULT_LOCATION, '-/+')
 SESSIONS_DIR = os.path.join(DEFAULT_LOCATION, 'sessions')
@@ -36,30 +36,35 @@ def ENSURE_SESSIONS():
             if subtool != '__init__':
                 os.makedirs(subtool_profiles_path)
 
+
 ENSURE_SESSIONS()
+
 
 def ENSURE_DATA():
     if not os.path.exists(DATA_DIR):
         os.makedirs(DATA_DIR)
 
+
 ENSURE_DATA()
+
 
 def ENSURE_SITES():
     if not os.path.exists(SITES_DIR):
         os.makedirs(SITES_DIR)
 
+
 ENSURE_SITES()
 
 
 if not os.path.exists(CONFIG_LOCATION):
-    username = "seva" #input("Type your GitHub username: ")
+    username = "seva"  # input("Type your GitHub username: ")
 
     config['GITHUB'] = {'USERNAME': username}
     config['PROXIES'] = {'http': '', 'https': ''}
     config['DRIVERS'] = {'auto_upgrade': False}
     config['SELENIUM'] = {'headless': False}
     config['DRIVER_BACKENDS'] = {
-        'CHROME': '/usr/local/bin/chromedriver' # e.g., or http://0.0.0.0:4444/wd/hub, etc.
+        'CHROME': '/usr/local/bin/chromedriver'  # e.g., or http://0.0.0.0:4444/wd/hub, etc.
     }
 
     with open(CONFIG_LOCATION, 'w') as configfile:
@@ -88,7 +93,6 @@ def ENSURE_REPO():
     while not requests.get('https://github.com/{}/-'.format(GITHUB_USER)).ok:
         input("Please, create repository named `-` on your GitHub. Type [ENTER] to continue... ")
 
-
     if os.path.exists(REPO_PATH):
         # git pull #
         os.system('cd {}; git pull'.format(REPO_PATH))
@@ -104,6 +108,7 @@ def ENSURE_REPO():
             REPO_PATH
         ))
 
+
 def ENSURE_GPG():
     config.read(CONFIG_LOCATION)
     if 'GPG' in config.keys():
@@ -114,7 +119,7 @@ def ENSURE_GPG():
 
     for i, key in enumerate(KEY_LIST):
         print('{id}. {uid} {fingerprint}'.format(
-            id=i+1,
+            id=i + 1,
             uid=key['uids'],
             fingerprint=key['fingerprint']
         ))
@@ -130,13 +135,15 @@ def ENSURE_GPG():
 
     return GPG_KEY
 
+
 def ENSURE_PROXIES():
     config.read(CONFIG_LOCATION)
     if 'PROXIES' in config.keys():
-        return {key: 'socks5h://'+config['PROXIES'][key] or None
+        return {key: 'socks5h://' + config['PROXIES'][key] or None
                 for key in config['PROXIES'] if config['PROXIES'][key]}
 
-    SOCKS5 = input('Type-in default socks5 proxy  (e.g., 127.0.0.1:9999) (leave emtpy to default to direct connections) [ENTER]: ')
+    SOCKS5 = input(
+        'Type-in default socks5 proxy  (e.g., 127.0.0.1:9999) (leave emtpy to default to direct connections) [ENTER]: ')
 
     config['PROXIES'] = {
         'http': SOCKS5,
@@ -146,5 +153,5 @@ def ENSURE_PROXIES():
     with open(CONFIG_LOCATION, 'w') as configfile:
         config.write(configfile)
 
-    return {key: 'socks5h://'+config['PROXIES'][key] or None
+    return {key: 'socks5h://' + config['PROXIES'][key] or None
             for key in config['PROXIES'] if config['PROXIES'][key]}

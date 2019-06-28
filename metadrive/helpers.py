@@ -13,16 +13,18 @@ def get_actions(cls):
         if not k.startswith('__'):
             sig = inspect.signature(v)
             actions[k] = \
-                '<'+', '.join([
-                p + str(sig.parameters[p].annotation.__name__ != '_empty' and ': '+sig.parameters[p].annotation.__name__ or '')
-                for p in sig.parameters
-                if sig.parameters[p].name != 'self'
-            ])+'>'
+                '<' + ', '.join([
+                    p + str(sig.parameters[p].annotation.__name__ != '_empty' and ': ' +
+                            sig.parameters[p].annotation.__name__ or '')
+                    for p in sig.parameters
+                    if sig.parameters[p].name != 'self'
+                ]) + '>'
 
             if v.__doc__:
                 actions[k] += ' - ' + v.__doc__.strip()
 
     return actions
+
 
 def print_actions(cls):
     actions = get_actions(cls)

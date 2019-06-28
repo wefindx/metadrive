@@ -19,6 +19,7 @@ class UserAgents:
 
         return user_agent
 
+
 class RequestsCookieAuthentication:
 
     def __init__(self, raw_cookie, key_name, proxies={}):
@@ -47,14 +48,14 @@ class RequestsCookieAuthentication:
 
                 if credential:
                     session.headers.update(dict({
-                        'content-type':'text/plain',
+                        'content-type': 'text/plain',
                     }, **credential))
                 else:
                     raise Warning("Credential is not provided, some data may not be retrieved.")
 
         else:
             session.headers.update({
-                'content-type':'text/plain',
+                'content-type': 'text/plain',
                 'cookie': self.raw_cookie
             })
 

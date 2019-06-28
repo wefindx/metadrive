@@ -1,8 +1,5 @@
 # Copyright (c) 2018 WeFindX Foundation, CLG.
 # All Rights Reserved.
-
-import os
-
 from setuptools import find_packages, setup
 
 try:
@@ -22,13 +19,13 @@ setup(
     author='Mindey',
     author_email='mindey@qq.com',
     license='Apache 2.0',
-    packages = find_packages(exclude=['docs', 'tests*']),
+    packages=find_packages(exclude=['docs', 'tests*']),
     install_requires=[
         'deprecated==1.2.5',
         'click==7.0',
         'fusepy==3.0.1',
         'tqdm==4.31.1',
-        'yolk3k==0.9', # TODO
+        'yolk3k==0.9',  # TODO
         'metatype',
         'metawiki',
         'metaform',
@@ -37,16 +34,16 @@ setup(
         # 'selenium==3.141.0', # for _selenuim
         # 'xarray==0.12.1', # for _xarray
     ],
-    extras_require = {
+    extras_require={
         'test': ['coverage', 'pytest', 'pytest-cov'],
     },
     zip_safe=False,
-    entry_points = {
+    entry_points={
         'console_scripts': [
             'connect=metadrive.cli:connect'
         ],
     },
-    package_data = {
+    package_data={
         'metadrive':
             []
     }

@@ -26,8 +26,8 @@ def get_drive(
         recreate_profile=False,
         proxies='default'):
 
-    proxy = mixins.set_proxies(proxies)
-    local = mixins.init_profile(profile, porfiles_dir, recreate_profile)
+    mixins.set_proxies(proxies)
+    mixins.init_profile(profile, porfiles_dir, recreate_profile)
 
     drive = XarrayDrive()
     drive.subtool = SUBTOOL

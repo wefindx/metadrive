@@ -8,7 +8,6 @@ from io import StringIO
 
 import gpgrecord
 import pkg_resources
-import requests
 import yaml
 
 from metadrive import config
@@ -61,6 +60,7 @@ def get_metaname(namespace, anchor=None):
         main=anchor if anchor else MAIN
     )
 
+
 def get_credential(namespace):
     '''
     namespace: -- service name, by directory
@@ -78,8 +78,9 @@ def get_credential(namespace):
 
         return credential
 
-    except:
+    except Exception:
         return None
+
 
 def set_credential(namespace, credential):
     '''
@@ -104,18 +105,19 @@ def set_credential(namespace, credential):
             cont=yaml.dump(encrypted_credential)
         )
 
-        repo = config.ENSURE_REPO()
+        # repo = config.ENSURE_REPO()
 
         with open(
                 os.path.join(
                     config.CREDENTIALS_DIR,
-                    namespace+'.md'), 'w') as f:
+                    namespace + '.md'), 'w') as f:
             f.write(content)
 
         os.system('cd {}; git add .; git commit -m "update"; git push origin master'.format(
             config.REPO_PATH))
 
     return
+
 
 def get_or_ask_credentials(namespace, variables, ask_refresh=False):
     credential = get_credential(namespace)
@@ -146,6 +148,7 @@ def get_or_ask_credentials(namespace, variables, ask_refresh=False):
     else:
         return credential
 
+
 def load_session_data(namespace):
     session_path = os.path.join(config.SESSIONS_DIR, namespace)
     if os.path.exists(session_path):
@@ -154,16 +157,18 @@ def load_session_data(namespace):
     else:
         return {}
 
+
 def save_session_data(namespace, session_data):
     session_path = os.path.join(config.SESSIONS_DIR, namespace)
     json.dump(session_data, open(session_path, 'w'))
+
 
 def ensure_driver_installed(driver_name):
     reader = driver_name
 
     SUPPORTED_PACKAGE_MANAGERS = ['pypi']
 
-    if reader.lower().split(':',1)[0] not in SUPPORTED_PACKAGE_MANAGERS:
+    if reader.lower().split(':', 1)[0] not in SUPPORTED_PACKAGE_MANAGERS:
         raise Exception(
             "Unknown package manager. " +
             "Make sure the reader you chose starts with one of these: " +
@@ -197,16 +202,15 @@ def ensure_driver_installed(driver_name):
     # TBD: unify the way we refer to package manager, use '::' in all cases
     packman, package = package_name.split(':')
 
-
     # Make sure we have that package installed.
     spec = importlib.util.find_spec(package)
     if spec is None:
         # answer = input(package +" is not installed. Install it? [Y/n] ")
         # if answer in ['y', 'Y', '']:
         try:
-            #easy_install.main( ["-U", package_name] )
+            # easy_install.main( ["-U", package_name] )
             os.system('pip install --no-input -U {} --no-cache'.format(package))
-        except SystemExit as e:
+        except SystemExit:
             pass
         # else:
         #     raise Exception(package_name +" is required. Install it and run again.")
@@ -229,35 +233,34 @@ def ensure_driver_installed(driver_name):
 
         def cmp_version(version1, version2):
             def norm(v):
-                return [int(x) for x in re.sub(r'(\.0+)*$','', v).split(".")]
+                return [int(x) for x in re.sub(r'(\.0+)*$', '', v).split(".")]
             a, b = norm(version1), norm(version2)
             return (a > b) - (a < b)
 
         if latest_version is not None:
             if cmp_version(installed_version, latest_version) < 0:
 
-                print('You are running {}=={}'.format(package,installed_version)+", but there is newer ({}) version.".format(latest_version))
+                print('You are running {}=={}'.format(package, installed_version) +
+                      ", but there is newer ({}) version.".format(latest_version))
 
                 if config.AUTO_UPGRADE_DRIVERS is None:
                     answer = input("Upgrade it? [y/N] ")
                     if answer in ['y', 'Y']:
                         try:
                             os.system('pip install --no-input -U {} --no-cache'.format(package))
-                        except SystemExit as e:
+                        except SystemExit:
                             pass
 
                 elif config.AUTO_UPGRADE_DRIVERS:
                     try:
                         os.system('pip install --no-input -U {} --no-cache'.format(package))
-                    except SystemExit as e:
+                    except SystemExit:
                         pass
 
-                else: # config.AUTO_UPGRADE_DRIVERS == False:
+                else:  # config.AUTO_UPGRADE_DRIVERS == False:
                     pass
 
     return package
-
-
 
 
 @contextlib.contextmanager

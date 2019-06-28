@@ -39,6 +39,7 @@ def set_proxies(proxies):
 
     return proxy
 
+
 def init_profile(profile, porfiles_dir, recreate_profile):
 
     local = True
