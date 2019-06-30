@@ -24,13 +24,14 @@ setup(
         'deprecated==1.2.5',
         'click==7.0',
         'fusepy==3.0.1',
-        'tqdm==4.31.1',
-        'yolk3k==0.9',  # TODO
-        'metatype',
-        'metawiki',
-        'metaform',
-        'typology',
+        'aiofiles==0.4.0',
 
+        # 'tqdm==4.31.1',
+        # 'yolk3k==0.9',  # TODO
+        # 'metatype',
+        # 'metawiki',
+        # 'metaform',
+        # 'typology',
         # 'selenium==3.141.0', # for _selenuim
         # 'xarray==0.12.1', # for _xarray
     ],
@@ -40,7 +41,7 @@ setup(
     zip_safe=False,
     entry_points={
         'console_scripts': [
-            'connect=metadrive.cli:connect'
+            'connect=metadrive.entrypoints.connect:connect'
         ],
     },
     package_data={
