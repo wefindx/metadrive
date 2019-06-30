@@ -4,7 +4,6 @@ import signal
 from concurrent.futures import ProcessPoolExecutor
 
 from metadrive import settings
-from metadrive.core.driver import get_driver
 from metadrive.core.mount import mount
 
 
@@ -32,7 +31,12 @@ class MetaDriveRunner:
         self.executor = ProcessPoolExecutor()
         self.loop.add_signal_handler(signal.SIGINT, self.shutdown)
 
-    async def mount_filesystem(self):
+    async def _get_driver(self):
+        # TODO identify driver by resource
+        from metadrive.subtools._example import ExampleDriver
+        return ExampleDriver
+
+    async def _mount_filesystem(self):
         await self.loop.run_in_executor(
             self.executor,
             mount,
@@ -40,14 +44,14 @@ class MetaDriveRunner:
             self.mountpoint
         )
 
-    async def sync_by_driver(self):
-        driver_cls = await get_driver(self.resource)
+    async def _sync_by_driver(self):
+        driver_cls = await self._get_driver()
         driver_obj = driver_cls(self.loop, self.resource, self.root)
         await driver_obj.sync()
 
     def run(self):
-        self.loop.create_task(self.mount_filesystem())
-        self.loop.create_task(self.sync_by_driver())
+        self.loop.create_task(self._mount_filesystem())
+        self.loop.create_task(self._sync_by_driver())
         self.loop.run_forever()
 
         pending = asyncio.Task.all_tasks(loop=self.loop)
