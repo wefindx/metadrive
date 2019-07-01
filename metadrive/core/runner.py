@@ -4,6 +4,7 @@ import signal
 import importlib
 import re
 import logging
+import sys
 from concurrent.futures import ProcessPoolExecutor
 
 from metadrive import settings
@@ -34,37 +35,37 @@ class MetaDriveRunner:
         except FileExistsError:
             pass
 
-        self.drives = []
+        self.drive = None
         for drive in settings.DRIVES:
             module_name, class_name = drive.split(':')
             module = importlib.import_module(module_name)
             drive_class = getattr(module, class_name)
-            self.drives.append(
-                drive_class(self.loop, self.resource, self.rootpath)
-            )
-
-    async def _get_drive(self):
-        for drive in self.drives:
-            if re.match(drive.get_resource_pattern(), self.resource):
-                return drive
-        logger.warning('No drive for resource %s', self.resource)
+            if re.match(drive_class.get_resource_pattern(), self.resource):
+                self.drive = drive_class(
+                    self.resource,
+                    self.rootpath
+                )
+                break
+        if self.drive is None:
+            logger.warning('No drive for resource %s', self.resource)
+            sys.exit(0)
 
     async def _mount_filesystem(self):
         await self.loop.run_in_executor(
             self.executor,
             mount,
+            self.mountpoint,
+            self.drive.__class__,
+            self.resource,
             self.rootpath,
-            self.mountpoint
         )
 
-    async def _sync_by_driver(self):
-        drive = await self._get_drive()
-        if drive:
-            await drive.sync()
+    async def _sync_drive(self):
+        await self.drive.sync()
 
     def run(self):
         self.loop.create_task(self._mount_filesystem())
-        self.loop.create_task(self._sync_by_driver())
+        self.loop.create_task(self._sync_drive())
         self.loop.run_forever()
 
         pending = asyncio.Task.all_tasks(loop=self.loop)

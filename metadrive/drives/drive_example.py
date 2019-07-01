@@ -10,7 +10,8 @@ logger = logging.getLogger(__file__)
 
 class ExampleDrive(GenericDriveInterface):
 
-    def get_resource_pattern(self):
+    @classmethod
+    def get_resource_pattern(cls):
         return r'^test.com$'
 
     async def sync(self):

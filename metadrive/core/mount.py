@@ -6,14 +6,14 @@ from fuse import FUSE, FuseOSError, Operations
 # https://github.com/skorokithakis/python-fuse-sample
 
 
-class Passthrough(Operations):
-    def __init__(self, root):
-        self.root = root
+class MetaFuseOperations(Operations):
+    def __init__(self, drive_cls, resource, rootpath):
+        self.drive = drive_cls(resource, rootpath)
 
     def _full_path(self, partial):
         if partial.startswith("/"):
             partial = partial[1:]
-        path = os.path.join(self.root, partial)
+        path = os.path.join(self.drive.rootpath, partial)
         return path
 
     # Filesystem methods
@@ -55,7 +55,7 @@ class Passthrough(Operations):
         pathname = os.readlink(self._full_path(path))
         if pathname.startswith("/"):
             # Path name is absolute, sanitize it.
-            return os.path.relpath(pathname, self.root)
+            return os.path.relpath(pathname, self.drive.rootpath)
         else:
             return pathname
 
@@ -107,12 +107,10 @@ class Passthrough(Operations):
         return os.open(full_path, os.O_WRONLY | os.O_CREAT, mode)
 
     def read(self, path, length, offset, fh):
-        os.lseek(fh, offset, os.SEEK_SET)
-        return os.read(fh, length)
+        return self.drive.read(path, length, offset, fh)
 
     def write(self, path, buf, offset, fh):
-        os.lseek(fh, offset, os.SEEK_SET)
-        return os.write(fh, buf)
+        return self.drive.write(path, buf, offset, fh)
 
     def truncate(self, path, length, fh=None):
         full_path = self._full_path(path)
@@ -129,5 +127,10 @@ class Passthrough(Operations):
         return self.flush(path, fh)
 
 
-def mount(root, mountpoint):
-    FUSE(Passthrough(root), mountpoint, nothreads=True, foreground=True)
+def mount(mountpoint, *args):
+    FUSE(
+        MetaFuseOperations(*args),
+        mountpoint,
+        nothreads=True,
+        foreground=True
+    )
