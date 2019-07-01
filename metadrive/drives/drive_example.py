@@ -3,16 +3,19 @@ import time
 import logging
 import aiofiles as aiof
 
-from metadrive.core.driver import AbstractDriver
+from metadrive.drives.interfaces._generic import GenericDriveInterface
 
 logger = logging.getLogger(__file__)
 
 
-class ExampleDriver(AbstractDriver):
+class ExampleDrive(GenericDriveInterface):
+
+    def get_resource_pattern(self):
+        return r'^test.com$'
 
     async def sync(self):
         logger.debug('test')
-        filename = os.path.join(self.root, '%s.txt' % time.time())
+        filename = os.path.join(self.rootpath, '%s.txt' % time.time())
         async with aiof.open(filename, "w", loop=self.loop) as out:
             out.write('%s' % time.time())
         out.flush()

@@ -39,8 +39,7 @@ def connect(resource, mountpoint=None, user=None, period=900):
     runner = MetaDriveRunner(
         resource,
         mountpoint=mountpoint,
-        user=user,
-        period=period
+        session=user,
     )
     try:
         runner.run()

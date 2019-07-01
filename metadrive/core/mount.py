@@ -16,6 +16,9 @@ class Passthrough(Operations):
         path = os.path.join(self.root, partial)
         return path
 
+    # Filesystem methods
+    # ==================
+
     def access(self, path, mode):
         full_path = self._full_path(path)
         if not os.access(full_path, mode):
