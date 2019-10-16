@@ -31,10 +31,17 @@ class RequestsDrive(requests.Session):
 
     def common_after(self, *args, **kwargs):
         if hasattr(self, 'profile'):
-            session_data = requests.utils.dict_from_cookiejar(self.cookies)
+
+            cookies_data = requests.utils.dict_from_cookiejar(self.cookies)
+            headers_data = requests.utils.dict_from_cookiejar(self.cookies)
+
+            session_data = {
+                'cookies': cookies_data,
+                'headers': headers_data
+            }
 
             session_prefix_file = os.path.join(
-                SUBTOOL, '{drive_id}/cookies.json'.format(
+                SUBTOOL, '{drive_id}/session.json'.format(
                     drive_id=self.profile
             ))
 
@@ -77,20 +84,26 @@ def get_drive(
     if drive is not None:
 
         session_prefix_file = os.path.join(
-            drive.subtool, '{drive_id}/cookies.json'.format(
+            drive.subtool, '{drive_id}/session.json'.format(
                 drive_id=profile
         ))
 
         if os.path.exists(os.path.join(config.SESSIONS_DIR, session_prefix_file)):
             session_data = utils.load_session_data(session_prefix_file)
         else:
-            session_data = requests.utils.dict_from_cookiejar(drive.cookies)
+            session_data = {
+                'cookies': requests.utils.dict_from_cookiejar(drive.cookies),
+                'headers': drive.headers
+            }
             # utils.save_session_data(session_prefix_file, session_data)
 
         if session_data:
+            drive.headers.update(
+                session_data.get('headers') or {}
+            )
             drive.cookies.update(
                 requests.utils.cookiejar_from_dict(
-                    session_data
+                    session_data.get('cookies') or {}
                 )
             )
 
