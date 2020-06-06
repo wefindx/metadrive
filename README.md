@@ -39,34 +39,14 @@ pip install metadrive
 Note: by default, all sessions are stored at `~/.metadrive/sessions/`, under the subfolder of underscored "metadrive", e.g., `_selenium` default session is at `~/.metadrive/sessions/_selenium/default`, or `_requests` default session data is at `~/.metadrive/sessions/_requests/default`
 
 ## Usage
-```
-import metadrive
-```
-
-### Minimal, with 'default' session in `~/.metadrive/session/<metadrive>/default`:
-
-```
-# Examples:
-
-drive = metadrive._requests.get_drive()                # metadrive: 'requests', driver: None, profile: 'default'
-drive = metadrive._requests.get_drive(profile='novel') # metadrive: 'requests', driver: None, profile: 'novel'
-drive = metadrive._selenium.get_drive(headless=False)  # metadrive: 'selenium', driver: None, profile: 'default'
-```
-
-### If you want to use a custom driver interface with default session, e.g.:
-
-```
-# Examples:
-drive = metadrive.drives.get('halfbakery-driver')          # metadrive: implied, driver: halfbakery-driver, profile: 'default'
-drive = metadrive.drives.get('halfbakery-driver:SomeName') # metadrive: implied, driver: halfbakery-driver, profile: 'SomeName'
-```
-
-This installs the `pip install halfbakery-driver`, and uses it. Each driver has to have `.__site_url__` attribute, and this way, metadrive determines which resource requires which driver to read.
 
 ### If you want to mount resources
+Mounting site to `~/Sites` or to custom location:
 ```
-drive halfbakery.com
+drive halfbakery.com # defaults to /home/<user>/Sites
+drive halfbakery.com /my/custom/location
 ```
+
 
 The command above will ask you to type your GitHub username. When you are done, the `.metadrive/config` will be created in your home directory and the server will start. The example of how `.metadrive/config` may look like:
 
@@ -84,6 +64,33 @@ https =
 [GPG]
 key = 5AFDB16B89805133F450688BDA580D1D5F5CC7AD
 ```
+
+### If you want to use resources in code
+
+```
+import metadrive
+```
+
+#### Minimal, with 'default' session in `~/.metadrive/session/<metadrive>/default`:
+
+```
+# Examples:
+
+drive = metadrive._requests.get_drive()                # metadrive: 'requests', driver: None, profile: 'default'
+drive = metadrive._requests.get_drive(profile='novel') # metadrive: 'requests', driver: None, profile: 'novel'
+drive = metadrive._selenium.get_drive(headless=False)  # metadrive: 'selenium', driver: None, profile: 'default'
+```
+
+#### If you want to use a custom driver interface with default session, e.g.:
+
+```
+# Examples:
+drive = metadrive.drives.get('halfbakery-driver')          # metadrive: implied, driver: halfbakery-driver, profile: 'default'
+drive = metadrive.drives.get('halfbakery-driver:SomeName') # metadrive: implied, driver: halfbakery-driver, profile: 'SomeName'
+```
+
+This installs the `pip install halfbakery-driver`, and uses it. Each driver has to have `.__site_url__` attribute, and this way, metadrive determines which resource requires which driver to read.
+
 
 The documentation for Metadrive can be found at [https://metadrive.readthedocs.io](https://metadrive.readthedocs.io/en/latest/).
 
