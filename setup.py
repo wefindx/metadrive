@@ -13,7 +13,7 @@ except ImportError:
 
 setup(
     name='metadrive',
-    version='1.4.26',
+    version='1.4.28',
     description='Integration of controllers to drive tools.',
     long_description=LONG_DESCRIPTION,
     long_description_content_type='text/markdown',
@@ -65,7 +65,7 @@ setup(
     zip_safe=False,
     entry_points = {
         'console_scripts': [
-            'connect=metadrive.cli:connect'
+            'drive=metadrive.cli:connect'
         ],
     },
     package_data = {

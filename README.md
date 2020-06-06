@@ -19,7 +19,6 @@ Many drivers are awaiting to be implemented at [drivernet][https://github.com/dr
 
 - [Prepare machine](#prepare-machine)
 - [Installation](#installation)
-  * [Installing drivers](#installing-drivers)
 - [Documentation](#documentation)
 - [Authors](#authors)
 - [Licensing](#licensing)
@@ -34,28 +33,39 @@ sudo apt install virtualenv python3 python3-dev build-essential chromium-browser
 The guide provides for the instructions on how to install Metadrive to a virtual environment, so create and activate it first, running the following commands:
 
 ```
-virtualenv -p python3 metadrive-env
-. ./metadrive-env/bin/activate
-```
-
-Then, install Metadrive from its source code
-
-```
-git clone https://github.com/wefindx/metadrive.git
-cd metadrive
-pip install -e .
-```
-
-or from its package
-
-```
 pip install metadrive
 ```
 
-Finally, run Metadrive, executing
+Note: by default, all sessions are stored at `~/.metadrive/sessions/`, under the subfolder of underscored "metadrive", e.g., `_selenium` default session is at `~/.metadrive/sessions/_selenium/default`, or `_requests` default session data is at `~/.metadrive/sessions/_requests/default`
+
+## Usage
+```
+import metadrive
+```
+
+### Minimal, with 'default' session in `~/.metadrive/session/<metadrive>/default`:
 
 ```
-connect <resource>
+# Examples:
+
+drive = metadrive._requests.get_drive()                # metadrive: 'requests', driver: None, profile: 'default'
+drive = metadrive._requests.get_drive(profile='novel') # metadrive: 'requests', driver: None, profile: 'novel'
+drive = metadrive._selenium.get_drive(headless=False)  # metadrive: 'selenium', driver: None, profile: 'default'
+```
+
+### If you want to use a custom driver interface with default session, e.g.:
+
+```
+# Examples:
+drive = metadrive.drives.get('halfbakery-driver')          # metadrive: implied, driver: halfbakery-driver, profile: 'default'
+drive = metadrive.drives.get('halfbakery-driver:SomeName') # metadrive: implied, driver: halfbakery-driver, profile: 'SomeName'
+```
+
+This installs the `pip install halfbakery-driver`, and uses it. Each driver has to have `.__site_url__` attribute, and this way, metadrive determines which resource requires which driver to read.
+
+### If you want to mount resources
+```
+drive halfbakery.com
 ```
 
 The command above will ask you to type your GitHub username. When you are done, the `.metadrive/config` will be created in your home directory and the server will start. The example of how `.metadrive/config` may look like:
@@ -74,16 +84,6 @@ https =
 [GPG]
 key = 5AFDB16B89805133F450688BDA580D1D5F5CC7AD
 ```
-
-### Installing drivers
-
-Drivers are automatically installed, when a drive is requested and a driver exists.
-
-```
-import metadrive
-drive = metadrive.drives.get('halfbakery-driver:Mindey')
-
-## Documentation
 
 The documentation for Metadrive can be found at [https://metadrive.readthedocs.io](https://metadrive.readthedocs.io/en/latest/).
 
