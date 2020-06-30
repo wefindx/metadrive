@@ -7,3 +7,4 @@ data/
 metadrive/.vscode/
 drivers/
 build/
+.python-version
