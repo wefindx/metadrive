@@ -146,6 +146,7 @@ def get_drive(
 
     PREFERENCES = {}
     #OPTIONS.experimental_options["prefs"] = PREFERENCES
+    OPTIONS.add_experimental_option('excludeSwitches', ['load-extension', 'enable-automation'])
 
     if headless:
         OPTIONS.add_argument('--headless')
