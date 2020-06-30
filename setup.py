@@ -4,11 +4,7 @@
 import os
 from setuptools import find_packages, setup
 
-try:
-    import pypandoc
-    LONG_DESCRIPTION = pypandoc.convert_file('README.md', 'rst')
-except ImportError:
-    LONG_DESCRIPTION = 'Integration of controllers to drive tools.'
+LONG_DESCRIPTION = 'Integration of controllers to drive tools.'
 
 
 setup(
@@ -41,7 +37,6 @@ setup(
         'metatype',
         'metawiki',
         'metaform',
-        'pypandoc==1.4',  # only for converting README.md
         'paramiko==2.4.2',
         'pyautogui==0.9.42',
         'pymongo==3.7.2',
