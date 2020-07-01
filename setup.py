@@ -9,7 +9,7 @@ LONG_DESCRIPTION = 'Integration of controllers to drive tools.'
 
 setup(
     name='metadrive',
-    version='1.4.30',
+    version='1.4.31',
     description='Integration of controllers to drive tools.',
     long_description=LONG_DESCRIPTION,
     long_description_content_type='text/markdown',
@@ -28,7 +28,7 @@ setup(
         'asyncio==3.4.3',
         'bs4==0.0.1',
         'celery==4.2.1',
-        'click==7.0',
+        'click==7.1.2',
         'feedparser==5.2.1',
         'gitpython==2.1.11',
         'gpgrecord==0.0.4',
