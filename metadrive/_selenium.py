@@ -11,6 +11,8 @@ import inspect
 import pathlib
 
 from selenium import webdriver
+from seleniumwire import webdriver as nwebdriver
+
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.action_chains import ActionChains
@@ -40,7 +42,7 @@ class TabsMixin:
         self.close()
 
 
-class Chrome(webdriver.Chrome, TabsMixin):
+class Chrome(nwebdriver.Chrome, TabsMixin):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
