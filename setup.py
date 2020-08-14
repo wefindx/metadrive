@@ -9,7 +9,7 @@ LONG_DESCRIPTION = 'Integration of controllers to drive tools.'
 
 setup(
     name='metadrive',
-    version='1.4.31',
+    version='1.4.32',
     description='Integration of controllers to drive tools.',
     long_description=LONG_DESCRIPTION,
     long_description_content_type='text/markdown',
