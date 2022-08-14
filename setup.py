@@ -53,7 +53,7 @@ setup(
         'typology',
         'yolk3k==0.9',
         'xarray==0.12.1',
-        'urllib3==1.24.3' # not sure if necessary
+        'urllib3==1.26.5' # not sure if necessary
     ],
     extras_require = {
         'test': ['coverage', 'pytest', 'pytest-cov'],
