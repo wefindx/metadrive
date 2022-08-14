@@ -44,7 +44,7 @@ setup(
         'pytest==4.4.1',
         'python-dateutil==2.8.0',
         'python3-xlib==0.15',
-        'requests==2.21.0',
+        'requests==2.28.1',
         'selenium==3.141.0',
         'selenium-wire==2.1.1',
         'slumber==0.7.1',
