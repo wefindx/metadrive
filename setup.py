@@ -27,7 +27,7 @@ setup(
         'apiage==0.1.4',
         'asyncio==3.4.3',
         'bs4==0.0.1',
-        'celery==5.2.2',
+        # 'celery==5.2.2',
         'click==7.1.2',
         # 'feedparser==5.2.1',
         'gitpython==2.1.11',

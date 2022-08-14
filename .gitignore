@@ -1,5 +1,6 @@
 .env/
-.pytest_cache/
+.venv/
+pytest_cache/
 metadrive.egg-info/
 dist/
 data/
