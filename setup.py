@@ -33,7 +33,7 @@ setup(
         'gitpython==2.1.11',
         'gpgrecord==0.0.4',
         'ipython==7.3.0',
-        'jinja2==2.10.1',
+        'jinja2==2.11.3',
         'metatype',
         'metawiki',
         'metaform',
