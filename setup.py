@@ -37,7 +37,7 @@ setup(
         'metatype',
         'metawiki',
         'metaform',
-        'paramiko==2.4.2',
+        'paramiko==2.10.1',
         'pyautogui==0.9.42',
         'pymongo==3.7.2',
         'pysocks==1.6.8',
