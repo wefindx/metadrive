@@ -29,7 +29,7 @@ setup(
         'bs4==0.0.1',
         'celery==5.2.2',
         'click==7.1.2',
-        'feedparser==5.2.1',
+        # 'feedparser==5.2.1',
         'gitpython==2.1.11',
         'gpgrecord==0.0.4',
         'ipython==7.3.0',
