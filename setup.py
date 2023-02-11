@@ -32,7 +32,7 @@ setup(
         # 'feedparser==5.2.1',
         'gitpython==2.1.11',
         'gpgrecord==0.0.4',
-        'ipython==7.3.0',
+        'ipython==8.10.0',
         'jinja2==2.11.3',
         'metatype',
         'metawiki',
