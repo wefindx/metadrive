@@ -36,9 +36,43 @@ The guide provides for the instructions on how to install Metadrive to a virtual
 pip install metadrive
 ```
 
+You might need to `pip install -U pandas`, as at this point, the library is not updated.
+
+Define a config in `~/.metadrive/config`, like:
+
+```
+[GITHUB]
+username = mindey
+
+[PROXIES] # leave empty, if none
+http = socks5h://127.0.0.1:9999
+https = socks5h://127.0.0.1:9999
+
+[GPG]
+key = 5AFDB16B89805133F450688BDA580D1D5F5CC7AD
+
+[DRIVERS]
+auto_upgrade = False
+
+[SELENIUM]
+headless = False
+
+[DRIVER_BACKENDS]
+chrome = /usr/bin/chromedriver
+```
+
 Note: by default, all sessions are stored at `~/.metadrive/sessions/`, under the subfolder of underscored "metadrive", e.g., `_selenium` default session is at `~/.metadrive/sessions/_selenium/default`, or `_requests` default session data is at `~/.metadrive/sessions/_requests/default`
 
 ## Usage
+
+### To use for crawling web using different profiles with proxies:
+
+```
+drive = metadrive._selenium.get_drive(profile='default')
+
+drive = metadrive._selenium.get_drive(headless=False, profile='default', proxies={'socksProxy': '127.0.0.1:7777'})
+```
+
 
 ### If you want to mount resources
 Mounting site to `~/Sites` or to custom location:
